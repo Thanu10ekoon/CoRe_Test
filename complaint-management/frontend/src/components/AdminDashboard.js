@@ -54,6 +54,7 @@ const AdminDashboard = () => {
   const handleLogout = () => {
     // Clear user session (if stored)
     localStorage.removeItem("user");
+    localStorage.removeItem("user_id");
     navigate("/"); // Redirect to login
   };
 

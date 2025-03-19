@@ -11,12 +11,18 @@ const Login = () => {
   const handleLogin = async () => {
     try {
       const response = await axios.post("http://localhost:5000/api/login", { username, password });
-      if (response.data.type === "admin") {
+
+      if (response.data.user_id && response.data.type) {
         localStorage.setItem("user_id", response.data.user_id);
-        navigate("/admin-dashboard");
+        localStorage.setItem("role", response.data.type.toLowerCase()); // Store role in localStorage
+
+        if (response.data.type.toLowerCase() === "admin") {
+          navigate("/admin-dashboard");
+        } else {
+          navigate("/user-dashboard");
+        }
       } else {
-        localStorage.setItem("user_id", response.data.user_id);
-        navigate("/user-dashboard");
+        throw new Error("Invalid response data");
       }
     } catch (error) {
       alert("Invalid credentials");
@@ -29,12 +35,13 @@ const Login = () => {
         <Card>
           <Card.Body>
             <h2 className="text-center mb-4">Login</h2>
-            <Form>
+            <Form onSubmit={(e) => e.preventDefault()}>
               <Form.Group id="username">
                 <Form.Label>Username</Form.Label>
                 <Form.Control
                   type="text"
                   placeholder="Enter username"
+                  value={username}
                   onChange={(e) => setUsername(e.target.value)}
                   required
                 />
@@ -44,6 +51,7 @@ const Login = () => {
                 <Form.Control
                   type="password"
                   placeholder="Enter password"
+                  value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
                 />
