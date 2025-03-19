@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { Button, Table, Container, Spinner, InputGroup, Form } from "react-bootstrap";
 
 const AdminDashboard = () => {
   const [complaints, setComplaints] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [statusInputs, setStatusInputs] = useState({}); // Track individual status inputs
-  const [adminId] = useState(1); // For now, hardcoded admin ID (update as needed)
+  const [statusInputs, setStatusInputs] = useState({});
+  const [adminId] = useState(1); // Hardcoded admin ID (update as needed)
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -35,30 +36,38 @@ const AdminDashboard = () => {
       status,
       admin_id: adminId,
     })
-      .then((response) => {
+      .then(() => {
         alert("Status updated successfully");
-        // Update the complaint's status locally
         setComplaints((prev) =>
           prev.map((complaint) =>
             complaint.complaint_id === complaintId ? { ...complaint, status } : complaint
           )
         );
-        // Clear the status input for that complaint
         setStatusInputs((prev) => ({ ...prev, [complaintId]: "" }));
       })
       .catch((error) => {
         console.error("Error updating status:", error);
-        alert("Failed to update status. Check console for details.");
+        alert("Failed to update status.");
       });
   };
 
+  const handleLogout = () => {
+    // Clear user session (if stored)
+    localStorage.removeItem("user");
+    navigate("/"); // Redirect to login
+  };
+
   return (
-    <div>
-      <h2>Admin Dashboard</h2>
+    <Container className="mt-4">
+      <div className="d-flex justify-content-between align-items-center mb-3">
+        <h2>Admin Dashboard</h2>
+        <Button variant="danger" onClick={handleLogout}>Logout</Button>
+      </div>
+
       {loading ? (
-        <p>Loading complaints...</p>
+        <Spinner animation="border" />
       ) : (
-        <table border="1" cellPadding="5">
+        <Table striped bordered hover>
           <thead>
             <tr>
               <th>ID</th>
@@ -74,30 +83,30 @@ const AdminDashboard = () => {
                 <td>{complaint.title}</td>
                 <td>
                   {complaint.status}
-                  {complaint.admin_username && (
-                    <span> (by {complaint.admin_username})</span>
-                  )}
+                  {complaint.admin_username && <span> (by {complaint.admin_username})</span>}
                 </td>
                 <td>
-                  <button onClick={() => navigate(`/complaint/${complaint.complaint_id}`)}>
+                  <Button variant="info" onClick={() => navigate(`/complaint/${complaint.complaint_id}`)}>
                     View Details
-                  </button>
-                  <input
-                    type="text"
-                    placeholder="Update status"
-                    value={statusInputs[complaint.complaint_id] || ""}
-                    onChange={(e) => handleStatusChange(complaint.complaint_id, e.target.value)}
-                  />
-                  <button onClick={() => handleStatusUpdate(complaint.complaint_id)}>
-                    Update Status
-                  </button>
+                  </Button>{" "}
+                  <InputGroup className="mt-2">
+                    <Form.Control
+                      type="text"
+                      placeholder="Update status"
+                      value={statusInputs[complaint.complaint_id] || ""}
+                      onChange={(e) => handleStatusChange(complaint.complaint_id, e.target.value)}
+                    />
+                    <Button variant="success" onClick={() => handleStatusUpdate(complaint.complaint_id)}>
+                      Update
+                    </Button>
+                  </InputGroup>
                 </td>
               </tr>
             ))}
           </tbody>
-        </table>
+        </Table>
       )}
-    </div>
+    </Container>
   );
 };
 
