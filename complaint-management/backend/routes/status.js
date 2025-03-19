@@ -3,7 +3,7 @@ const db = require('../db');
 const router = express.Router();
 
 // Admin updates complaint status
-router.post('/update', (req, res) => {
+router.put('/update', (req, res) => {
     const { complaint_id, admin_id, status_text } = req.body;
 
     const sql1 = 'INSERT INTO status_updates (complaint_id, admin_id, update_text) VALUES (?, ?, ?)';

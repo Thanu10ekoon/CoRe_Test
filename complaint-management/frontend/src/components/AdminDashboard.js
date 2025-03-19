@@ -7,8 +7,10 @@ const AdminDashboard = () => {
   const [complaints, setComplaints] = useState([]);
   const [loading, setLoading] = useState(true);
   const [statusInputs, setStatusInputs] = useState({});
-  const [adminId] = useState(1); // Hardcoded admin ID (update as needed)
   const navigate = useNavigate();
+
+  // Retrieve admin ID from localStorage
+  const adminId = localStorage.getItem("user_id");
 
   useEffect(() => {
     axios.get("http://localhost:5000/api/complaints")
@@ -32,9 +34,10 @@ const AdminDashboard = () => {
       alert("Please enter a status update.");
       return;
     }
+
     axios.put(`http://localhost:5000/api/complaints/${complaintId}/status`, {
       status,
-      admin_id: adminId,
+      admin_id: adminId, // Pass the correct admin ID
     })
       .then(() => {
         alert("Status updated successfully");
@@ -52,10 +55,9 @@ const AdminDashboard = () => {
   };
 
   const handleLogout = () => {
-    // Clear user session (if stored)
     localStorage.removeItem("user");
     localStorage.removeItem("user_id");
-    navigate("/"); // Redirect to login
+    navigate("/"); // Redirect to login page
   };
 
   return (
@@ -84,7 +86,7 @@ const AdminDashboard = () => {
                 <td>{complaint.title}</td>
                 <td>
                   {complaint.status}
-                  {complaint.admin_username && <span> (by {complaint.admin_username})</span>}
+                  {complaint.updated_by_admin && <span> (by Admin ID: {complaint.updated_by_admin})</span>}
                 </td>
                 <td>
                   <Button variant="info" onClick={() => navigate(`/complaint/${complaint.complaint_id}`)}>
