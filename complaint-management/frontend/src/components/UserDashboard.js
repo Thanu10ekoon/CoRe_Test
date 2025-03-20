@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { Container, Card, Table, Button } from "react-bootstrap";
-// Import Chatbot from the chatbot folder (adjust relative path as needed)
 import Chatbot from "../Chatbot";
 
 const UserDashboard = () => {
@@ -14,7 +13,7 @@ const UserDashboard = () => {
     const userId = localStorage.getItem("user_id");
     if (userId) {
       axios
-        .get(`http://localhost:5000/api/complaints/user/${userId}`)
+        .get(`${process.env.REACT_APP_API_BASE_URL}/complaints/user/${userId}`)
         .then((response) => {
           setComplaints(response.data);
           setLoading(false);
@@ -36,7 +35,6 @@ const UserDashboard = () => {
 
   return (
     <Container className="d-flex flex-column min-vh-100">
-      {/* Logo */}
       <div className="d-flex justify-content-center mt-4">
         <img
           src="https://i.ibb.co/cXsYwrCh/core-ms-high-resolution-logo.png"
@@ -45,7 +43,6 @@ const UserDashboard = () => {
         />
       </div>
 
-      {/* Dashboard Content */}
       <div className="flex-grow-1 d-flex flex-column align-items-center mt-3">
         <Card className="w-100" style={{ maxWidth: "800px" }}>
           <Card.Body>
@@ -102,7 +99,6 @@ const UserDashboard = () => {
         </Card>
       </div>
 
-      {/* Footer */}
       <footer className="text-center mt-auto py-3">
         <p>
           Developed by{" "}
@@ -116,7 +112,6 @@ const UserDashboard = () => {
         </p>
       </footer>
 
-      {/* Chatbot Integration */}
       <Chatbot userType="user" />
     </Container>
   );

@@ -12,22 +12,17 @@ const ComplaintDetails = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Fetch complaint details
         const complaintResponse = await axios.get(
-          `http://localhost:5000/api/complaints/${id}`
+          `${process.env.REACT_APP_API_BASE_URL}/complaints/${id}`
         );
         setComplaint(complaintResponse.data);
 
-        // Fetch full history of status updates for this complaint
         const updatesResponse = await axios.get(
-          `http://localhost:5000/api/statusupdates/${id}`
+          `${process.env.REACT_APP_API_BASE_URL}/statusupdates/${id}`
         );
         setUpdates(updatesResponse.data);
       } catch (error) {
-        console.error(
-          "Error fetching complaint details or status updates:",
-          error
-        );
+        console.error("Error fetching complaint details or status updates:", error);
       } finally {
         setLoading(false);
       }
@@ -38,16 +33,14 @@ const ComplaintDetails = () => {
 
   return (
     <Container className="d-flex flex-column min-vh-100">
-      {/* Logo */}
       <div className="d-flex justify-content-center mt-4">
         <img
           src="https://i.ibb.co/cXsYwrCh/core-ms-high-resolution-logo.png"
           alt="Logo"
-          style={{ width: "300px",margin:"-50px" }}
+          style={{ width: "300px", margin: "-50px" }}
         />
       </div>
 
-      {/* Complaint Details */}
       <div className="flex-grow-1 d-flex flex-column align-items-center mt-3">
         <div className="w-100 px-2" style={{ maxWidth: "800px" }}>
           {loading ? (
@@ -75,7 +68,6 @@ const ComplaintDetails = () => {
             <Alert variant="danger">Complaint not found.</Alert>
           )}
 
-          {/* Status Update History */}
           <h4 className="mt-4">Status Update History</h4>
           {updates.length > 0 ? (
             <ListGroup>
@@ -95,7 +87,6 @@ const ComplaintDetails = () => {
         </div>
       </div>
 
-      {/* Footer */}
       <footer className="text-center mt-auto py-3">
         <p>
           Developed by{" "}

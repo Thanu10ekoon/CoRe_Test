@@ -11,7 +11,6 @@ const NewComplaint = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // Retrieve dynamic user ID from localStorage, defaulting to 1 if not found
     const userId = localStorage.getItem("user_id") || 1;
 
     const complaintData = {
@@ -21,7 +20,10 @@ const NewComplaint = () => {
     };
 
     try {
-      const response = await axios.post("http://localhost:5000/api/complaints", complaintData);
+      const response = await axios.post(
+        `${process.env.REACT_APP_API_BASE_URL}/complaints`,
+        complaintData
+      );
       if (response.status === 200) {
         alert("Complaint submitted successfully!");
         navigate("/user-dashboard");

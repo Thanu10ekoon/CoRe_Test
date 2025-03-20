@@ -10,7 +10,7 @@ const Login = () => {
 
   const handleLogin = async () => {
     try {
-      const response = await axios.post("http://localhost:5000/api/login", { username, password });
+      const response = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/login`, { username, password });
 
       if (response.data.user_id && response.data.type) {
         localStorage.setItem("user_id", response.data.user_id);
@@ -31,10 +31,8 @@ const Login = () => {
 
   return (
     <Container className="d-flex flex-column align-items-center justify-content-center" style={{ minHeight: "100vh" }}>
-      {/* Logo */}
       <img src="https://i.ibb.co/cXsYwrCh/core-ms-high-resolution-logo.png" alt="Logo" style={{ width: "400px", marginTop: "-50px", marginBottom:"-10px"}} />
 
-      {/* Login Card */}
       <div className="w-100" style={{ maxWidth: "400px" }}>
         <Card>
           <Card.Body>
@@ -68,7 +66,6 @@ const Login = () => {
         </Card>
       </div>
 
-      {/* Footer */}
       <footer className="text-center mt-4">
         <p>
           Developed by{" "}

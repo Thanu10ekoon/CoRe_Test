@@ -1,15 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import {
-  Button,
-  Table,
-  Container,
-  Spinner,
-  InputGroup,
-  Form,
-} from "react-bootstrap";
-// Import Chatbot from the chatbot folder (adjust relative path as needed)
+import { Button, Table, Container, Spinner, InputGroup, Form } from "react-bootstrap";
 import Chatbot from "../Chatbot";
 
 const AdminDashboard = () => {
@@ -17,13 +9,11 @@ const AdminDashboard = () => {
   const [loading, setLoading] = useState(true);
   const [statusInputs, setStatusInputs] = useState({});
   const navigate = useNavigate();
-
-  // Retrieve admin ID from localStorage
   const adminId = localStorage.getItem("user_id");
 
   useEffect(() => {
     axios
-      .get("http://localhost:5000/api/complaints")
+      .get(`${process.env.REACT_APP_API_BASE_URL}/complaints`)
       .then((response) => {
         setComplaints(response.data);
         setLoading(false);
@@ -46,7 +36,7 @@ const AdminDashboard = () => {
     }
 
     axios
-      .put(`http://localhost:5000/api/complaints/${complaintId}/status`, {
+      .put(`${process.env.REACT_APP_API_BASE_URL}/complaints/${complaintId}/status`, {
         status,
         admin_id: adminId,
       })
@@ -75,7 +65,6 @@ const AdminDashboard = () => {
 
   return (
     <Container className="d-flex flex-column min-vh-100">
-      {/* Logo */}
       <div className="d-flex justify-content-center mt-4">
         <img
           src="https://i.ibb.co/cXsYwrCh/core-ms-high-resolution-logo.png"
@@ -84,7 +73,6 @@ const AdminDashboard = () => {
         />
       </div>
 
-      {/* Dashboard Content */}
       <div className="flex-grow-1 d-flex flex-column align-items-center mt-3">
         <div className="w-100 px-2" style={{ maxWidth: "900px" }}>
           <div className="d-flex flex-column flex-md-row justify-content-between align-items-center mb-3">
@@ -161,7 +149,6 @@ const AdminDashboard = () => {
         </div>
       </div>
 
-      {/* Footer */}
       <footer className="text-center mt-auto py-3">
         <p>
           Developed by{" "}
@@ -175,7 +162,6 @@ const AdminDashboard = () => {
         </p>
       </footer>
 
-      {/* Chatbot Integration */}
       <Chatbot userType="admin" />
     </Container>
   );
