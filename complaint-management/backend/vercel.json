@@ -2,15 +2,20 @@
     "version": 2,
     "builds": [
       {
-        "src": "./routes/server.js",
+        "src": "routes/server.js",
         "use": "@vercel/node"
       }
     ],
     "routes": [
       {
-        "src": "/(.*)",
-        "destination": "routes/server.js",
+        "src": "/api/(.*)",
+        "dest": "routes/server.js",
         "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"]
+      },
+      {
+        "src": "/(.*)",
+        "dest": "routes/server.js",
+        "status": 404
       }
     ]
   }
