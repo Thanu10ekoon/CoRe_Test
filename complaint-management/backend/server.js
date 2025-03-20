@@ -28,6 +28,14 @@ db.connect((err) => {
   console.log("Connected to database");
 });
 
+// Handle preflight requests
+app.options('*', cors(corsOptions));
+
+// Simple health check endpoint
+app.get('/health', (req, res) => {
+  res.status(200).json({ status: 'ok' });
+});
+
 // API Routes
 app.post("/api/login", (req, res) => {
   const { username, password } = req.body;
