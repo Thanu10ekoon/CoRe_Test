@@ -14,7 +14,7 @@ const Login = () => {
 
       if (response.data.user_id && response.data.type) {
         localStorage.setItem("user_id", response.data.user_id);
-        localStorage.setItem("role", response.data.type.toLowerCase()); // Store role in localStorage
+        localStorage.setItem("role", response.data.type.toLowerCase());
 
         if (response.data.type.toLowerCase() === "admin") {
           navigate("/admin-dashboard");
@@ -30,7 +30,11 @@ const Login = () => {
   };
 
   return (
-    <Container className="d-flex align-items-center justify-content-center" style={{ minHeight: "100vh" }}>
+    <Container className="d-flex flex-column align-items-center justify-content-center" style={{ minHeight: "100vh" }}>
+      {/* Logo */}
+      <img src="https://i.ibb.co/cXsYwrCh/core-ms-high-resolution-logo.png" alt="Logo" style={{ width: "400px", marginTop: "-50px", marginBottom:"-10px"}} />
+
+      {/* Login Card */}
       <div className="w-100" style={{ maxWidth: "400px" }}>
         <Card>
           <Card.Body>
@@ -63,6 +67,16 @@ const Login = () => {
           </Card.Body>
         </Card>
       </div>
+
+      {/* Footer */}
+      <footer className="text-center mt-4">
+        <p>
+          Developed by{" "}
+          <a href="https://github.com/Thanu10ekoon" target="_blank" rel="noopener noreferrer">
+            Scorpion X
+          </a>
+        </p>
+      </footer>
     </Container>
   );
 };

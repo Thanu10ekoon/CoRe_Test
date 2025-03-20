@@ -37,48 +37,73 @@ const ComplaintDetails = () => {
   }, [id]);
 
   return (
-    <Container className="mt-4">
-      {loading ? (
-        <div className="text-center">
-          <Spinner animation="border" />
-          <p>Loading complaint details...</p>
-        </div>
-      ) : complaint ? (
-        <Card>
-          <Card.Body>
-            <Card.Title>{complaint.title}</Card.Title>
-            <Card.Text>{complaint.description}</Card.Text>
-            <ListGroup variant="flush">
-              <ListGroup.Item>
-                <strong>Status:</strong> {complaint.status}
-              </ListGroup.Item>
-              <ListGroup.Item>
-                <strong>Updated By:</strong>{" "}
-                {complaint.admin_username ? complaint.admin_username : "N/A"}
-              </ListGroup.Item>
-            </ListGroup>
-          </Card.Body>
-        </Card>
-      ) : (
-        <Alert variant="danger">Complaint not found.</Alert>
-      )}
+    <Container className="d-flex flex-column min-vh-100">
+      {/* Logo */}
+      <div className="d-flex justify-content-center mt-4">
+        <img
+          src="https://i.ibb.co/cXsYwrCh/core-ms-high-resolution-logo.png"
+          alt="Logo"
+          style={{ width: "300px",margin:"-50px" }}
+        />
+      </div>
 
-      <h4 className="mt-4">Status Update History</h4>
-      {updates.length > 0 ? (
-        <ListGroup>
-          {updates.map((update) => (
-            <ListGroup.Item key={update.update_id}>
-              <strong>{update.update_text}</strong> - Updated by{" "}
-              {update.admin_username ? update.admin_username : update.admin_id}{" "}
-              on {new Date(update.update_date).toLocaleString()}
-            </ListGroup.Item>
-          ))}
-        </ListGroup>
-      ) : (
-        <Alert variant="warning" className="mt-3">
-          No status updates found.
-        </Alert>
-      )}
+      {/* Complaint Details */}
+      <div className="flex-grow-1 d-flex flex-column align-items-center mt-3">
+        <div className="w-100 px-2" style={{ maxWidth: "800px" }}>
+          {loading ? (
+            <div className="text-center">
+              <Spinner animation="border" />
+              <p>Loading complaint details...</p>
+            </div>
+          ) : complaint ? (
+            <Card className="shadow">
+              <Card.Body>
+                <Card.Title className="text-primary">{complaint.title}</Card.Title>
+                <Card.Text>{complaint.description}</Card.Text>
+                <ListGroup variant="flush">
+                  <ListGroup.Item>
+                    <strong>Status:</strong> {complaint.status}
+                  </ListGroup.Item>
+                  <ListGroup.Item>
+                    <strong>Updated By:</strong>{" "}
+                    {complaint.admin_username ? complaint.admin_username : "N/A"}
+                  </ListGroup.Item>
+                </ListGroup>
+              </Card.Body>
+            </Card>
+          ) : (
+            <Alert variant="danger">Complaint not found.</Alert>
+          )}
+
+          {/* Status Update History */}
+          <h4 className="mt-4">Status Update History</h4>
+          {updates.length > 0 ? (
+            <ListGroup>
+              {updates.map((update) => (
+                <ListGroup.Item key={update.update_id}>
+                  <strong>{update.update_text}</strong> - Updated by{" "}
+                  {update.admin_username ? update.admin_username : update.admin_id}{" "}
+                  on {new Date(update.update_date).toLocaleString()}
+                </ListGroup.Item>
+              ))}
+            </ListGroup>
+          ) : (
+            <Alert variant="warning" className="mt-3">
+              No status updates found.
+            </Alert>
+          )}
+        </div>
+      </div>
+
+      {/* Footer */}
+      <footer className="text-center mt-auto py-3">
+        <p>
+          Developed by{" "}
+          <a href="https://github.com/Thanu10ekoon" target="_blank" rel="noopener noreferrer">
+            Scorpion X
+          </a>
+        </p>
+      </footer>
     </Container>
   );
 };

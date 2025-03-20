@@ -9,7 +9,7 @@ const UserDashboard = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const userId = localStorage.getItem("user_id"); // Dynamic user ID (from session or auth token)
+    const userId = localStorage.getItem("user_id");
     if (userId) {
       axios
         .get(`http://localhost:5000/api/complaints/user/${userId}`)
@@ -33,50 +33,68 @@ const UserDashboard = () => {
   };
 
   return (
-    <Container className="mt-5">
-      <Card>
-        <Card.Body>
-          <div className="d-flex justify-content-between align-items-center">
-            <Card.Title>Your Complaints</Card.Title>
-            <Button variant="danger" onClick={handleLogout}>Logout</Button>
-          </div>
-          <Button variant="primary" className="mb-3" onClick={() => navigate("/complaint/new")}>
-            New Complaint
-          </Button>
-          {loading ? (
-            <p>Loading complaints...</p>
-          ) : (
-            <Table striped bordered hover responsive>
-              <thead>
-                <tr>
-                  <th>ID</th>
-                  <th>Title</th>
-                  <th>Date</th>
-                </tr>
-              </thead>
-              <tbody>
-                {complaints.length > 0 ? (
-                  complaints.map((complaint) => (
-                    <tr
-                      key={complaint.complaint_id}
-                      onClick={() => navigate(`/complaint/${complaint.complaint_id}`)}
-                      style={{ cursor: "pointer" }}
-                    >
-                      <td>{complaint.complaint_id}</td>
-                      <td>{complaint.title}</td>
-                      <td>{new Date(complaint.created_at).toLocaleString()}</td>
-                    </tr>
-                  ))
-                ) : (
+    <Container className="d-flex flex-column min-vh-100">
+      {/* Logo */}
+      <div className="d-flex justify-content-center mt-4">
+        <img src="https://i.ibb.co/cXsYwrCh/core-ms-high-resolution-logo.png" alt="Logo" style={{ width: "400px" }} />
+      </div>
+
+      {/* Dashboard Content */}
+      <div className="flex-grow-1 d-flex flex-column align-items-center mt-3">
+        <Card className="w-100" style={{ maxWidth: "800px" }}>
+          <Card.Body>
+            <div className="d-flex justify-content-between align-items-center">
+              <Card.Title>Your Complaints</Card.Title>
+              <Button variant="danger" onClick={handleLogout}>Logout</Button>
+            </div>
+            <Button variant="primary" className="mb-3" onClick={() => navigate("/complaint/new")}>
+              New Complaint
+            </Button>
+            {loading ? (
+              <p>Loading complaints...</p>
+            ) : (
+              <Table striped bordered hover responsive>
+                <thead>
                   <tr>
-                    <td colSpan="3" className="text-center">No complaints found.</td>
+                    <th>ID</th>
+                    <th>Title</th>
+                    <th>Date</th>
                   </tr>
-                )}
-              </tbody>
-            </Table>
-          )}
-        </Card.Body>
-      </Card>
+                </thead>
+                <tbody>
+                  {complaints.length > 0 ? (
+                    complaints.map((complaint) => (
+                      <tr
+                        key={complaint.complaint_id}
+                        onClick={() => navigate(`/complaint/${complaint.complaint_id}`)}
+                        style={{ cursor: "pointer" }}
+                      >
+                        <td>{complaint.complaint_id}</td>
+                        <td>{complaint.title}</td>
+                        <td>{new Date(complaint.created_at).toLocaleString()}</td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td colSpan="3" className="text-center">No complaints found.</td>
+                    </tr>
+                  )}
+                </tbody>
+              </Table>
+            )}
+          </Card.Body>
+        </Card>
+      </div>
+
+      {/* Footer */}
+      <footer className="text-center mt-auto py-3">
+        <p>
+          Developed by{" "}
+          <a href="https://github.com/Thanu10ekoon" target="_blank" rel="noopener noreferrer">
+            Scorpion X
+          </a>
+        </p>
+      </footer>
     </Container>
   );
 };
