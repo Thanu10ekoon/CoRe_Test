@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { Container, Card, Table, Button } from "react-bootstrap";
+// Import Chatbot from the chatbot folder (adjust relative path as needed)
+import Chatbot from "../Chatbot";
 
 const UserDashboard = () => {
   const [complaints, setComplaints] = useState([]);
@@ -36,7 +38,11 @@ const UserDashboard = () => {
     <Container className="d-flex flex-column min-vh-100">
       {/* Logo */}
       <div className="d-flex justify-content-center mt-4">
-        <img src="https://i.ibb.co/cXsYwrCh/core-ms-high-resolution-logo.png" alt="Logo" style={{ width: "400px" }} />
+        <img
+          src="https://i.ibb.co/cXsYwrCh/core-ms-high-resolution-logo.png"
+          alt="Logo"
+          style={{ width: "400px" }}
+        />
       </div>
 
       {/* Dashboard Content */}
@@ -47,7 +53,11 @@ const UserDashboard = () => {
               <Card.Title>Your Complaints</Card.Title>
               <Button variant="danger" onClick={handleLogout}>Logout</Button>
             </div>
-            <Button variant="primary" className="mb-3" onClick={() => navigate("/complaint/new")}>
+            <Button
+              variant="primary"
+              className="mb-3"
+              onClick={() => navigate("/complaint/new")}
+            >
               New Complaint
             </Button>
             {loading ? (
@@ -66,17 +76,23 @@ const UserDashboard = () => {
                     complaints.map((complaint) => (
                       <tr
                         key={complaint.complaint_id}
-                        onClick={() => navigate(`/complaint/${complaint.complaint_id}`)}
+                        onClick={() =>
+                          navigate(`/complaint/${complaint.complaint_id}`)
+                        }
                         style={{ cursor: "pointer" }}
                       >
                         <td>{complaint.complaint_id}</td>
                         <td>{complaint.title}</td>
-                        <td>{new Date(complaint.created_at).toLocaleString()}</td>
+                        <td>
+                          {new Date(complaint.created_at).toLocaleString()}
+                        </td>
                       </tr>
                     ))
                   ) : (
                     <tr>
-                      <td colSpan="3" className="text-center">No complaints found.</td>
+                      <td colSpan="3" className="text-center">
+                        No complaints found.
+                      </td>
                     </tr>
                   )}
                 </tbody>
@@ -90,11 +106,18 @@ const UserDashboard = () => {
       <footer className="text-center mt-auto py-3">
         <p>
           Developed by{" "}
-          <a href="https://github.com/Thanu10ekoon" target="_blank" rel="noopener noreferrer">
+          <a
+            href="https://github.com/Thanu10ekoon"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             Scorpion X
           </a>
         </p>
       </footer>
+
+      {/* Chatbot Integration */}
+      <Chatbot userType="user" />
     </Container>
   );
 };
