@@ -1,6 +1,6 @@
 # CoRe MS
 ## Complaints & Requests Management System
-<p align="left"><img src="https://i.ibb.co/0Vrf3tqx/Black-White-Minimalist-Initials-Monogram-Jewelry-Logo-2.png" width = "300px"></p>
+<p align="left"><img src="https://i.ibb.co/cXsYwrCh/core-ms-high-resolution-logo.png" width = "300px"></p>
 
 
 ## Overview
