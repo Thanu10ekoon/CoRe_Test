@@ -69,7 +69,7 @@ const Login = () => {
       <footer className="text-center mt-4">
         <p>
           Developed by{" "}
-          <a href="https://github.com/Thanu10ekoon" target="_blank" rel="noopener noreferrer">
+          <a href="https://scorpion-xweb.vercel.app/" target="_blank" rel="noopener noreferrer">
             Scorpion X
           </a>
         </p>

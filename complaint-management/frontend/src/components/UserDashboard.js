@@ -103,7 +103,7 @@ const UserDashboard = () => {
         <p>
           Developed by{" "}
           <a
-            href="https://github.com/Thanu10ekoon"
+            href="https://scorpion-xweb.vercel.app/"
             target="_blank"
             rel="noopener noreferrer"
           >
