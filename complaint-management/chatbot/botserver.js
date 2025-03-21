@@ -1,13 +1,17 @@
-const express = require("express");
-const mysql = require("mysql2");
-const bodyParser = require("body-parser");
-const cors = require("cors");
+// botserver.js
+const express = require('express');
+const mysql = require('mysql2');
+const bodyParser = require('body-parser');
+const cors = require('cors');
+const { NlpManager } = require('node-nlp');
+const fs = require('fs');
+const path = require('path');
 
 const app = express();
 app.use(bodyParser.json());
 app.use(cors());
 
-// Create connection pool
+// Create connection pool for complaints database
 const pool = mysql.createPool({
   host: "bp2juxysn0nszxvmkkzj-mysql.services.clever-cloud.com",
   user: "udflccbdblfustx7",
@@ -18,7 +22,7 @@ const pool = mysql.createPool({
   queueLimit: 0
 });
 
-// Verify connection
+// Verify database connection
 pool.getConnection((err, connection) => {
   if (err) {
     console.error("Database connection failed:", err);
@@ -27,6 +31,25 @@ pool.getConnection((err, connection) => {
   console.log("Database connected via pool");
   connection.release();
 });
+
+// -------------------------
+// Set up NLP Manager
+// -------------------------
+const manager = new NlpManager({ languages: ['en'], forceNER: true });
+const modelFilePath = path.join(__dirname, 'model.nlp');
+
+// Load pre-trained NLP model from file if it exists
+if (fs.existsSync(modelFilePath)) {
+  manager.load(modelFilePath);
+  console.log("Loaded pre-trained NLP model from model.nlp");
+} else {
+  console.error("Pre-trained NLP model not found. Run train-model.js first to create model.nlp.");
+  process.exit(1);
+}
+
+// -------------------------
+// Complaint Management Endpoints
+// -------------------------
 
 // Add a new complaint
 app.post("/api/complaints", (req, res) => {
@@ -128,6 +151,22 @@ app.get("/api/complaints/user/:userId", (req, res) => {
     }
     res.json(results);
   });
+});
+
+// -------------------------
+// NLP Processing Endpoint
+// -------------------------
+app.post('/api/nlp', async (req, res) => {
+  const { text } = req.body;
+  if (!text) {
+    return res.status(400).json({ error: "Text is required" });
+  }
+  try {
+    const result = await manager.process('en', text);
+    res.json(result);
+  } catch(err) {
+    res.status(500).json({ error: "NLP processing error", details: err.message });
+  }
 });
 
 const PORT = process.env.PORT || 5001;

@@ -1,0 +1,3504 @@
+{
+  "settings": {
+    "languages": [
+      "en"
+    ],
+    "forceNER": true,
+    "tag": "nlp",
+    "threshold": 0.5,
+    "autoLoad": true,
+    "autoSave": true,
+    "modelFileName": "model.nlp",
+    "executeActionsBeforeAnswers": false,
+    "calculateSentiment": true
+  },
+  "nluManager": {
+    "settings": {
+      "tag": "nlu-manager"
+    },
+    "locales": [
+      "en"
+    ],
+    "languageNames": {},
+    "domainManagers": {
+      "en": {
+        "settings": {
+          "locale": "en",
+          "trainByDomain": false,
+          "tag": "domain-manager-en",
+          "nluByDomain": {
+            "default": {
+              "className": "NeuralNlu",
+              "settings": {}
+            }
+          },
+          "useStemDict": true
+        },
+        "stemDict": {
+          "a,add,complaint,i,to,want": {
+            "intent": "complaint.add",
+            "domain": "default"
+          },
+          "a,complaint,submit": {
+            "intent": "complaint.add",
+            "domain": "default"
+          },
+          "a,add,complaint,new": {
+            "intent": "complaint.add",
+            "domain": "default"
+          },
+          "a,complaint,file,i,to,want": {
+            "intent": "complaint.add",
+            "domain": "default"
+          },
+          "a,can,complaint,i,submit": {
+            "intent": "complaint.add",
+            "domain": "default"
+          },
+          "a,complaint,had,i,like,lodg,to": {
+            "intent": "complaint.add",
+            "domain": "default"
+          },
+          "a,complaint,i,need,regist,to": {
+            "intent": "complaint.add",
+            "domain": "default"
+          },
+          "add,complaint,my,pleas": {
+            "intent": "complaint.add",
+            "domain": "default"
+          },
+          "a,complaint,file,help,me": {
+            "intent": "complaint.add",
+            "domain": "default"
+          },
+          "a,complaint,i,new,submit,to,wish": {
+            "intent": "complaint.add",
+            "domain": "default"
+          },
+          "an,had,i,issu,like,report,to": {
+            "intent": "complaint.add",
+            "domain": "default"
+          },
+          "a,can,complaint,for,me,regist,you": {
+            "intent": "complaint.add",
+            "domain": "default"
+          },
+          "a,complaint,i,need,rais,to": {
+            "intent": "complaint.add",
+            "domain": "default"
+          },
+          "a,complaint,formal,had,i,like,submit,to": {
+            "intent": "complaint.add",
+            "domain": "default"
+          },
+          "complaint,my,pleas,regist": {
+            "intent": "complaint.add",
+            "domain": "default"
+          },
+          "a,complaint,i,make,to,want": {
+            "intent": "complaint.add",
+            "domain": "default"
+          },
+          "a,complaint,file,formal,i,to,want": {
+            "intent": "complaint.add",
+            "domain": "default"
+          },
+          "a,complaint,i,log,need,to": {
+            "intent": "complaint.add",
+            "domain": "default"
+          },
+          "about,complain,i,need,someth,to": {
+            "intent": "complaint.add",
+            "domain": "default"
+          },
+          "an,have,i,issu,report,to": {
+            "intent": "complaint.add",
+            "domain": "default"
+          },
+          "a,i’d,like,problem,report,to": {
+            "intent": "complaint.add",
+            "domain": "default"
+          },
+          "a,about,an,i,issu,make,report,to,want": {
+            "intent": "complaint.add",
+            "domain": "default"
+          },
+          "a,grievanc,have,i,submit,to": {
+            "intent": "complaint.add",
+            "domain": "default"
+          },
+          "a,file,grievanc,i,need,to": {
+            "intent": "complaint.add",
+            "domain": "default"
+          },
+          "add,issu,my,pleas,system,the,to": {
+            "intent": "complaint.add",
+            "domain": "default"
+          },
+          "a,i,problem,report,technic,to,want": {
+            "intent": "complaint.add",
+            "domain": "default"
+          },
+          "about,complain,i,is,need,someth,there,to": {
+            "intent": "complaint.add",
+            "domain": "default"
+          },
+          "a,complaint,file,i,need,product,regard,to": {
+            "intent": "complaint.add",
+            "domain": "default"
+          },
+          "a,about,complaint,file,i,servic,to,want": {
+            "intent": "complaint.add",
+            "domain": "default"
+          },
+          "issu,my,pleas,report": {
+            "intent": "complaint.add",
+            "domain": "default"
+          },
+          "an,complaint,i,make,offici,to,want": {
+            "intent": "complaint.add",
+            "domain": "default"
+          },
+          "a,can,complaint,for,me,submit,you": {
+            "intent": "complaint.add",
+            "domain": "default"
+          },
+          "a,formal,i,issu,need,submit,to": {
+            "intent": "complaint.add",
+            "domain": "default"
+          },
+          "a,complaint,for,log,me,pleas": {
+            "intent": "complaint.add",
+            "domain": "default"
+          },
+          "a,concern,i’d,like,submit,to": {
+            "intent": "complaint.add",
+            "domain": "default"
+          },
+          "a,concern,i,report,to,want": {
+            "intent": "complaint.add",
+            "domain": "default"
+          },
+          "address,an,be,have,i,issu,need,that,to": {
+            "intent": "complaint.add",
+            "domain": "default"
+          },
+          "can,complaint,for,log,me,this,you": {
+            "intent": "complaint.add",
+            "domain": "default"
+          },
+          "a,complaint,file,have,i,need,to": {
+            "intent": "complaint.add",
+            "domain": "default"
+          },
+          "complaint,file,pleas,this": {
+            "intent": "complaint.add",
+            "domain": "default"
+          },
+          "a,about,complaint,formal,i,make,this,to,want": {
+            "intent": "complaint.add",
+            "domain": "default"
+          },
+          "issu,my,offici,pleas,report": {
+            "intent": "complaint.add",
+            "domain": "default"
+          },
+          "a,against,complaint,file,i’d,like,someon,to": {
+            "intent": "complaint.add",
+            "domain": "default"
+          },
+          "an,i,incid,report,to,want": {
+            "intent": "complaint.add",
+            "domain": "default"
+          },
+          "a,about,complaint,experi,i,log,my,to,want": {
+            "intent": "complaint.add",
+            "domain": "default"
+          },
+          "a,about,add,complaint,custom,i,need,servic,to": {
+            "intent": "complaint.add",
+            "domain": "default"
+          },
+          "a,about,complain,have,i,need,problem,to": {
+            "intent": "complaint.add",
+            "domain": "default"
+          },
+          "a,i,my,order,problem,report,to,want,with": {
+            "intent": "complaint.add",
+            "domain": "default"
+          },
+          "add,complaint,issu,pleas,system,the,this,to": {
+            "intent": "complaint.add",
+            "domain": "default"
+          },
+          "a,about,complaint,i,make,product,to,want,your": {
+            "intent": "complaint.add",
+            "domain": "default"
+          },
+          "a,failur,i,need,report,servic,to": {
+            "intent": "complaint.add",
+            "domain": "default"
+          },
+          "a,complaint,deliveri,file,i,regard,to,want": {
+            "intent": "complaint.add",
+            "domain": "default"
+          },
+          "about,add,complaint,my,pleas,staff,the": {
+            "intent": "complaint.add",
+            "domain": "default"
+          },
+          "a,about,complaint,have,i,of,qualiti,servic,the": {
+            "intent": "complaint.add",
+            "domain": "default"
+          },
+          "a,about,charg,complaint,file,i,need,to": {
+            "intent": "complaint.add",
+            "domain": "default"
+          },
+          "a,about,complaint,pleas,regist,the,websit": {
+            "intent": "complaint.add",
+            "domain": "default"
+          },
+          "a,broken,i,product,report,to,want": {
+            "intent": "complaint.add",
+            "domain": "default"
+          },
+          "a,broken,i,item,need,receiv,report,to": {
+            "intent": "complaint.add",
+            "domain": "default"
+          },
+          "about,complain,faulti,i,servic,to,want": {
+            "intent": "complaint.add",
+            "domain": "default"
+          },
+          "a,complaint,file,for,me,pleas": {
+            "intent": "complaint.add",
+            "domain": "default"
+          },
+          "a,formal,grievanc,i,submit,to,want": {
+            "intent": "complaint.add",
+            "domain": "default"
+          },
+          "a,behalf,complaint,make,my,on,pleas": {
+            "intent": "complaint.add",
+            "domain": "default"
+          },
+          "address,an,have,i,issu,need": {
+            "intent": "complaint.add",
+            "domain": "default"
+          },
+          "a,complaint,help,me,pleas,regist": {
+            "intent": "complaint.add",
+            "domain": "default"
+          },
+          "a,about,complaint,delay,formal,i’d,like,make,the,to": {
+            "intent": "complaint.add",
+            "domain": "default"
+          },
+          "deliveri,issu,pleas,report,the,with": {
+            "intent": "complaint.add",
+            "domain": "default"
+          },
+          "a,can,complaint,file,help,me,you": {
+            "intent": "complaint.add",
+            "domain": "default"
+          },
+          "a,about,complaint,i,make,servic,to,want,your": {
+            "intent": "complaint.add",
+            "domain": "default"
+          },
+          "a,about,complaint,file,i,malfunct,need,to": {
+            "intent": "complaint.add",
+            "domain": "default"
+          },
+          "a,complaint,for,me,pleas,submit": {
+            "intent": "complaint.add",
+            "domain": "default"
+          },
+          "a,complaint,have,i,report,to": {
+            "intent": "complaint.add",
+            "domain": "default"
+          },
+          "a,complaint,i,qualiti,regard,submit,the,to,want": {
+            "intent": "complaint.add",
+            "domain": "default"
+          },
+          "a,behalf,complaint,file,my,on,pleas": {
+            "intent": "complaint.add",
+            "domain": "default"
+          },
+          "a,bad,experi,i,need,report,to": {
+            "intent": "complaint.add",
+            "domain": "default"
+          },
+          "complaint,i,my,to,view,want": {
+            "intent": "complaint.view",
+            "domain": "default"
+          },
+          "complaint,me,my,show": {
+            "intent": "complaint.view",
+            "domain": "default"
+          },
+          "123,complaint,number,view": {
+            "intent": "complaint.view",
+            "domain": "default"
+          },
+          "complaint,list,me,my,show": {
+            "intent": "complaint.view",
+            "domain": "default"
+          },
+          "complaint,i,my,see,to,want": {
+            "intent": "complaint.view",
+            "domain": "default"
+          },
+          "can,complaint,display,my,you": {
+            "intent": "complaint.view",
+            "domain": "default"
+          },
+          "check,complaint,i,like,my,to,would": {
+            "intent": "complaint.view",
+            "domain": "default"
+          },
+          "complaint,let,me,my,status,view": {
+            "intent": "complaint.view",
+            "domain": "default"
+          },
+          "complaint,detail,give,me,my,of,the": {
+            "intent": "complaint.view",
+            "domain": "default"
+          },
+          "456,at,complaint,i,look,number,to,want": {
+            "intent": "complaint.view",
+            "domain": "default"
+          },
+          "789,can,complaint,show,you": {
+            "intent": "complaint.view",
+            "domain": "default"
+          },
+          "complaint,i,pleas,show,submit,the": {
+            "intent": "complaint.view",
+            "domain": "default"
+          },
+          "complaint,is,my,of,status,the,what": {
+            "intent": "complaint.view",
+            "domain": "default"
+          },
+          "complaint,me,my,of,show,status,the": {
+            "intent": "complaint.view",
+            "domain": "default"
+          },
+          "check,complaint,i,my,of,status,the,to,want": {
+            "intent": "complaint.view",
+            "domain": "default"
+          },
+          "complaint,my,pleas,show,status": {
+            "intent": "complaint.view",
+            "domain": "default"
+          },
+          "can,complaint,give,me,my,of,status,the,you": {
+            "intent": "complaint.view",
+            "domain": "default"
+          },
+          "123,complaint,i,know,number,of,status,the,to,want": {
+            "intent": "complaint.view",
+            "domain": "default"
+          },
+          "check,complaint,let,me,my": {
+            "intent": "complaint.view",
+            "domain": "default"
+          },
+          "complaint,is,my,on,the,updat,what": {
+            "intent": "complaint.view",
+            "domain": "default"
+          },
+          "can,check,complaint,i,my,of,progress,the": {
+            "intent": "complaint.view",
+            "domain": "default"
+          },
+          "complaint,detail,i,my,need,to,view": {
+            "intent": "complaint.view",
+            "domain": "default"
+          },
+          "complaint,file,i,me,pleas,show,the": {
+            "intent": "complaint.view",
+            "domain": "default"
+          },
+          "complaint,i,my,review,to,want": {
+            "intent": "complaint.view",
+            "domain": "default"
+          },
+          "can,complaint,detail,display,my,of,the,you": {
+            "intent": "complaint.view",
+            "domain": "default"
+          },
+          "a,complaint,give,me,my,of,summari": {
+            "intent": "complaint.view",
+            "domain": "default"
+          },
+          "about,complaint,i,know,more,my,to,want": {
+            "intent": "complaint.view",
+            "domain": "default"
+          },
+          "an,can,complaint,my,on,provid,updat,you": {
+            "intent": "complaint.view",
+            "domain": "default"
+          },
+          "complaint,let,me,see,status,the": {
+            "intent": "complaint.view",
+            "domain": "default"
+          },
+          "complaint,detail,me,show,the": {
+            "intent": "complaint.view",
+            "domain": "default"
+          },
+          "complaint,i,know,like,my,of,status,the,to,would": {
+            "intent": "complaint.view",
+            "domain": "default"
+          },
+          "456,complaint,is,number,of,status,the,what": {
+            "intent": "complaint.view",
+            "domain": "default"
+          },
+          "complaint,happen,i,know,my,to,want,what": {
+            "intent": "complaint.view",
+            "domain": "default"
+          },
+          "complaint,current,me,my,of,pleas,status,tell,the": {
+            "intent": "complaint.view",
+            "domain": "default"
+          },
+          "cancel": {
+            "intent": "general.cancel",
+            "domain": "default"
+          },
+          "exit": {
+            "intent": "general.cancel",
+            "domain": "default"
+          },
+          "action,cancel,the": {
+            "intent": "general.cancel",
+            "domain": "default"
+          },
+          "about,forget,it": {
+            "intent": "general.cancel",
+            "domain": "default"
+          },
+          "do,i,not,proceed,to,want": {
+            "intent": "general.cancel",
+            "domain": "default"
+          },
+          "process,stop,the": {
+            "intent": "general.cancel",
+            "domain": "default"
+          },
+          "abort,oper,the": {
+            "intent": "general.cancel",
+            "domain": "default"
+          },
+          "mind,never": {
+            "intent": "general.cancel",
+            "domain": "default"
+          },
+          "chang,i,mind,my": {
+            "intent": "general.cancel",
+            "domain": "default"
+          },
+          "cancel,it,pleas": {
+            "intent": "general.cancel",
+            "domain": "default"
+          },
+          "cancel,request,this": {
+            "intent": "general.cancel",
+            "domain": "default"
+          },
+          "exit,submit,without": {
+            "intent": "general.cancel",
+            "domain": "default"
+          },
+          "forget,request,this": {
+            "intent": "general.cancel",
+            "domain": "default"
+          },
+          "cancel,oper,the": {
+            "intent": "general.cancel",
+            "domain": "default"
+          },
+          "everyth,stop": {
+            "intent": "general.cancel",
+            "domain": "default"
+          },
+          "abort,task,the": {
+            "intent": "general.cancel",
+            "domain": "default"
+          },
+          "i,longer,no,proceed,to,want": {
+            "intent": "general.cancel",
+            "domain": "default"
+          },
+          "about,complaint,forget,the": {
+            "intent": "general.cancel",
+            "domain": "default"
+          },
+          "for,me,process,stop,the": {
+            "intent": "general.cancel",
+            "domain": "default"
+          },
+          "and,cancel,exit": {
+            "intent": "general.cancel",
+            "domain": "default"
+          },
+          "end,now,this": {
+            "intent": "general.cancel",
+            "domain": "default"
+          },
+          "i,stop,this,to,want": {
+            "intent": "general.cancel",
+            "domain": "default"
+          },
+          "action,do,not,proceed,the,with": {
+            "intent": "general.cancel",
+            "domain": "default"
+          },
+          "confirm,exit,without": {
+            "intent": "general.cancel",
+            "domain": "default"
+          },
+          "cancel,entir,process,the": {
+            "intent": "general.cancel",
+            "domain": "default"
+          },
+          "exit,i,to,want": {
+            "intent": "general.cancel",
+            "domain": "default"
+          },
+          "cancel,i,made,request,the": {
+            "intent": "general.cancel",
+            "domain": "default"
+          },
+          "anymor,do,i,it,not,submit,to,want": {
+            "intent": "general.cancel",
+            "domain": "default"
+          },
+          "action,forget,i,the,took": {
+            "intent": "general.cancel",
+            "domain": "default"
+          },
+          "everyth,now,stop": {
+            "intent": "general.cancel",
+            "domain": "default"
+          },
+          "cancel,step,this": {
+            "intent": "general.cancel",
+            "domain": "default"
+          },
+          "cancel,my,request": {
+            "intent": "general.cancel",
+            "domain": "default"
+          },
+          "exit,process,the": {
+            "intent": "general.cancel",
+            "domain": "default"
+          },
+          "cancel,i,this,to,want": {
+            "intent": "general.cancel",
+            "domain": "default"
+          },
+          "continu,do,i,not,to,want": {
+            "intent": "general.cancel",
+            "domain": "default"
+          },
+          "and,cancel,stop": {
+            "intent": "general.cancel",
+            "domain": "default"
+          },
+          "and,cancel,exit,process,the": {
+            "intent": "general.cancel",
+            "domain": "default"
+          },
+          "everyth,forget": {
+            "intent": "general.cancel",
+            "domain": "default"
+          },
+          "end,process,this": {
+            "intent": "general.cancel",
+            "domain": "default"
+          },
+          "cancel,everyth,pleas": {
+            "intent": "general.cancel",
+            "domain": "default"
+          },
+          "exit,immedi": {
+            "intent": "general.cancel",
+            "domain": "default"
+          },
+          "now,pleas,stop,this": {
+            "intent": "general.cancel",
+            "domain": "default"
+          },
+          "chang,decis,i,my": {
+            "intent": "general.cancel",
+            "domain": "default"
+          },
+          "abort,everyth": {
+            "intent": "general.cancel",
+            "domain": "default"
+          },
+          "action,cancel,my,previous": {
+            "intent": "general.cancel",
+            "domain": "default"
+          },
+          "do,not,proceed,request,this,with": {
+            "intent": "general.cancel",
+            "domain": "default"
+          },
+          "end,oper,this": {
+            "intent": "general.cancel",
+            "domain": "default"
+          },
+          "and,cancel,exit,now": {
+            "intent": "general.cancel",
+            "domain": "default"
+          },
+          "current,exit,process,the": {
+            "intent": "general.cancel",
+            "domain": "default"
+          },
+          "now,right,stop": {
+            "intent": "general.cancel",
+            "domain": "default"
+          },
+          "cancel,submit,without": {
+            "intent": "general.cancel",
+            "domain": "default"
+          }
+        },
+        "intentDict": {
+          "complaint.add": "default",
+          "complaint.view": "default",
+          "general.cancel": "default"
+        },
+        "sentences": [
+          {
+            "domain": "default",
+            "utterance": "I want to add a complaint",
+            "intent": "complaint.add"
+          },
+          {
+            "domain": "default",
+            "utterance": "Submit a complaint",
+            "intent": "complaint.add"
+          },
+          {
+            "domain": "default",
+            "utterance": "Add a new complaint",
+            "intent": "complaint.add"
+          },
+          {
+            "domain": "default",
+            "utterance": "I want to file a complaint",
+            "intent": "complaint.add"
+          },
+          {
+            "domain": "default",
+            "utterance": "Can I submit a complaint?",
+            "intent": "complaint.add"
+          },
+          {
+            "domain": "default",
+            "utterance": "I'd like to lodge a complaint",
+            "intent": "complaint.add"
+          },
+          {
+            "domain": "default",
+            "utterance": "I need to register a complaint",
+            "intent": "complaint.add"
+          },
+          {
+            "domain": "default",
+            "utterance": "Please add my complaint",
+            "intent": "complaint.add"
+          },
+          {
+            "domain": "default",
+            "utterance": "Help me file a complaint",
+            "intent": "complaint.add"
+          },
+          {
+            "domain": "default",
+            "utterance": "I wish to submit a new complaint",
+            "intent": "complaint.add"
+          },
+          {
+            "domain": "default",
+            "utterance": "I'd like to report an issue",
+            "intent": "complaint.add"
+          },
+          {
+            "domain": "default",
+            "utterance": "Can you register a complaint for me?",
+            "intent": "complaint.add"
+          },
+          {
+            "domain": "default",
+            "utterance": "I need to raise a complaint",
+            "intent": "complaint.add"
+          },
+          {
+            "domain": "default",
+            "utterance": "I'd like to submit a formal complaint",
+            "intent": "complaint.add"
+          },
+          {
+            "domain": "default",
+            "utterance": "Please register my complaint",
+            "intent": "complaint.add"
+          },
+          {
+            "domain": "default",
+            "utterance": "I want to make a complaint",
+            "intent": "complaint.add"
+          },
+          {
+            "domain": "default",
+            "utterance": "I want to file a formal complaint",
+            "intent": "complaint.add"
+          },
+          {
+            "domain": "default",
+            "utterance": "I need to log a complaint",
+            "intent": "complaint.add"
+          },
+          {
+            "domain": "default",
+            "utterance": "I need to complain about something",
+            "intent": "complaint.add"
+          },
+          {
+            "domain": "default",
+            "utterance": "I have an issue to report",
+            "intent": "complaint.add"
+          },
+          {
+            "domain": "default",
+            "utterance": "I’d like to report a problem",
+            "intent": "complaint.add"
+          },
+          {
+            "domain": "default",
+            "utterance": "I want to make a report about an issue",
+            "intent": "complaint.add"
+          },
+          {
+            "domain": "default",
+            "utterance": "I have a grievance to submit",
+            "intent": "complaint.add"
+          },
+          {
+            "domain": "default",
+            "utterance": "I need to file a grievance",
+            "intent": "complaint.add"
+          },
+          {
+            "domain": "default",
+            "utterance": "Please add my issue to the system",
+            "intent": "complaint.add"
+          },
+          {
+            "domain": "default",
+            "utterance": "I want to report a technical problem",
+            "intent": "complaint.add"
+          },
+          {
+            "domain": "default",
+            "utterance": "There is something I need to complain about",
+            "intent": "complaint.add"
+          },
+          {
+            "domain": "default",
+            "utterance": "I need to file a complaint regarding a product",
+            "intent": "complaint.add"
+          },
+          {
+            "domain": "default",
+            "utterance": "I want to file a complaint about a service",
+            "intent": "complaint.add"
+          },
+          {
+            "domain": "default",
+            "utterance": "Please report my issue",
+            "intent": "complaint.add"
+          },
+          {
+            "domain": "default",
+            "utterance": "I want to make an official complaint",
+            "intent": "complaint.add"
+          },
+          {
+            "domain": "default",
+            "utterance": "Can you submit a complaint for me?",
+            "intent": "complaint.add"
+          },
+          {
+            "domain": "default",
+            "utterance": "I need to submit a formal issue",
+            "intent": "complaint.add"
+          },
+          {
+            "domain": "default",
+            "utterance": "Please log a complaint for me",
+            "intent": "complaint.add"
+          },
+          {
+            "domain": "default",
+            "utterance": "I’d like to submit a concern",
+            "intent": "complaint.add"
+          },
+          {
+            "domain": "default",
+            "utterance": "I want to report a concern",
+            "intent": "complaint.add"
+          },
+          {
+            "domain": "default",
+            "utterance": "I have an issue that needs to be addressed",
+            "intent": "complaint.add"
+          },
+          {
+            "domain": "default",
+            "utterance": "Can you log this complaint for me?",
+            "intent": "complaint.add"
+          },
+          {
+            "domain": "default",
+            "utterance": "I have a complaint I need to file",
+            "intent": "complaint.add"
+          },
+          {
+            "domain": "default",
+            "utterance": "Please file this complaint",
+            "intent": "complaint.add"
+          },
+          {
+            "domain": "default",
+            "utterance": "I want to make a formal complaint about this",
+            "intent": "complaint.add"
+          },
+          {
+            "domain": "default",
+            "utterance": "Please report my issue officially",
+            "intent": "complaint.add"
+          },
+          {
+            "domain": "default",
+            "utterance": "I’d like to file a complaint against someone",
+            "intent": "complaint.add"
+          },
+          {
+            "domain": "default",
+            "utterance": "I want to report an incident",
+            "intent": "complaint.add"
+          },
+          {
+            "domain": "default",
+            "utterance": "I want to log a complaint about my experience",
+            "intent": "complaint.add"
+          },
+          {
+            "domain": "default",
+            "utterance": "I need to add a complaint about customer service",
+            "intent": "complaint.add"
+          },
+          {
+            "domain": "default",
+            "utterance": "I have a problem I need to complain about",
+            "intent": "complaint.add"
+          },
+          {
+            "domain": "default",
+            "utterance": "I want to report a problem with my order",
+            "intent": "complaint.add"
+          },
+          {
+            "domain": "default",
+            "utterance": "Please add this issue to the complaints system",
+            "intent": "complaint.add"
+          },
+          {
+            "domain": "default",
+            "utterance": "I want to make a complaint about your product",
+            "intent": "complaint.add"
+          },
+          {
+            "domain": "default",
+            "utterance": "I need to report a service failure",
+            "intent": "complaint.add"
+          },
+          {
+            "domain": "default",
+            "utterance": "I want to file a complaint regarding delivery",
+            "intent": "complaint.add"
+          },
+          {
+            "domain": "default",
+            "utterance": "Please add my complaint about the staff",
+            "intent": "complaint.add"
+          },
+          {
+            "domain": "default",
+            "utterance": "I have a complaint about the quality of service",
+            "intent": "complaint.add"
+          },
+          {
+            "domain": "default",
+            "utterance": "I need to file a complaint about a charge",
+            "intent": "complaint.add"
+          },
+          {
+            "domain": "default",
+            "utterance": "Please register a complaint about the website",
+            "intent": "complaint.add"
+          },
+          {
+            "domain": "default",
+            "utterance": "I want to report a broken product",
+            "intent": "complaint.add"
+          },
+          {
+            "domain": "default",
+            "utterance": "I need to report a broken item I received",
+            "intent": "complaint.add"
+          },
+          {
+            "domain": "default",
+            "utterance": "I want to complain about faulty service",
+            "intent": "complaint.add"
+          },
+          {
+            "domain": "default",
+            "utterance": "Please file a complaint for me",
+            "intent": "complaint.add"
+          },
+          {
+            "domain": "default",
+            "utterance": "I want to submit a formal grievance",
+            "intent": "complaint.add"
+          },
+          {
+            "domain": "default",
+            "utterance": "Please make a complaint on my behalf",
+            "intent": "complaint.add"
+          },
+          {
+            "domain": "default",
+            "utterance": "I have an issue I need addressed",
+            "intent": "complaint.add"
+          },
+          {
+            "domain": "default",
+            "utterance": "Please help me register a complaint",
+            "intent": "complaint.add"
+          },
+          {
+            "domain": "default",
+            "utterance": "I’d like to make a formal complaint about the delay",
+            "intent": "complaint.add"
+          },
+          {
+            "domain": "default",
+            "utterance": "Please report the issue with the delivery",
+            "intent": "complaint.add"
+          },
+          {
+            "domain": "default",
+            "utterance": "Can you help me file a complaint?",
+            "intent": "complaint.add"
+          },
+          {
+            "domain": "default",
+            "utterance": "I want to make a complaint about your service",
+            "intent": "complaint.add"
+          },
+          {
+            "domain": "default",
+            "utterance": "I need to file a complaint about a malfunction",
+            "intent": "complaint.add"
+          },
+          {
+            "domain": "default",
+            "utterance": "Please submit a complaint for me",
+            "intent": "complaint.add"
+          },
+          {
+            "domain": "default",
+            "utterance": "I have a complaint to report",
+            "intent": "complaint.add"
+          },
+          {
+            "domain": "default",
+            "utterance": "I want to submit a complaint regarding the quality",
+            "intent": "complaint.add"
+          },
+          {
+            "domain": "default",
+            "utterance": "Please file a complaint on my behalf",
+            "intent": "complaint.add"
+          },
+          {
+            "domain": "default",
+            "utterance": "I need to report a bad experience",
+            "intent": "complaint.add"
+          },
+          {
+            "domain": "default",
+            "utterance": "I want to view my complaint",
+            "intent": "complaint.view"
+          },
+          {
+            "domain": "default",
+            "utterance": "Show me my complaints",
+            "intent": "complaint.view"
+          },
+          {
+            "domain": "default",
+            "utterance": "View complaint number 123",
+            "intent": "complaint.view"
+          },
+          {
+            "domain": "default",
+            "utterance": "Show me my complaints list",
+            "intent": "complaint.view"
+          },
+          {
+            "domain": "default",
+            "utterance": "I want to see my complaint",
+            "intent": "complaint.view"
+          },
+          {
+            "domain": "default",
+            "utterance": "Can you display my complaint?",
+            "intent": "complaint.view"
+          },
+          {
+            "domain": "default",
+            "utterance": "I would like to check my complaints",
+            "intent": "complaint.view"
+          },
+          {
+            "domain": "default",
+            "utterance": "Let me view my complaint status",
+            "intent": "complaint.view"
+          },
+          {
+            "domain": "default",
+            "utterance": "Give me the details of my complaint",
+            "intent": "complaint.view"
+          },
+          {
+            "domain": "default",
+            "utterance": "I want to look at complaint number 456",
+            "intent": "complaint.view"
+          },
+          {
+            "domain": "default",
+            "utterance": "Can you show complaint 789?",
+            "intent": "complaint.view"
+          },
+          {
+            "domain": "default",
+            "utterance": "Please show the complaint I submitted",
+            "intent": "complaint.view"
+          },
+          {
+            "domain": "default",
+            "utterance": "What is the status of my complaint?",
+            "intent": "complaint.view"
+          },
+          {
+            "domain": "default",
+            "utterance": "Show me the status of my complaint",
+            "intent": "complaint.view"
+          },
+          {
+            "domain": "default",
+            "utterance": "I want to check the status of my complaint",
+            "intent": "complaint.view"
+          },
+          {
+            "domain": "default",
+            "utterance": "Please show my complaint status",
+            "intent": "complaint.view"
+          },
+          {
+            "domain": "default",
+            "utterance": "Can you give me the status of my complaint?",
+            "intent": "complaint.view"
+          },
+          {
+            "domain": "default",
+            "utterance": "I want to know the status of complaint number 123",
+            "intent": "complaint.view"
+          },
+          {
+            "domain": "default",
+            "utterance": "Let me check my complaint",
+            "intent": "complaint.view"
+          },
+          {
+            "domain": "default",
+            "utterance": "What is the update on my complaint?",
+            "intent": "complaint.view"
+          },
+          {
+            "domain": "default",
+            "utterance": "Can I check the progress of my complaint?",
+            "intent": "complaint.view"
+          },
+          {
+            "domain": "default",
+            "utterance": "I need to view my complaint details",
+            "intent": "complaint.view"
+          },
+          {
+            "domain": "default",
+            "utterance": "Please show me the complaint I filed",
+            "intent": "complaint.view"
+          },
+          {
+            "domain": "default",
+            "utterance": "I want to review my complaint",
+            "intent": "complaint.view"
+          },
+          {
+            "domain": "default",
+            "utterance": "Can you display the details of my complaint?",
+            "intent": "complaint.view"
+          },
+          {
+            "domain": "default",
+            "utterance": "Give me a summary of my complaint",
+            "intent": "complaint.view"
+          },
+          {
+            "domain": "default",
+            "utterance": "I want to know more about my complaint",
+            "intent": "complaint.view"
+          },
+          {
+            "domain": "default",
+            "utterance": "Can you provide an update on my complaint?",
+            "intent": "complaint.view"
+          },
+          {
+            "domain": "default",
+            "utterance": "Let me see the complaint status",
+            "intent": "complaint.view"
+          },
+          {
+            "domain": "default",
+            "utterance": "Show me the complaint details",
+            "intent": "complaint.view"
+          },
+          {
+            "domain": "default",
+            "utterance": "I would like to know the status of my complaint",
+            "intent": "complaint.view"
+          },
+          {
+            "domain": "default",
+            "utterance": "What is the status of complaint number 456?",
+            "intent": "complaint.view"
+          },
+          {
+            "domain": "default",
+            "utterance": "I want to know what happened to my complaint",
+            "intent": "complaint.view"
+          },
+          {
+            "domain": "default",
+            "utterance": "Please tell me the current status of my complaint",
+            "intent": "complaint.view"
+          },
+          {
+            "domain": "default",
+            "utterance": "Cancel",
+            "intent": "general.cancel"
+          },
+          {
+            "domain": "default",
+            "utterance": "Exit",
+            "intent": "general.cancel"
+          },
+          {
+            "domain": "default",
+            "utterance": "Cancel the action",
+            "intent": "general.cancel"
+          },
+          {
+            "domain": "default",
+            "utterance": "Forget about it",
+            "intent": "general.cancel"
+          },
+          {
+            "domain": "default",
+            "utterance": "I don't want to proceed",
+            "intent": "general.cancel"
+          },
+          {
+            "domain": "default",
+            "utterance": "Stop the process",
+            "intent": "general.cancel"
+          },
+          {
+            "domain": "default",
+            "utterance": "Abort the operation",
+            "intent": "general.cancel"
+          },
+          {
+            "domain": "default",
+            "utterance": "Never mind",
+            "intent": "general.cancel"
+          },
+          {
+            "domain": "default",
+            "utterance": "I changed my mind",
+            "intent": "general.cancel"
+          },
+          {
+            "domain": "default",
+            "utterance": "Please cancel it",
+            "intent": "general.cancel"
+          },
+          {
+            "domain": "default",
+            "utterance": "Cancel this request",
+            "intent": "general.cancel"
+          },
+          {
+            "domain": "default",
+            "utterance": "Exit without submitting",
+            "intent": "general.cancel"
+          },
+          {
+            "domain": "default",
+            "utterance": "Forget this request",
+            "intent": "general.cancel"
+          },
+          {
+            "domain": "default",
+            "utterance": "Cancel the operation",
+            "intent": "general.cancel"
+          },
+          {
+            "domain": "default",
+            "utterance": "Stop everything",
+            "intent": "general.cancel"
+          },
+          {
+            "domain": "default",
+            "utterance": "Abort the task",
+            "intent": "general.cancel"
+          },
+          {
+            "domain": "default",
+            "utterance": "I no longer want to proceed",
+            "intent": "general.cancel"
+          },
+          {
+            "domain": "default",
+            "utterance": "Forget about the complaint",
+            "intent": "general.cancel"
+          },
+          {
+            "domain": "default",
+            "utterance": "Stop the process for me",
+            "intent": "general.cancel"
+          },
+          {
+            "domain": "default",
+            "utterance": "Cancel and exit",
+            "intent": "general.cancel"
+          },
+          {
+            "domain": "default",
+            "utterance": "End this now",
+            "intent": "general.cancel"
+          },
+          {
+            "domain": "default",
+            "utterance": "I want to stop this",
+            "intent": "general.cancel"
+          },
+          {
+            "domain": "default",
+            "utterance": "Don't proceed with the action",
+            "intent": "general.cancel"
+          },
+          {
+            "domain": "default",
+            "utterance": "Exit without confirming",
+            "intent": "general.cancel"
+          },
+          {
+            "domain": "default",
+            "utterance": "Cancel the entire process",
+            "intent": "general.cancel"
+          },
+          {
+            "domain": "default",
+            "utterance": "I want to exit",
+            "intent": "general.cancel"
+          },
+          {
+            "domain": "default",
+            "utterance": "Cancel the request I made",
+            "intent": "general.cancel"
+          },
+          {
+            "domain": "default",
+            "utterance": "I don't want to submit it anymore",
+            "intent": "general.cancel"
+          },
+          {
+            "domain": "default",
+            "utterance": "Forget the action I took",
+            "intent": "general.cancel"
+          },
+          {
+            "domain": "default",
+            "utterance": "Stop everything now",
+            "intent": "general.cancel"
+          },
+          {
+            "domain": "default",
+            "utterance": "Cancel this step",
+            "intent": "general.cancel"
+          },
+          {
+            "domain": "default",
+            "utterance": "Cancel my request",
+            "intent": "general.cancel"
+          },
+          {
+            "domain": "default",
+            "utterance": "Exit the process",
+            "intent": "general.cancel"
+          },
+          {
+            "domain": "default",
+            "utterance": "I want to cancel this",
+            "intent": "general.cancel"
+          },
+          {
+            "domain": "default",
+            "utterance": "I do not want to continue",
+            "intent": "general.cancel"
+          },
+          {
+            "domain": "default",
+            "utterance": "Cancel and stop",
+            "intent": "general.cancel"
+          },
+          {
+            "domain": "default",
+            "utterance": "Exit and cancel the process",
+            "intent": "general.cancel"
+          },
+          {
+            "domain": "default",
+            "utterance": "Forget everything",
+            "intent": "general.cancel"
+          },
+          {
+            "domain": "default",
+            "utterance": "End this process",
+            "intent": "general.cancel"
+          },
+          {
+            "domain": "default",
+            "utterance": "Please cancel everything",
+            "intent": "general.cancel"
+          },
+          {
+            "domain": "default",
+            "utterance": "Exit immediately",
+            "intent": "general.cancel"
+          },
+          {
+            "domain": "default",
+            "utterance": "Please stop this now",
+            "intent": "general.cancel"
+          },
+          {
+            "domain": "default",
+            "utterance": "I changed my decision",
+            "intent": "general.cancel"
+          },
+          {
+            "domain": "default",
+            "utterance": "Abort everything",
+            "intent": "general.cancel"
+          },
+          {
+            "domain": "default",
+            "utterance": "Cancel my previous action",
+            "intent": "general.cancel"
+          },
+          {
+            "domain": "default",
+            "utterance": "Don't proceed with this request",
+            "intent": "general.cancel"
+          },
+          {
+            "domain": "default",
+            "utterance": "End this operation",
+            "intent": "general.cancel"
+          },
+          {
+            "domain": "default",
+            "utterance": "Cancel and exit now",
+            "intent": "general.cancel"
+          },
+          {
+            "domain": "default",
+            "utterance": "Exit the current process",
+            "intent": "general.cancel"
+          },
+          {
+            "domain": "default",
+            "utterance": "Stop right now",
+            "intent": "general.cancel"
+          },
+          {
+            "domain": "default",
+            "utterance": "Cancel without submitting",
+            "intent": "general.cancel"
+          }
+        ],
+        "domains": {
+          "master_domain": {
+            "settings": {
+              "locale": "en",
+              "tag": "nlu-en",
+              "keepStopwords": true,
+              "nonefeatureValue": 1,
+              "nonedeltaMultiplier": 1.2,
+              "spellCheck": false,
+              "spellCheckDistance": 1,
+              "filterZeros": true,
+              "log": true
+            },
+            "features": {
+              "123": 1,
+              "456": 1,
+              "789": 1,
+              "i": 1,
+              "want": 1,
+              "to": 1,
+              "add": 1,
+              "a": 1,
+              "complaint": 1,
+              "submit": 1,
+              "new": 1,
+              "file": 1,
+              "can": 1,
+              "had": 1,
+              "like": 1,
+              "lodg": 1,
+              "need": 1,
+              "regist": 1,
+              "pleas": 1,
+              "my": 1,
+              "help": 1,
+              "me": 1,
+              "wish": 1,
+              "report": 1,
+              "an": 1,
+              "issu": 1,
+              "you": 1,
+              "for": 1,
+              "rais": 1,
+              "formal": 1,
+              "make": 1,
+              "log": 1,
+              "complain": 1,
+              "about": 1,
+              "someth": 1,
+              "have": 1,
+              "i’d": 1,
+              "problem": 1,
+              "grievanc": 1,
+              "the": 1,
+              "system": 1,
+              "technic": 1,
+              "there": 1,
+              "is": 1,
+              "regard": 1,
+              "product": 1,
+              "servic": 1,
+              "offici": 1,
+              "concern": 1,
+              "that": 1,
+              "be": 1,
+              "address": 1,
+              "this": 1,
+              "against": 1,
+              "someon": 1,
+              "incid": 1,
+              "experi": 1,
+              "custom": 1,
+              "with": 1,
+              "order": 1,
+              "your": 1,
+              "failur": 1,
+              "deliveri": 1,
+              "staff": 1,
+              "qualiti": 1,
+              "of": 1,
+              "charg": 1,
+              "websit": 1,
+              "broken": 1,
+              "item": 1,
+              "receiv": 1,
+              "faulti": 1,
+              "on": 1,
+              "behalf": 1,
+              "delay": 1,
+              "malfunct": 1,
+              "bad": 1,
+              "view": 1,
+              "show": 1,
+              "number": 1,
+              "list": 1,
+              "see": 1,
+              "display": 1,
+              "would": 1,
+              "check": 1,
+              "let": 1,
+              "status": 1,
+              "give": 1,
+              "detail": 1,
+              "look": 1,
+              "at": 1,
+              "what": 1,
+              "know": 1,
+              "updat": 1,
+              "progress": 1,
+              "review": 1,
+              "summari": 1,
+              "more": 1,
+              "provid": 1,
+              "happen": 1,
+              "tell": 1,
+              "current": 1,
+              "cancel": 1,
+              "exit": 1,
+              "action": 1,
+              "forget": 1,
+              "it": 1,
+              "do": 1,
+              "not": 1,
+              "proceed": 1,
+              "stop": 1,
+              "process": 1,
+              "abort": 1,
+              "oper": 1,
+              "never": 1,
+              "mind": 1,
+              "chang": 1,
+              "request": 1,
+              "without": 1,
+              "everyth": 1,
+              "task": 1,
+              "no": 1,
+              "longer": 1,
+              "and": 1,
+              "end": 1,
+              "now": 1,
+              "confirm": 1,
+              "entir": 1,
+              "made": 1,
+              "anymor": 1,
+              "took": 1,
+              "step": 1,
+              "continu": 1,
+              "immedi": 1,
+              "decis": 1,
+              "previous": 1,
+              "right": 1
+            },
+            "intents": {
+              "complaint.add": 1,
+              "complaint.view": 1,
+              "general.cancel": 1
+            },
+            "intentFeatures": {
+              "complaint.add": {
+                "i": 1,
+                "want": 1,
+                "to": 1,
+                "add": 1,
+                "a": 1,
+                "complaint": 1,
+                "submit": 1,
+                "new": 1,
+                "file": 1,
+                "can": 1,
+                "had": 1,
+                "like": 1,
+                "lodg": 1,
+                "need": 1,
+                "regist": 1,
+                "pleas": 1,
+                "my": 1,
+                "help": 1,
+                "me": 1,
+                "wish": 1,
+                "report": 1,
+                "an": 1,
+                "issu": 1,
+                "you": 1,
+                "for": 1,
+                "rais": 1,
+                "formal": 1,
+                "make": 1,
+                "log": 1,
+                "complain": 1,
+                "about": 1,
+                "someth": 1,
+                "have": 1,
+                "i’d": 1,
+                "problem": 1,
+                "grievanc": 1,
+                "the": 1,
+                "system": 1,
+                "technic": 1,
+                "there": 1,
+                "is": 1,
+                "regard": 1,
+                "product": 1,
+                "servic": 1,
+                "offici": 1,
+                "concern": 1,
+                "that": 1,
+                "be": 1,
+                "address": 1,
+                "this": 1,
+                "against": 1,
+                "someon": 1,
+                "incid": 1,
+                "experi": 1,
+                "custom": 1,
+                "with": 1,
+                "order": 1,
+                "your": 1,
+                "failur": 1,
+                "deliveri": 1,
+                "staff": 1,
+                "qualiti": 1,
+                "of": 1,
+                "charg": 1,
+                "websit": 1,
+                "broken": 1,
+                "item": 1,
+                "receiv": 1,
+                "faulti": 1,
+                "on": 1,
+                "behalf": 1,
+                "delay": 1,
+                "malfunct": 1,
+                "bad": 1
+              },
+              "complaint.view": {
+                "123": 1,
+                "456": 1,
+                "789": 1,
+                "i": 1,
+                "want": 1,
+                "to": 1,
+                "view": 1,
+                "my": 1,
+                "complaint": 1,
+                "show": 1,
+                "me": 1,
+                "number": 1,
+                "list": 1,
+                "see": 1,
+                "can": 1,
+                "you": 1,
+                "display": 1,
+                "would": 1,
+                "like": 1,
+                "check": 1,
+                "let": 1,
+                "status": 1,
+                "give": 1,
+                "the": 1,
+                "detail": 1,
+                "of": 1,
+                "look": 1,
+                "at": 1,
+                "pleas": 1,
+                "submit": 1,
+                "what": 1,
+                "is": 1,
+                "know": 1,
+                "updat": 1,
+                "on": 1,
+                "progress": 1,
+                "need": 1,
+                "file": 1,
+                "review": 1,
+                "a": 1,
+                "summari": 1,
+                "more": 1,
+                "about": 1,
+                "provid": 1,
+                "an": 1,
+                "happen": 1,
+                "tell": 1,
+                "current": 1
+              },
+              "general.cancel": {
+                "cancel": 1,
+                "exit": 1,
+                "the": 1,
+                "action": 1,
+                "forget": 1,
+                "about": 1,
+                "it": 1,
+                "i": 1,
+                "do": 1,
+                "not": 1,
+                "want": 1,
+                "to": 1,
+                "proceed": 1,
+                "stop": 1,
+                "process": 1,
+                "abort": 1,
+                "oper": 1,
+                "never": 1,
+                "mind": 1,
+                "chang": 1,
+                "my": 1,
+                "pleas": 1,
+                "this": 1,
+                "request": 1,
+                "without": 1,
+                "submit": 1,
+                "everyth": 1,
+                "task": 1,
+                "no": 1,
+                "longer": 1,
+                "complaint": 1,
+                "for": 1,
+                "me": 1,
+                "and": 1,
+                "end": 1,
+                "now": 1,
+                "with": 1,
+                "confirm": 1,
+                "entir": 1,
+                "made": 1,
+                "anymor": 1,
+                "took": 1,
+                "step": 1,
+                "continu": 1,
+                "immedi": 1,
+                "decis": 1,
+                "previous": 1,
+                "current": 1,
+                "right": 1
+              }
+            },
+            "featuresToIntent": {
+              "123": [
+                "complaint.view"
+              ],
+              "456": [
+                "complaint.view"
+              ],
+              "789": [
+                "complaint.view"
+              ],
+              "i": [
+                "complaint.add",
+                "complaint.view",
+                "general.cancel"
+              ],
+              "want": [
+                "complaint.add",
+                "complaint.view",
+                "general.cancel"
+              ],
+              "to": [
+                "complaint.add",
+                "complaint.view",
+                "general.cancel"
+              ],
+              "add": [
+                "complaint.add"
+              ],
+              "a": [
+                "complaint.add",
+                "complaint.view"
+              ],
+              "complaint": [
+                "complaint.add",
+                "complaint.view",
+                "general.cancel"
+              ],
+              "submit": [
+                "complaint.add",
+                "complaint.view",
+                "general.cancel"
+              ],
+              "new": [
+                "complaint.add"
+              ],
+              "file": [
+                "complaint.add",
+                "complaint.view"
+              ],
+              "can": [
+                "complaint.add",
+                "complaint.view"
+              ],
+              "had": [
+                "complaint.add"
+              ],
+              "like": [
+                "complaint.add",
+                "complaint.view"
+              ],
+              "lodg": [
+                "complaint.add"
+              ],
+              "need": [
+                "complaint.add",
+                "complaint.view"
+              ],
+              "regist": [
+                "complaint.add"
+              ],
+              "pleas": [
+                "complaint.add",
+                "complaint.view",
+                "general.cancel"
+              ],
+              "my": [
+                "complaint.add",
+                "complaint.view",
+                "general.cancel"
+              ],
+              "help": [
+                "complaint.add"
+              ],
+              "me": [
+                "complaint.add",
+                "complaint.view",
+                "general.cancel"
+              ],
+              "wish": [
+                "complaint.add"
+              ],
+              "report": [
+                "complaint.add"
+              ],
+              "an": [
+                "complaint.add",
+                "complaint.view"
+              ],
+              "issu": [
+                "complaint.add"
+              ],
+              "you": [
+                "complaint.add",
+                "complaint.view"
+              ],
+              "for": [
+                "complaint.add",
+                "general.cancel"
+              ],
+              "rais": [
+                "complaint.add"
+              ],
+              "formal": [
+                "complaint.add"
+              ],
+              "make": [
+                "complaint.add"
+              ],
+              "log": [
+                "complaint.add"
+              ],
+              "complain": [
+                "complaint.add"
+              ],
+              "about": [
+                "complaint.add",
+                "complaint.view",
+                "general.cancel"
+              ],
+              "someth": [
+                "complaint.add"
+              ],
+              "have": [
+                "complaint.add"
+              ],
+              "i’d": [
+                "complaint.add"
+              ],
+              "problem": [
+                "complaint.add"
+              ],
+              "grievanc": [
+                "complaint.add"
+              ],
+              "the": [
+                "complaint.add",
+                "complaint.view",
+                "general.cancel"
+              ],
+              "system": [
+                "complaint.add"
+              ],
+              "technic": [
+                "complaint.add"
+              ],
+              "there": [
+                "complaint.add"
+              ],
+              "is": [
+                "complaint.add",
+                "complaint.view"
+              ],
+              "regard": [
+                "complaint.add"
+              ],
+              "product": [
+                "complaint.add"
+              ],
+              "servic": [
+                "complaint.add"
+              ],
+              "offici": [
+                "complaint.add"
+              ],
+              "concern": [
+                "complaint.add"
+              ],
+              "that": [
+                "complaint.add"
+              ],
+              "be": [
+                "complaint.add"
+              ],
+              "address": [
+                "complaint.add"
+              ],
+              "this": [
+                "complaint.add",
+                "general.cancel"
+              ],
+              "against": [
+                "complaint.add"
+              ],
+              "someon": [
+                "complaint.add"
+              ],
+              "incid": [
+                "complaint.add"
+              ],
+              "experi": [
+                "complaint.add"
+              ],
+              "custom": [
+                "complaint.add"
+              ],
+              "with": [
+                "complaint.add",
+                "general.cancel"
+              ],
+              "order": [
+                "complaint.add"
+              ],
+              "your": [
+                "complaint.add"
+              ],
+              "failur": [
+                "complaint.add"
+              ],
+              "deliveri": [
+                "complaint.add"
+              ],
+              "staff": [
+                "complaint.add"
+              ],
+              "qualiti": [
+                "complaint.add"
+              ],
+              "of": [
+                "complaint.add",
+                "complaint.view"
+              ],
+              "charg": [
+                "complaint.add"
+              ],
+              "websit": [
+                "complaint.add"
+              ],
+              "broken": [
+                "complaint.add"
+              ],
+              "item": [
+                "complaint.add"
+              ],
+              "receiv": [
+                "complaint.add"
+              ],
+              "faulti": [
+                "complaint.add"
+              ],
+              "on": [
+                "complaint.add",
+                "complaint.view"
+              ],
+              "behalf": [
+                "complaint.add"
+              ],
+              "delay": [
+                "complaint.add"
+              ],
+              "malfunct": [
+                "complaint.add"
+              ],
+              "bad": [
+                "complaint.add"
+              ],
+              "view": [
+                "complaint.view"
+              ],
+              "show": [
+                "complaint.view"
+              ],
+              "number": [
+                "complaint.view"
+              ],
+              "list": [
+                "complaint.view"
+              ],
+              "see": [
+                "complaint.view"
+              ],
+              "display": [
+                "complaint.view"
+              ],
+              "would": [
+                "complaint.view"
+              ],
+              "check": [
+                "complaint.view"
+              ],
+              "let": [
+                "complaint.view"
+              ],
+              "status": [
+                "complaint.view"
+              ],
+              "give": [
+                "complaint.view"
+              ],
+              "detail": [
+                "complaint.view"
+              ],
+              "look": [
+                "complaint.view"
+              ],
+              "at": [
+                "complaint.view"
+              ],
+              "what": [
+                "complaint.view"
+              ],
+              "know": [
+                "complaint.view"
+              ],
+              "updat": [
+                "complaint.view"
+              ],
+              "progress": [
+                "complaint.view"
+              ],
+              "review": [
+                "complaint.view"
+              ],
+              "summari": [
+                "complaint.view"
+              ],
+              "more": [
+                "complaint.view"
+              ],
+              "provid": [
+                "complaint.view"
+              ],
+              "happen": [
+                "complaint.view"
+              ],
+              "tell": [
+                "complaint.view"
+              ],
+              "current": [
+                "complaint.view",
+                "general.cancel"
+              ],
+              "cancel": [
+                "general.cancel"
+              ],
+              "exit": [
+                "general.cancel"
+              ],
+              "action": [
+                "general.cancel"
+              ],
+              "forget": [
+                "general.cancel"
+              ],
+              "it": [
+                "general.cancel"
+              ],
+              "do": [
+                "general.cancel"
+              ],
+              "not": [
+                "general.cancel"
+              ],
+              "proceed": [
+                "general.cancel"
+              ],
+              "stop": [
+                "general.cancel"
+              ],
+              "process": [
+                "general.cancel"
+              ],
+              "abort": [
+                "general.cancel"
+              ],
+              "oper": [
+                "general.cancel"
+              ],
+              "never": [
+                "general.cancel"
+              ],
+              "mind": [
+                "general.cancel"
+              ],
+              "chang": [
+                "general.cancel"
+              ],
+              "request": [
+                "general.cancel"
+              ],
+              "without": [
+                "general.cancel"
+              ],
+              "everyth": [
+                "general.cancel"
+              ],
+              "task": [
+                "general.cancel"
+              ],
+              "no": [
+                "general.cancel"
+              ],
+              "longer": [
+                "general.cancel"
+              ],
+              "and": [
+                "general.cancel"
+              ],
+              "end": [
+                "general.cancel"
+              ],
+              "now": [
+                "general.cancel"
+              ],
+              "confirm": [
+                "general.cancel"
+              ],
+              "entir": [
+                "general.cancel"
+              ],
+              "made": [
+                "general.cancel"
+              ],
+              "anymor": [
+                "general.cancel"
+              ],
+              "took": [
+                "general.cancel"
+              ],
+              "step": [
+                "general.cancel"
+              ],
+              "continu": [
+                "general.cancel"
+              ],
+              "immedi": [
+                "general.cancel"
+              ],
+              "decis": [
+                "general.cancel"
+              ],
+              "previous": [
+                "general.cancel"
+              ],
+              "right": [
+                "general.cancel"
+              ]
+            },
+            "neuralNetwork": {
+              "settings": {
+                "locale": "en",
+                "tag": "nlu-en",
+                "keepStopwords": true,
+                "nonefeatureValue": 1,
+                "nonedeltaMultiplier": 1.2,
+                "spellCheck": false,
+                "spellCheckDistance": 1,
+                "filterZeros": true,
+                "log": true
+              },
+              "features": [
+                "i",
+                "want",
+                "to",
+                "add",
+                "a",
+                "complaint",
+                "submit",
+                "new",
+                "file",
+                "can",
+                "had",
+                "like",
+                "lodg",
+                "need",
+                "regist",
+                "pleas",
+                "my",
+                "help",
+                "me",
+                "wish",
+                "report",
+                "an",
+                "issu",
+                "you",
+                "for",
+                "rais",
+                "formal",
+                "make",
+                "log",
+                "complain",
+                "about",
+                "someth",
+                "have",
+                "i’d",
+                "problem",
+                "grievanc",
+                "the",
+                "system",
+                "technic",
+                "there",
+                "is",
+                "regard",
+                "product",
+                "servic",
+                "offici",
+                "concern",
+                "that",
+                "be",
+                "address",
+                "this",
+                "against",
+                "someon",
+                "incid",
+                "experi",
+                "custom",
+                "with",
+                "order",
+                "your",
+                "failur",
+                "deliveri",
+                "staff",
+                "qualiti",
+                "of",
+                "charg",
+                "websit",
+                "broken",
+                "item",
+                "receiv",
+                "faulti",
+                "on",
+                "behalf",
+                "delay",
+                "malfunct",
+                "bad",
+                "view",
+                "show",
+                "123",
+                "number",
+                "list",
+                "see",
+                "display",
+                "would",
+                "check",
+                "let",
+                "status",
+                "give",
+                "detail",
+                "456",
+                "look",
+                "at",
+                "789",
+                "what",
+                "know",
+                "updat",
+                "progress",
+                "review",
+                "summari",
+                "more",
+                "provid",
+                "happen",
+                "tell",
+                "current",
+                "cancel",
+                "exit",
+                "action",
+                "forget",
+                "it",
+                "do",
+                "not",
+                "proceed",
+                "stop",
+                "process",
+                "abort",
+                "oper",
+                "never",
+                "mind",
+                "chang",
+                "request",
+                "without",
+                "everyth",
+                "task",
+                "no",
+                "longer",
+                "and",
+                "end",
+                "now",
+                "confirm",
+                "entir",
+                "made",
+                "anymor",
+                "took",
+                "step",
+                "continu",
+                "immedi",
+                "decis",
+                "previous",
+                "right"
+              ],
+              "intents": [
+                "complaint.add",
+                "complaint.view",
+                "general.cancel"
+              ],
+              "perceptrons": [
+                [
+                  0.0010899195913225412,
+                  -1.026489496231079,
+                  0.09162035584449768,
+                  5.149612903594971,
+                  1.4507168531417847,
+                  1.9029039144515991,
+                  3.9933834075927734,
+                  -0.8141909837722778,
+                  4.734259128570557,
+                  0.2970918118953705,
+                  1.2316210269927979,
+                  -1.1423708200454712,
+                  4.089329242706299,
+                  -0.4646366238594055,
+                  4.588558197021484,
+                  0.13954013586044312,
+                  1.3140214681625366,
+                  2.3859457969665527,
+                  -2.7103233337402344,
+                  1.057963490486145,
+                  3.8817970752716064,
+                  0.8281443119049072,
+                  1.8206756114959717,
+                  -0.05521775409579277,
+                  2.7087807655334473,
+                  4.638580799102783,
+                  1.0401864051818848,
+                  4.996427536010742,
+                  4.739294052124023,
+                  5.887256145477295,
+                  -2.5477747917175293,
+                  4.891548156738281,
+                  0.517750084400177,
+                  0.5371586084365845,
+                  2.7511532306671143,
+                  2.15685772895813,
+                  -1.2960072755813599,
+                  -0.2929227650165558,
+                  1.0315165519714355,
+                  1.1079615354537964,
+                  -0.9156832098960876,
+                  -2.6330888271331787,
+                  3.127450704574585,
+                  3.4793944358825684,
+                  0.90212482213974,
+                  3.3218414783477783,
+                  -0.0755160003900528,
+                  -0.0755160003900528,
+                  5.0799360275268555,
+                  0.9877868294715881,
+                  0.09310897439718246,
+                  0.09310897439718246,
+                  3.929926633834839,
+                  1.6978601217269897,
+                  -1.4687731266021729,
+                  0.37166136503219604,
+                  -1.2544620037078857,
+                  -0.5042793154716492,
+                  -0.6738351583480835,
+                  3.020352602005005,
+                  3.0823655128479004,
+                  5.219414710998535,
+                  -1.0369000434875488,
+                  2.4569239616394043,
+                  3.5345096588134766,
+                  0.17611163854599,
+                  1.2716286182403564,
+                  1.2716286182403564,
+                  1.7826472520828247,
+                  -2.8535330295562744,
+                  1.0402289628982544,
+                  2.699409246444702,
+                  2.531508445739746,
+                  1.1357665061950684,
+                  -8.83005142211914,
+                  -11.136832237243652,
+                  -0.5764132738113403,
+                  -2.3577919006347656,
+                  -0.39009883999824524,
+                  -8.793846130371094,
+                  -9.86477279663086,
+                  -2.889932870864868,
+                  -5.800048828125,
+                  -1.0801544189453125,
+                  -2.9183130264282227,
+                  -3.8213014602661133,
+                  -0.7454012036323547,
+                  -1.706528902053833,
+                  -1.706528902053833,
+                  -1.706528902053833,
+                  -0.7571238279342651,
+                  -3.4595296382904053,
+                  -3.8112874031066895,
+                  -3.8950557708740234,
+                  -1.8259532451629639,
+                  -8.656694412231445,
+                  -3.4864678382873535,
+                  -2.37445330619812,
+                  -3.8950557708740234,
+                  -1.4343181848526,
+                  -0.8712351322174072,
+                  -0.8712351322174072,
+                  -6.3392014503479,
+                  -6.253451824188232,
+                  -0.7422763109207153,
+                  -4.3844685554504395,
+                  -3.2122128009796143,
+                  -2.4716460704803467,
+                  -2.4716460704803467,
+                  -2.3231868743896484,
+                  -6.342284679412842,
+                  -2.4675402641296387,
+                  -3.343379497528076,
+                  -2.4549901485443115,
+                  -2.798497438430786,
+                  -3.5151352882385254,
+                  -4.154434680938721,
+                  -2.9404966831207275,
+                  -4.203096389770508,
+                  -2.954003095626831,
+                  -1.666718602180481,
+                  -1.5575462579727173,
+                  -1.5575462579727173,
+                  -0.006032424047589302,
+                  -4.824853897094727,
+                  -3.0011963844299316,
+                  -0.05389964580535889,
+                  0,
+                  0,
+                  -1.2730175256729126,
+                  0,
+                  -1.0230449438095093,
+                  -0.43176478147506714,
+                  -0.164464071393013,
+                  -3.437220335006714,
+                  -0.548802375793457,
+                  0,
+                  6.31701969631852
+                ],
+                [
+                  2.3033194541931152,
+                  -0.005628966726362705,
+                  -0.9704121947288513,
+                  -8.265149116516113,
+                  -6.467940330505371,
+                  8.252229690551758,
+                  -1.545920968055725,
+                  -0.7153290510177612,
+                  -1.6125538349151611,
+                  -1.1335150003433228,
+                  -0.9651419520378113,
+                  -0.07151392102241516,
+                  -0.742708146572113,
+                  -0.43231841921806335,
+                  -8.259181022644043,
+                  -0.05919349938631058,
+                  2.1193227767944336,
+                  -0.6668167114257812,
+                  0.041493434458971024,
+                  -0.22797484695911407,
+                  -0.8347427248954773,
+                  1.0352706909179688,
+                  -0.6040263175964355,
+                  1.7847203016281128,
+                  -3.1178202629089355,
+                  -0.6518517732620239,
+                  -0.19968430697917938,
+                  -4.2915520668029785,
+                  -2.537351369857788,
+                  -0.564338743686676,
+                  -2.4592154026031494,
+                  -0.564338743686676,
+                  -0.2713696360588074,
+                  0,
+                  0,
+                  0,
+                  1.5677639245986938,
+                  0,
+                  0,
+                  -0.564338743686676,
+                  3.032932996749878,
+                  -0.7698442339897156,
+                  0,
+                  -0.021144190803170204,
+                  -4.2915520668029785,
+                  0,
+                  0,
+                  0,
+                  -0.009414462372660637,
+                  -4.505409240722656,
+                  0,
+                  0,
+                  0,
+                  -0.5933364033699036,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  -0.7983812093734741,
+                  -1.3876079320907593,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  -0.9551350474357605,
+                  -0.8327710032463074,
+                  0,
+                  0,
+                  0,
+                  4.454948425292969,
+                  5.840121269226074,
+                  1.5191066265106201,
+                  1.8735065460205078,
+                  0.013809268362820148,
+                  4.677597522735596,
+                  4.858365058898926,
+                  0.8984506130218506,
+                  4.1217827796936035,
+                  1.6333309412002563,
+                  0.13313181698322296,
+                  5.001556396484375,
+                  0.5749566555023193,
+                  0.357331782579422,
+                  2.2514805793762207,
+                  2.2514805793762207,
+                  1.5316342115402222,
+                  2.500092029571533,
+                  3.2557156085968018,
+                  -0.11935336142778397,
+                  0.500130832195282,
+                  4.648525238037109,
+                  8.823482513427734,
+                  3.9293172359466553,
+                  5.336260795593262,
+                  -1.0965396165847778,
+                  2.8408987522125244,
+                  2.7849841117858887,
+                  -2.2940797805786133,
+                  -1.762352705001831,
+                  -0.7682453393936157,
+                  -5.314393043518066,
+                  -0.4206092357635498,
+                  -1.032732605934143,
+                  -1.032732605934143,
+                  -1.4521231651306152,
+                  -0.8524600863456726,
+                  -0.5618823170661926,
+                  -0.37379321455955505,
+                  -0.26636332273483276,
+                  -0.15161360800266266,
+                  -2.0760161876678467,
+                  -3.446536064147949,
+                  -1.1308258771896362,
+                  -0.11962362378835678,
+                  -0.12702657282352448,
+                  -0.09949704259634018,
+                  -0.5944926738739014,
+                  -0.5944926738739014,
+                  0,
+                  -0.045389361679553986,
+                  -0.05008571594953537,
+                  -0.019119195640087128,
+                  0,
+                  0,
+                  -0.09025081992149353,
+                  0,
+                  0,
+                  -0.07815279066562653,
+                  -0.008321586064994335,
+                  -1.5696611404418945,
+                  -0.49832433462142944,
+                  0,
+                  -2.008613753818959
+                ],
+                [
+                  -0.6741544008255005,
+                  2.7015488147735596,
+                  -2.020695686340332,
+                  -4.693129062652588,
+                  -5.500255584716797,
+                  -3.564680576324463,
+                  -0.8689976930618286,
+                  -0.208792582154274,
+                  -4.255131721496582,
+                  -1.749951958656311,
+                  -0.6803385615348816,
+                  -1.0073546171188354,
+                  -0.09952502697706223,
+                  -1.9794825315475464,
+                  -3.4935646057128906,
+                  0.41460803151130676,
+                  -0.9345922470092773,
+                  0,
+                  -1.2308757305145264,
+                  0,
+                  -4.630110263824463,
+                  -2.9363577365875244,
+                  -3.5961945056915283,
+                  -1.232672929763794,
+                  1.0549050569534302,
+                  0,
+                  -0.8116901516914368,
+                  -0.5152207016944885,
+                  -1.093490481376648,
+                  -4.777774810791016,
+                  1.9052684307098389,
+                  -1.871772050857544,
+                  -0.8404288291931152,
+                  -0.06325686722993851,
+                  -0.3111020028591156,
+                  -1.3000630140304565,
+                  1.2450612783432007,
+                  -0.6264333128929138,
+                  -0.30086541175842285,
+                  -0.35507848858833313,
+                  -1.6018486022949219,
+                  0,
+                  -0.02518210932612419,
+                  -2.819349765777588,
+                  -0.6308961510658264,
+                  -0.15393418073654175,
+                  0,
+                  0,
+                  -0.014654923230409622,
+                  -0.22145625948905945,
+                  0,
+                  0,
+                  -1.3051849603652954,
+                  0,
+                  0,
+                  -0.3326146900653839,
+                  0,
+                  -0.02518210932612419,
+                  0,
+                  -0.7370753288269043,
+                  -2.0283749103546143,
+                  0,
+                  -1.670461654663086,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  -2.819349765777588,
+                  -0.803797721862793,
+                  0,
+                  0,
+                  0,
+                  0,
+                  -3.087104082107544,
+                  -4.1346869468688965,
+                  -0.5284523963928223,
+                  -1.4332531690597534,
+                  -0.04635124281048775,
+                  -3.0694127082824707,
+                  -0.13900014758110046,
+                  0,
+                  -1.0497524738311768,
+                  -0.8254725337028503,
+                  -1.6198911666870117,
+                  -0.4384080469608307,
+                  -1.0601978302001953,
+                  -0.8867697715759277,
+                  -0.8677583932876587,
+                  -0.8677583932876587,
+                  0,
+                  -1.1401712894439697,
+                  -2.48240065574646,
+                  -0.803797721862793,
+                  -0.11061703413724899,
+                  -2.9993131160736084,
+                  0,
+                  -2.48240065574646,
+                  0,
+                  0,
+                  -0.06265419721603394,
+                  -0.1447828859090805,
+                  6.740583419799805,
+                  6.715978622436523,
+                  -1.172109842300415,
+                  6.557456970214844,
+                  -1.1176857948303223,
+                  2.7750792503356934,
+                  2.7750792503356934,
+                  1.2755907773971558,
+                  6.819638729095459,
+                  -1.2014503479003906,
+                  6.611440658569336,
+                  -1.1029510498046875,
+                  2.8726067543029785,
+                  3.78623104095459,
+                  4.580900192260742,
+                  0.45079123973846436,
+                  0.7843190431594849,
+                  -0.07087257504463196,
+                  -1.126560926437378,
+                  2.7330479621887207,
+                  2.7330479621887207,
+                  -6.757381916046143,
+                  7.7616705894470215,
+                  -0.31789660453796387,
+                  -0.8219541907310486,
+                  -0.10710431635379791,
+                  -1.0647573471069336,
+                  3.1467397212982178,
+                  0.7295532822608948,
+                  0.16181382536888123,
+                  1.0834194421768188,
+                  -0.06359462440013885,
+                  3.668665885925293,
+                  2.018993377685547,
+                  0.13423536717891693,
+                  7.656994178031571
+                ]
+              ]
+            }
+          }
+        }
+      }
+    },
+    "intentDomains": {},
+    "extraSentences": [
+      [
+        "en",
+        "I want to add a complaint"
+      ],
+      [
+        "en",
+        "Submit a complaint"
+      ],
+      [
+        "en",
+        "Add a new complaint"
+      ],
+      [
+        "en",
+        "I want to file a complaint"
+      ],
+      [
+        "en",
+        "Can I submit a complaint?"
+      ],
+      [
+        "en",
+        "I'd like to lodge a complaint"
+      ],
+      [
+        "en",
+        "I need to register a complaint"
+      ],
+      [
+        "en",
+        "Please add my complaint"
+      ],
+      [
+        "en",
+        "Help me file a complaint"
+      ],
+      [
+        "en",
+        "I wish to submit a new complaint"
+      ],
+      [
+        "en",
+        "I'd like to report an issue"
+      ],
+      [
+        "en",
+        "Can you register a complaint for me?"
+      ],
+      [
+        "en",
+        "I need to raise a complaint"
+      ],
+      [
+        "en",
+        "I'd like to submit a formal complaint"
+      ],
+      [
+        "en",
+        "Please register my complaint"
+      ],
+      [
+        "en",
+        "I want to make a complaint"
+      ],
+      [
+        "en",
+        "I want to file a formal complaint"
+      ],
+      [
+        "en",
+        "I need to log a complaint"
+      ],
+      [
+        "en",
+        "I need to complain about something"
+      ],
+      [
+        "en",
+        "I have an issue to report"
+      ],
+      [
+        "en",
+        "I’d like to report a problem"
+      ],
+      [
+        "en",
+        "I want to make a report about an issue"
+      ],
+      [
+        "en",
+        "I have a grievance to submit"
+      ],
+      [
+        "en",
+        "I need to file a grievance"
+      ],
+      [
+        "en",
+        "Please add my issue to the system"
+      ],
+      [
+        "en",
+        "I want to report a technical problem"
+      ],
+      [
+        "en",
+        "There is something I need to complain about"
+      ],
+      [
+        "en",
+        "I need to file a complaint regarding a product"
+      ],
+      [
+        "en",
+        "I want to file a complaint about a service"
+      ],
+      [
+        "en",
+        "Please report my issue"
+      ],
+      [
+        "en",
+        "I want to make an official complaint"
+      ],
+      [
+        "en",
+        "Can you submit a complaint for me?"
+      ],
+      [
+        "en",
+        "I need to submit a formal issue"
+      ],
+      [
+        "en",
+        "Please log a complaint for me"
+      ],
+      [
+        "en",
+        "I’d like to submit a concern"
+      ],
+      [
+        "en",
+        "I want to report a concern"
+      ],
+      [
+        "en",
+        "I have an issue that needs to be addressed"
+      ],
+      [
+        "en",
+        "Can you log this complaint for me?"
+      ],
+      [
+        "en",
+        "I have a complaint I need to file"
+      ],
+      [
+        "en",
+        "Please file this complaint"
+      ],
+      [
+        "en",
+        "I want to make a formal complaint about this"
+      ],
+      [
+        "en",
+        "Please report my issue officially"
+      ],
+      [
+        "en",
+        "I’d like to file a complaint against someone"
+      ],
+      [
+        "en",
+        "I want to report an incident"
+      ],
+      [
+        "en",
+        "I want to log a complaint about my experience"
+      ],
+      [
+        "en",
+        "I need to add a complaint about customer service"
+      ],
+      [
+        "en",
+        "I have a problem I need to complain about"
+      ],
+      [
+        "en",
+        "I want to report a problem with my order"
+      ],
+      [
+        "en",
+        "Please add this issue to the complaints system"
+      ],
+      [
+        "en",
+        "I want to make a complaint about your product"
+      ],
+      [
+        "en",
+        "I need to report a service failure"
+      ],
+      [
+        "en",
+        "I want to file a complaint regarding delivery"
+      ],
+      [
+        "en",
+        "Please add my complaint about the staff"
+      ],
+      [
+        "en",
+        "I have a complaint about the quality of service"
+      ],
+      [
+        "en",
+        "I need to file a complaint about a charge"
+      ],
+      [
+        "en",
+        "Please register a complaint about the website"
+      ],
+      [
+        "en",
+        "I want to report a broken product"
+      ],
+      [
+        "en",
+        "I need to report a broken item I received"
+      ],
+      [
+        "en",
+        "I want to complain about faulty service"
+      ],
+      [
+        "en",
+        "Please file a complaint for me"
+      ],
+      [
+        "en",
+        "I want to submit a formal grievance"
+      ],
+      [
+        "en",
+        "Please make a complaint on my behalf"
+      ],
+      [
+        "en",
+        "I have an issue I need addressed"
+      ],
+      [
+        "en",
+        "Please help me register a complaint"
+      ],
+      [
+        "en",
+        "I’d like to make a formal complaint about the delay"
+      ],
+      [
+        "en",
+        "Please report the issue with the delivery"
+      ],
+      [
+        "en",
+        "Can you help me file a complaint?"
+      ],
+      [
+        "en",
+        "I want to make a complaint about your service"
+      ],
+      [
+        "en",
+        "I need to file a complaint about a malfunction"
+      ],
+      [
+        "en",
+        "Please submit a complaint for me"
+      ],
+      [
+        "en",
+        "I have a complaint to report"
+      ],
+      [
+        "en",
+        "I want to submit a complaint regarding the quality"
+      ],
+      [
+        "en",
+        "Please file a complaint on my behalf"
+      ],
+      [
+        "en",
+        "I need to report a bad experience"
+      ],
+      [
+        "en",
+        "I want to view my complaint"
+      ],
+      [
+        "en",
+        "Show me my complaints"
+      ],
+      [
+        "en",
+        "View complaint number 123"
+      ],
+      [
+        "en",
+        "Show me my complaints list"
+      ],
+      [
+        "en",
+        "I want to see my complaint"
+      ],
+      [
+        "en",
+        "Can you display my complaint?"
+      ],
+      [
+        "en",
+        "I would like to check my complaints"
+      ],
+      [
+        "en",
+        "Let me view my complaint status"
+      ],
+      [
+        "en",
+        "Give me the details of my complaint"
+      ],
+      [
+        "en",
+        "I want to look at complaint number 456"
+      ],
+      [
+        "en",
+        "Can you show complaint 789?"
+      ],
+      [
+        "en",
+        "Please show the complaint I submitted"
+      ],
+      [
+        "en",
+        "What is the status of my complaint?"
+      ],
+      [
+        "en",
+        "Show me the status of my complaint"
+      ],
+      [
+        "en",
+        "I want to check the status of my complaint"
+      ],
+      [
+        "en",
+        "Please show my complaint status"
+      ],
+      [
+        "en",
+        "Can you give me the status of my complaint?"
+      ],
+      [
+        "en",
+        "I want to know the status of complaint number 123"
+      ],
+      [
+        "en",
+        "Let me check my complaint"
+      ],
+      [
+        "en",
+        "What is the update on my complaint?"
+      ],
+      [
+        "en",
+        "Can I check the progress of my complaint?"
+      ],
+      [
+        "en",
+        "I need to view my complaint details"
+      ],
+      [
+        "en",
+        "Please show me the complaint I filed"
+      ],
+      [
+        "en",
+        "I want to review my complaint"
+      ],
+      [
+        "en",
+        "Can you display the details of my complaint?"
+      ],
+      [
+        "en",
+        "Give me a summary of my complaint"
+      ],
+      [
+        "en",
+        "I want to know more about my complaint"
+      ],
+      [
+        "en",
+        "Can you provide an update on my complaint?"
+      ],
+      [
+        "en",
+        "Let me see the complaint status"
+      ],
+      [
+        "en",
+        "Show me the complaint details"
+      ],
+      [
+        "en",
+        "I would like to know the status of my complaint"
+      ],
+      [
+        "en",
+        "What is the status of complaint number 456?"
+      ],
+      [
+        "en",
+        "I want to know what happened to my complaint"
+      ],
+      [
+        "en",
+        "Please tell me the current status of my complaint"
+      ],
+      [
+        "en",
+        "Cancel"
+      ],
+      [
+        "en",
+        "Exit"
+      ],
+      [
+        "en",
+        "Cancel the action"
+      ],
+      [
+        "en",
+        "Forget about it"
+      ],
+      [
+        "en",
+        "I don't want to proceed"
+      ],
+      [
+        "en",
+        "Stop the process"
+      ],
+      [
+        "en",
+        "Abort the operation"
+      ],
+      [
+        "en",
+        "Never mind"
+      ],
+      [
+        "en",
+        "I changed my mind"
+      ],
+      [
+        "en",
+        "Please cancel it"
+      ],
+      [
+        "en",
+        "Cancel this request"
+      ],
+      [
+        "en",
+        "Exit without submitting"
+      ],
+      [
+        "en",
+        "Forget this request"
+      ],
+      [
+        "en",
+        "Cancel the operation"
+      ],
+      [
+        "en",
+        "Stop everything"
+      ],
+      [
+        "en",
+        "Abort the task"
+      ],
+      [
+        "en",
+        "I no longer want to proceed"
+      ],
+      [
+        "en",
+        "Forget about the complaint"
+      ],
+      [
+        "en",
+        "Stop the process for me"
+      ],
+      [
+        "en",
+        "Cancel and exit"
+      ],
+      [
+        "en",
+        "End this now"
+      ],
+      [
+        "en",
+        "I want to stop this"
+      ],
+      [
+        "en",
+        "Don't proceed with the action"
+      ],
+      [
+        "en",
+        "Exit without confirming"
+      ],
+      [
+        "en",
+        "Cancel the entire process"
+      ],
+      [
+        "en",
+        "I want to exit"
+      ],
+      [
+        "en",
+        "Cancel the request I made"
+      ],
+      [
+        "en",
+        "I don't want to submit it anymore"
+      ],
+      [
+        "en",
+        "Forget the action I took"
+      ],
+      [
+        "en",
+        "Stop everything now"
+      ],
+      [
+        "en",
+        "Cancel this step"
+      ],
+      [
+        "en",
+        "Cancel my request"
+      ],
+      [
+        "en",
+        "Exit the process"
+      ],
+      [
+        "en",
+        "I want to cancel this"
+      ],
+      [
+        "en",
+        "I do not want to continue"
+      ],
+      [
+        "en",
+        "Cancel and stop"
+      ],
+      [
+        "en",
+        "Exit and cancel the process"
+      ],
+      [
+        "en",
+        "Forget everything"
+      ],
+      [
+        "en",
+        "End this process"
+      ],
+      [
+        "en",
+        "Please cancel everything"
+      ],
+      [
+        "en",
+        "Exit immediately"
+      ],
+      [
+        "en",
+        "Please stop this now"
+      ],
+      [
+        "en",
+        "I changed my decision"
+      ],
+      [
+        "en",
+        "Abort everything"
+      ],
+      [
+        "en",
+        "Cancel my previous action"
+      ],
+      [
+        "en",
+        "Don't proceed with this request"
+      ],
+      [
+        "en",
+        "End this operation"
+      ],
+      [
+        "en",
+        "Cancel and exit now"
+      ],
+      [
+        "en",
+        "Exit the current process"
+      ],
+      [
+        "en",
+        "Stop right now"
+      ],
+      [
+        "en",
+        "Cancel without submitting"
+      ]
+    ]
+  },
+  "ner": {
+    "settings": {
+      "tag": "ner",
+      "entityPreffix": "%",
+      "entitySuffix": "%"
+    },
+    "rules": {}
+  },
+  "nlgManager": {
+    "settings": {
+      "tag": "nlg-manager"
+    },
+    "responses": {}
+  },
+  "actionManager": {
+    "settings": {
+      "tag": "action-manager"
+    },
+    "actions": {}
+  },
+  "slotManager": {}
+}

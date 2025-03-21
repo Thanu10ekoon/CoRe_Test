@@ -31,6 +31,43 @@ const Chatbot = ({ userType }) => {
     addMessage('user', userMessage);
     setInput('');
 
+    try {
+      // Send user message to the NLP endpoint
+      const res = await fetch('http://localhost:5001/api/nlp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text: userMessage })
+      });
+      const nlpResult = await res.json();
+      console.log('NLP result:', nlpResult);
+
+      // Determine action based on the detected intent
+      if (nlpResult.intent === 'complaint.add') {
+        if (userType === 'user') {
+          addMessage('bot', 'What is the complaint title?');
+          setStep('getTitle');
+        } else {
+          addMessage('bot', 'As an admin, you can only view complaints. Please type "view".');
+        }
+      } else if (nlpResult.intent === 'complaint.view') {
+        addMessage('bot', 'Please provide the complaint ID or describe the issue.');
+        setStep('getComplaintIdOrQuery');
+      } else if (nlpResult.intent === 'general.cancel') {
+        addMessage('bot', 'Operation cancelled.');
+        setStep('initial');
+      } else {
+        // Fallback to manual input processing if NLP result is inconclusive
+        processUserInputFallback(userMessage);
+      }
+    } catch (err) {
+      console.error(err);
+      addMessage('bot', 'Error processing your message with NLP.');
+      processUserInputFallback(userMessage);
+    }
+  };
+
+  // Fallback processing if NLP does not determine an intent
+  const processUserInputFallback = async (userMessage) => {
     if (step === 'initial') {
       if (userType === 'user') {
         if (/add/i.test(userMessage)) {
