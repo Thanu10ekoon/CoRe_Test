@@ -8,9 +8,15 @@ const app = express();
 // Middleware
 app.use(express.json());
 app.use(cors({
-  origin: process.env.FRONTEND_URL || "https://co-re-test-front.vercel.app",
+  origin: function(origin, callback) {
+    // Allow requests with no origin, like mobile apps or curl requests
+    if (!origin) return callback(null, true);
+    // For all origins, dynamically allow them
+    callback(null, true);
+  },
   credentials: true
 }));
+
 
 // Database connection
 const db = mysql.createConnection({
