@@ -8,12 +8,16 @@ const app = express();
 // Middleware
 app.use(express.json());
 app.use(cors({
+<<<<<<< HEAD
   origin: function(origin, callback) {
     // Allow requests with no origin, like mobile apps or curl requests
     if (!origin) return callback(null, true);
     // For all origins, dynamically allow them
     callback(null, true);
   },
+=======
+  origin: process.env.FRONTEND_URL || "http://localhost:3000",
+>>>>>>> 2c2fac00acf9e8fbf7b626b5bc9bdaebabef8dc2
   credentials: true
 }));
 
