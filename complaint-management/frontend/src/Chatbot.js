@@ -4,21 +4,16 @@ import './Chatbot.css';
 const Chatbot = ({ userType }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState([
-    { 
-      sender: 'bot', 
-      text: 'Hello, I am Ms. CoRe, Welcome to CoRe MS, The Complaints and Requests Management System of Faculty of Engineering, University of Ruhuna' 
-    },
-    { 
-      sender: 'bot', 
-      text: userType === 'admin' ? 
-        'How can I assist you today? Would you like to view past complaints?' : 
-        'How can I assist you today? Would you like to add a new complaint or view past ones?' 
-    }
+    { sender: 'bot', text: 'Hello, I am Ms. CoRe, Welcome to CoRe MS, The Complaints and Requests Management System of Faculty of Engineering, University of Ruhuna' },
+    { sender: 'bot', text: userType === 'admin' ? 'How can I assist you today? Would you like to view past complaints?' : 'How can I assist you today? Would you like to add a new complaint or view past ones?' }
   ]);
   const [input, setInput] = useState('');
   const [step, setStep] = useState('initial');
   const [complaintData, setComplaintData] = useState({ title: '', description: '' });
   const [searchResults, setSearchResults] = useState([]);
+
+  const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+  const BOT_URL = process.env.REACT_APP_API_BOT_URL;
 
   const addMessage = (sender, text) => {
     setMessages(prev => [...prev, { sender, text }]);
@@ -32,8 +27,7 @@ const Chatbot = ({ userType }) => {
     setInput('');
 
     try {
-      // Send user message to the NLP endpoint
-      const res = await fetch('http://localhost:5001/api/nlp', {
+      const res = await fetch(`${BOT_URL}/nlp`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ text: userMessage })
@@ -41,7 +35,6 @@ const Chatbot = ({ userType }) => {
       const nlpResult = await res.json();
       console.log('NLP result:', nlpResult);
 
-      // Determine action based on the detected intent
       if (nlpResult.intent === 'complaint.add') {
         if (userType === 'user') {
           addMessage('bot', 'What is the complaint title?');
@@ -56,7 +49,6 @@ const Chatbot = ({ userType }) => {
         addMessage('bot', 'Operation cancelled.');
         setStep('initial');
       } else {
-        // Fallback to manual input processing if NLP result is inconclusive
         processUserInputFallback(userMessage);
       }
     } catch (err) {
@@ -66,7 +58,6 @@ const Chatbot = ({ userType }) => {
     }
   };
 
-  // Fallback processing if NLP does not determine an intent
   const processUserInputFallback = async (userMessage) => {
     if (step === 'initial') {
       if (userType === 'user') {
@@ -104,7 +95,7 @@ const Chatbot = ({ userType }) => {
             setStep('initial');
             return;
           }
-          const res = await fetch('http://localhost:5001/api/complaints', {
+          const res = await fetch(`${BOT_URL}/complaints`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -140,9 +131,9 @@ const Chatbot = ({ userType }) => {
 
   const fetchComplaintById = async (complaintId) => {
     try {
-      const res = await fetch(`http://localhost:5001/api/complaints/${complaintId}`);
+      const res = await fetch(`${BOT_URL}/complaints/${complaintId}`);
       const data = await res.json();
-      
+
       if (!res.ok) {
         throw new Error(data.error || data.message || `Complaint not found (Status: ${res.status})`);
       }
@@ -159,11 +150,9 @@ const Chatbot = ({ userType }) => {
 
   const fetchComplaintByQuery = async (query) => {
     try {
-      const res = await fetch(
-        `http://localhost:5001/api/complaints/search?q=${encodeURIComponent(query)}`
-      );
+      const res = await fetch(`${BOT_URL}/complaints/search?q=${encodeURIComponent(query)}`);
       const data = await res.json();
-      
+
       if (!res.ok) {
         throw new Error(data.error || data.message || `Search failed (Status: ${res.status})`);
       }
@@ -209,52 +198,32 @@ const Chatbot = ({ userType }) => {
 
   return (
     <div className="chatbot-container">
-      <button 
-        className={`chatbot-toggle ${isOpen ? 'active' : ''}`}
-        onClick={() => setIsOpen(!isOpen)}
-      >
-        <img 
-          src="/MSCoRe.png" 
-          alt="Ms. CoRe Assistant"
-          className="chatbot-icon"
-        />
+      <button className={`chatbot-toggle ${isOpen ? 'active' : ''}`} onClick={() => setIsOpen(!isOpen)}>
+        <img src="/MSCoRe.png" alt="Ms. CoRe Assistant" className="chatbot-icon" />
       </button>
-      
+
       {isOpen && (
         <div className="chatbot-popup">
           <div className="chatbot-header">
-            <img 
-              src="/MSCoRe.png" 
-              alt="Ms. CoRe" 
-              className="chatbot-avatar"
-            />
+            <img src="/MSCoRe.png" alt="Ms. CoRe" className="chatbot-avatar" />
             <div className="chatbot-title">
               <h3>Ms. CoRe Assistant</h3>
               <p>CoRe Management System</p>
             </div>
-            <button 
-              className="chatbot-close"
-              onClick={() => setIsOpen(false)}
-            >
+            <button className="chatbot-close" onClick={() => setIsOpen(false)}>
               &times;
             </button>
           </div>
 
           <div className="chatbot-messages">
             {messages.map((msg, index) => (
-              <div 
-                key={index} 
-                className={`message ${msg.sender} animate-slide-in`}
-              >
+              <div key={index} className={`message ${msg.sender} animate-slide-in`}>
                 {msg.text}
               </div>
             ))}
           </div>
 
-          <form 
-            onSubmit={handleUserInput} 
-            className="chatbot-input-container"
-          >
+          <form onSubmit={handleUserInput} className="chatbot-input-container">
             <input
               type="text"
               value={input}
@@ -262,12 +231,7 @@ const Chatbot = ({ userType }) => {
               placeholder="Type your message here..."
               className="chatbot-input"
             />
-            <button 
-              type="submit" 
-              className="chatbot-send-button"
-            >
-              Send
-            </button>
+            <button type="submit" className="chatbot-send-button">Send</button>
           </form>
         </div>
       )}
