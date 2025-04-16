@@ -6,60 +6,114 @@
 ## Overview
 The Complaint Management System is a web application that allows users to submit complaints and track their status. The system includes role-based authentication, where users can submit and view complaints, while admins can manage and update complaint statuses.
 
-## Tech Stack
+## ⚙️ Tech Stack
+
 - **Frontend:** React.js  
 - **Backend:** Node.js with Express.js  
-- **Database:** MySQL  
+- **Database:** MySQL (Clever Cloud)  
+- **AI Chatbot:** `node-nlp` (nlp.js)
 
-## Features
-### User Features:
+---
+
+## ✨ Features
+
+### 👤 User Features:
 - Submit a new complaint with a title and description.
-- View a list of past complaints with their status and admin updates.
-- See the history of status changes for each complaint.
+- View a list of previously submitted complaints with status and update history.
+- View **complete status history** for each complaint.
+- Get assistance from **Ms. CoRe**, the AI chatbot, for complaint submission and tracking.
+- Complaints are categorized (e.g., hostel, academic) and auto-directed to the relevant admin type.
 
-### Admin Features:
-- View all complaints submitted by users.
-- Update the status of complaints with a custom status.
-- Record which admin updated the complaint status.
+### 🛡️ Admin Features:
+- Role and subrole-based admin dashboard (e.g., Dean, Warden).
+- View all complaints assigned to their domain.
+- Update the complaint status with **custom-defined** steps.
+- Status updates are time-stamped and linked to the specific admin who made the update.
+- Full visibility into **status update history** for all complaints.
 
-### Authentication:
-- Pre-registered users log in and are redirected based on their role.
-- **Users** are redirected to the user dashboard.
-- **Admins** are redirected to the admin dashboard.
+### 🔐 Authentication:
+- **Pre-registered** users only; registration is handled outside the app.
+- On login:
+  - Users are redirected to the **User Dashboard**.
+  - Admins are redirected to the **Admin Dashboard** based on their subrole.
+- **No password hashing** or **email verification** is currently implemented.
 
-## Database Schema
-### `complaints` Table
-| Column       | Data Type    | Description |
-|-------------|-------------|-------------|
-| id          | INT (AUTO_INCREMENT, PRIMARY KEY) | Unique complaint ID |
-| title       | VARCHAR(255) | Complaint title |
-| description | TEXT        | Detailed complaint description |
-| status      | VARCHAR(255) (DEFAULT 'Pending') | Current complaint status |
-| date        | TIMESTAMP (DEFAULT CURRENT_TIMESTAMP) | Date and time of complaint submission |
+---
+
+## 🧠 Ms. CoRe - AI Chatbot Assistant
+<p align="left"><img src="https://i.ibb.co/hR7WRM5j/MSCoRe.png" width = "100px"></p>
+Meet **Ms. CoRe**, your intelligent assistant built with `node-nlp`.  
+She can:
+- Understand user intent via Natural Language Processing (NLP).
+- Help lodge complaints interactively using conversational form.
+- Retrieve current complaint status when given a complaint ID.
+- Clarify confusion about complaint categories, steps, and admin roles.
+
+> Ms. CoRe is powered by **NLPManager from node-nlp**, trained with domain-specific intents, and works as a smart frontend-side assistant.
+
+---
+
+## 🗃️ Database Schema
 
 ### `users` Table
 | Column   | Data Type      | Description |
-|----------|--------------|-------------|
+|----------|----------------|-------------|
 | id       | INT (AUTO_INCREMENT, PRIMARY KEY) | Unique user ID |
-| username | VARCHAR(255) | Unique username |
+| username | VARCHAR(255)   | Unique username |
 | role     | ENUM('user', 'admin') | Role of the user |
+| subrole  | VARCHAR(255)   | Admin category (Dean, Warden, etc.) |
+
+### `complaints` Table
+| Column       | Data Type    | Description |
+|--------------|--------------|-------------|
+| id           | INT (AUTO_INCREMENT, PRIMARY KEY) | Unique complaint ID |
+| user_id      | INT (FOREIGN KEY) | FK to `users.id` |
+| title        | VARCHAR(255) | Complaint title |
+| description  | TEXT         | Complaint details |
+| category     | VARCHAR(255) | Complaint category |
+| status       | VARCHAR(255) | Default: 'Pending' |
+| date         | TIMESTAMP (DEFAULT CURRENT_TIMESTAMP) | Date of complaint submission |
+| updated_by_admin | INT (FOREIGN KEY) | Admin who last updated status |
 
 ### `status_updates` Table
 | Column       | Data Type    | Description |
-|-------------|-------------|-------------|
-| id          | INT (AUTO_INCREMENT, PRIMARY KEY) | Unique status update ID |
-| complaint_id | INT (FOREIGN KEY) | Associated complaint ID |
-| admin_id    | INT (FOREIGN KEY) | Admin who updated the status |
-| status      | VARCHAR(255) | Updated status |
-| date        | TIMESTAMP (DEFAULT CURRENT_TIMESTAMP) | Time of status update |
+|--------------|--------------|-------------|
+| id           | INT (AUTO_INCREMENT, PRIMARY KEY) | Unique status update ID |
+| complaint_id | INT (FOREIGN KEY) | Associated complaint |
+| admin_id     | INT (FOREIGN KEY) | Admin who made the update |
+| status       | VARCHAR(255) | Status step (e.g., "Informed to technician") |
+| date         | TIMESTAMP (DEFAULT CURRENT_TIMESTAMP) | Timestamp of update |
 
-## Usage
-- Login: Users log in with pre-registered accounts.
-- Users: Can submit complaints and track their status.
-- Admins: Can view and update complaint statuses.
-- Status History: Users and admins can see past updates for each complaint.
+---
 
-## Notes
-- New users are not allowed to register through the system; they must be pre-added.
-- Status updates cannot be edited after submission.
-- No email verification or password hashing is implemented.
+## 🔧 Usage Guide
+
+- **Login:** Use pre-registered credentials.
+- **Users:** Can submit categorized complaints, track status, view full history, or ask **Ms. CoRe** for help.
+- **Admins:** Can view complaints under their subrole, and submit **uneditable**, timestamped status updates.
+- **AI Assistant:** Type natural phrases like:
+  - _"I want to complain about my leaking tap in hostel"_
+  - _"What’s the status of my complaint 103?"_
+
+---
+
+## 🔒 Notes
+
+- Users and admins are manually registered via the database.
+- Status updates are **immutable** after being recorded.
+- No filters or sorting implemented (as per spec).
+- No password hashing or email verification.
+
+---
+
+## 📜 License  
+All rights reserved.
+
+---
+
+## 🙌 Credits  
+- Developed by Scorpion X 
+- Integrated AI with ❤️ using **node-nlp**  
+- Special thanks to the **University of Ruhuna - Faculty of Engineering**
+
+---
