@@ -1,3 +1,4 @@
+// server.js
 const express = require("express");
 const mysql = require("mysql2");
 const cors = require("cors");
@@ -17,13 +18,12 @@ app.use(cors({
   credentials: true
 }));
 
-
 // Database connection
 const db = mysql.createConnection({
-    host: 'bp2juxysn0nszxvmkkzj-mysql.services.clever-cloud.com',  // Update with Clever Cloud host
-    user: 'udflccbdblfustx7',  // Your MySQL username
-    password: 'qgnCvYDdKjXJIfaLe8hL',  // Your MySQL password
-    database: 'bp2juxysn0nszxvmkkzj'
+  host: 'bp2juxysn0nszxvmkkzj-mysql.services.clever-cloud.com',  // Update with Clever Cloud host
+  user: 'udflccbdblfustx7',  // Your MySQL username
+  password: 'qgnCvYDdKjXJIfaLe8hL',  // Your MySQL password
+  database: 'bp2juxysn0nszxvmkkzj'
 });
 
 db.connect((err) => {
@@ -34,12 +34,13 @@ db.connect((err) => {
   console.log("Connected to database");
 });
 
-
 // API Routes
+
+// Login route returns user details including subrole.
 app.post("/api/login", (req, res) => {
   const { username, password } = req.body;
-  const sql = "SELECT * FROM users WHERE username = ?";
-  
+  const sql = "SELECT * FROM CoReMSusers WHERE username = ?";
+
   db.query(sql, [username], (err, results) => {
     if (err) return res.status(500).json({ error: "Database error" });
     if (results.length === 0 || results[0].password !== password) {
@@ -48,18 +49,23 @@ app.post("/api/login", (req, res) => {
     const user = results[0];
     res.json({ 
       user_id: user.user_id,
-      type: user.role,
-      username: user.username
+      username: user.username,
+      role: user.role,
+      subrole: user.subrole  // New property
     });
   });
 });
 
+// Complaint submission: now expects a "category" field.
 app.post("/api/complaints", (req, res) => {
-  const { user_id, title, description } = req.body;
-  const sql = `INSERT INTO complaints (user_id, title, description, status, created_at)
-               VALUES (?, ?, ?, 'Pending', NOW())`;
-  
-  db.query(sql, [user_id, title, description], (err, result) => {
+  const { user_id, title, description, category } = req.body;
+  if (!category) {
+    return res.status(400).json({ error: "Category is required" });
+  }
+  const sql = `INSERT INTO CoReMScomplaints (user_id, title, description, category, status, created_at)
+               VALUES (?, ?, ?, ?, 'Pending', NOW())`;
+
+  db.query(sql, [user_id, title, description, category], (err, result) => {
     if (err) return res.status(500).json({ error: "Database error" });
     res.json({ 
       message: "Complaint added successfully",
@@ -68,26 +74,11 @@ app.post("/api/complaints", (req, res) => {
   });
 });
 
-app.get("/api/complaints", (req, res) => {
-  const sql = "SELECT * FROM complaints ORDER BY created_at DESC";
-  db.query(sql, (err, results) => {
-    if (err) return res.status(500).json({ error: "Database error" });
-    res.json(results);
-  });
-});
-
-app.get("/api/complaints/user/:user_id", (req, res) => {
-  const sql = "SELECT * FROM complaints WHERE user_id = ? ORDER BY created_at DESC";
-  db.query(sql, [req.params.user_id], (err, results) => {
-    if (err) return res.status(500).json({ error: "Database error" });
-    res.json(results);
-  });
-});
-
+// GET complaint details by complaint id with admin details.
 app.get("/api/complaints/:id", (req, res) => {
-  const sql = `SELECT c.*, u.username AS admin_username 
-               FROM complaints c
-               LEFT JOIN users u ON c.updated_by_admin = u.user_id
+  const sql = `SELECT c.*, u.username AS admin_username, u.subrole AS admin_subrole 
+               FROM CoReMScomplaints c
+               LEFT JOIN CoReMSusers u ON c.updated_by_admin = u.user_id
                WHERE c.complaint_id = ?`;
   db.query(sql, [req.params.id], (err, results) => {
     if (err) return res.status(500).json({ error: "Database error" });
@@ -95,12 +86,84 @@ app.get("/api/complaints/:id", (req, res) => {
   });
 });
 
+// GET complaints for an admin or full list if not filtered.
+app.get("/api/complaints", (req, res) => {
+  const adminId = req.query.admin_id;
+  
+  // Default full query including JOIN to get admin details
+  const sqlAll = `SELECT c.*, u.username AS admin_username, u.subrole AS admin_subrole
+                  FROM CoReMScomplaints c
+                  LEFT JOIN CoReMSusers u ON c.updated_by_admin = u.user_id
+                  ORDER BY c.created_at DESC`;
+  
+  if (adminId) {
+    // Lookup the admin info first to check subrole.
+    const getAdminSql = "SELECT * FROM CoReMSusers WHERE user_id = ?";
+    db.query(getAdminSql, [adminId], (err, adminResults) => {
+      if (err) return res.status(500).json({ error: "Database error" });
+      if (!adminResults || adminResults.length === 0) {
+        return res.status(400).json({ error: "Invalid admin" });
+      }
+      const admin = adminResults[0];
+      // Full access: Dean or ComplaintsManager should see all complaints.
+      if (admin.role === "admin" && (admin.subrole === "Dean" || admin.subrole === "ComplaintsManager")) {
+        db.query(sqlAll, (err, results) => {
+          if (err) return res.status(500).json({ error: "Database error" });
+          res.json(results);
+        });
+      } else if (admin.role === "admin") {
+        // Map admin subrole to the complaint category.
+        const categoryMapping = {
+          "Warden": "Hostel",
+          "AR": "Documentation",
+          "CanteenCordinator": "Canteen",
+          "AcademicCordinator": "Academic",
+          "SportCordinator": "Sports",
+          "MaintainanceCordinator": "Maintainance",
+          "Librarian": "Library",
+          "SecurityCordinator": "Security"
+        };
+        const complaintCategory = categoryMapping[admin.subrole];
+        if (!complaintCategory) {
+          return res.status(400).json({ error: "No mapping for admin subrole" });
+        }
+        const filteredSql = `SELECT c.*, u.username AS admin_username, u.subrole AS admin_subrole
+                             FROM CoReMScomplaints c
+                             LEFT JOIN CoReMSusers u ON c.updated_by_admin = u.user_id
+                             WHERE c.category = ? ORDER BY c.created_at DESC`;
+        db.query(filteredSql, [complaintCategory], (err, results) => {
+          if (err) return res.status(500).json({ error: "Database error" });
+          res.json(results);
+        });
+      } else {
+        return res.status(403).json({ error: "Unauthorized" });
+      }
+    });
+  } else {
+    // If admin_id not provided, return full list (or optionally restrict this route to admin-only).
+    db.query(sqlAll, (err, results) => {
+      if (err) return res.status(500).json({ error: "Database error" });
+      res.json(results);
+    });
+  }
+});
+
+// Get complaints for a particular user remains unchanged.
+app.get("/api/complaints/user/:user_id", (req, res) => {
+  const sql = "SELECT * FROM CoReMScomplaints WHERE user_id = ? ORDER BY created_at DESC";
+  db.query(sql, [req.params.user_id], (err, results) => {
+    if (err) return res.status(500).json({ error: "Database error" });
+    res.json(results);
+  });
+});
+
+// Update complaint status (for admins).
 app.put("/api/complaints/:id/status", (req, res) => {
   const { status, admin_id } = req.body;
-  const updateComplaint = `UPDATE complaints 
+  const updateComplaint = `UPDATE CoReMScomplaints 
                            SET status = ?, updated_by_admin = ?
                            WHERE complaint_id = ?`;
-  const insertUpdate = `INSERT INTO status_updates 
+  const insertUpdate = `INSERT INTO CoReMSstatus 
                         (complaint_id, admin_id, update_text, update_date)
                         VALUES (?, ?, ?, NOW())`;
 
@@ -114,10 +177,11 @@ app.put("/api/complaints/:id/status", (req, res) => {
   });
 });
 
+// GET complaint status updates remains unchanged.
 app.get("/api/statusupdates/:complaintId", (req, res) => {
   const sql = `SELECT su.*, u.username AS admin_username
-               FROM status_updates su
-               LEFT JOIN users u ON su.admin_id = u.user_id
+               FROM CoReMSstatus su
+               LEFT JOIN CoReMSusers u ON su.admin_id = u.user_id
                WHERE su.complaint_id = ?
                ORDER BY su.update_date ASC`;
   db.query(sql, [req.params.complaintId], (err, results) => {

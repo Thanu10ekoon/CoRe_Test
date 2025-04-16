@@ -1,3 +1,4 @@
+// AuthGuard.js
 import React from "react";
 import { Navigate } from "react-router-dom";
 
@@ -10,7 +11,7 @@ const AuthGuard = ({ children, allowedRoles }) => {
     return <Navigate to="/unauthorized" />;
   }
 
-  // Check if the user's role matches the allowed roles
+  // Check if the user's role matches the allowed roles (if provided)
   if (allowedRoles && !allowedRoles.includes(role)) {
     return <Navigate to="/unauthorized" />;
   }

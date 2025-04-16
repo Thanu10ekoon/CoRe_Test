@@ -1,3 +1,4 @@
+// AdminDashboard.js
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -13,7 +14,7 @@ const AdminDashboard = () => {
 
   useEffect(() => {
     axios
-      .get(`${process.env.REACT_APP_API_BASE_URL}/complaints`)
+      .get(`${process.env.REACT_APP_API_BASE_URL}/complaints?admin_id=${adminId}`)
       .then((response) => {
         setComplaints(response.data);
         setLoading(false);
@@ -22,7 +23,7 @@ const AdminDashboard = () => {
         console.error("Error fetching complaints:", error);
         setLoading(false);
       });
-  }, []);
+  }, [adminId]);
 
   const handleStatusChange = (complaintId, value) => {
     setStatusInputs((prev) => ({ ...prev, [complaintId]: value }));
@@ -60,6 +61,8 @@ const AdminDashboard = () => {
   const handleLogout = () => {
     localStorage.removeItem("user");
     localStorage.removeItem("user_id");
+    localStorage.removeItem("role");
+    localStorage.removeItem("subrole");
     navigate("/");
   };
 
@@ -93,6 +96,7 @@ const AdminDashboard = () => {
                   <tr>
                     <th>ID</th>
                     <th>Title</th>
+                    <th>Category</th>
                     <th>Status</th>
                     <th>Actions</th>
                   </tr>
@@ -102,10 +106,18 @@ const AdminDashboard = () => {
                     <tr key={complaint.complaint_id}>
                       <td>{complaint.complaint_id}</td>
                       <td>{complaint.title}</td>
+                      <td>{complaint.category}</td>
                       <td>
                         {complaint.status}
                         {complaint.updated_by_admin && (
-                          <span> (by Admin ID: {complaint.updated_by_admin})</span>
+                          <span>
+                            {" "}
+                            (by{" "}
+                            {complaint.admin_subrole
+                              ? complaint.admin_subrole
+                              : complaint.admin_username || `Admin ID: ${complaint.updated_by_admin}`}
+                            )
+                          </span>
                         )}
                       </td>
                       <td>
@@ -117,7 +129,7 @@ const AdminDashboard = () => {
                           }
                         >
                           View Details
-                        </Button>{" "}
+                        </Button>
                         <InputGroup className="mt-2">
                           <Form.Control
                             type="text"

@@ -59,7 +59,7 @@ app.post("/api/complaints", (req, res) => {
   }
 
   pool.query(
-    "INSERT INTO complaints SET ?",
+    "INSERT INTO CoReMScomplaints SET ?",
     {
       user_id,
       title,
@@ -98,7 +98,7 @@ app.get("/api/complaints/search", (req, res) => {
 
   const sql = `
     SELECT complaint_id, title, description, status, created_at
-    FROM complaints
+    FROM CoReMScomplaints
     WHERE ${conditions.join(" OR ")}
     ORDER BY created_at DESC
     LIMIT 5
@@ -125,7 +125,7 @@ app.get("/api/complaints/:id", (req, res) => {
   const { id } = req.params;
   const sql = `
     SELECT c.*, u.username AS admin_username
-    FROM complaints c
+    FROM CoReMScomplaints c
     LEFT JOIN users u ON c.updated_by_admin = u.user_id
     WHERE c.complaint_id = ?`;
   pool.query(sql, [id], (err, results) => {
@@ -143,7 +143,7 @@ app.get("/api/complaints/:id", (req, res) => {
 // Fetch all complaints for a specific user
 app.get("/api/complaints/user/:userId", (req, res) => {
   const { userId } = req.params;
-  const sql = "SELECT * FROM complaints WHERE user_id = ? ORDER BY date DESC";
+  const sql = "SELECT * FROM CoReMScomplaints WHERE user_id = ? ORDER BY date DESC";
   pool.query(sql, [userId], (err, results) => {
     if (err) {
       console.error("Fetch error:", err);
