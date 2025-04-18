@@ -3,7 +3,6 @@ const express = require('express');
 const mysql = require('mysql2');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const fetch = require('node-fetch');
 const { NlpManager } = require('node-nlp');
 const fs = require('fs');
 const path = require('path');
@@ -39,11 +38,12 @@ pool.getConnection((err, connection) => {
 const manager = new NlpManager({ languages: ['en'], forceNER: true });
 const modelFilePath = path.join(__dirname, 'model.nlp');
 
+// Load pre-trained NLP model from file if it exists
 if (fs.existsSync(modelFilePath)) {
   manager.load(modelFilePath);
   console.log("Loaded pre-trained NLP model from model.nlp");
 } else {
-  console.error("Pre-trained NLP model not found. Run train-model.js first.");
+  console.error("Pre-trained NLP model not found. Run train-model.js first to create model.nlp.");
   process.exit(1);
 }
 
@@ -81,6 +81,7 @@ app.post("/api/complaints", (req, res) => {
 // Search complaints
 app.get("/api/complaints/search", (req, res) => {
   const { q } = req.query;
+  
   if (!q || q.trim() === "") {
     return res.status(200).json([]);
   }
@@ -105,8 +106,15 @@ app.get("/api/complaints/search", (req, res) => {
 
   pool.query(sql, params, (err, results) => {
     if (err) {
-      console.error("Search failed:", { error: err, sql, params });
-      return res.status(500).json({ error: "Database error", message: err.message });
+      console.error("Search failed:", {
+        error: err,
+        sql: sql,
+        params: params
+      });
+      return res.status(500).json({ 
+        error: "Database error",
+        message: err.message
+      });
     }
     res.json(results);
   });
@@ -119,8 +127,7 @@ app.get("/api/complaints/:id", (req, res) => {
     SELECT c.*, u.username AS admin_username
     FROM CoReMScomplaints c
     LEFT JOIN users u ON c.updated_by_admin = u.user_id
-    WHERE c.complaint_id = ?
-  `;
+    WHERE c.complaint_id = ?`;
   pool.query(sql, [id], (err, results) => {
     if (err) {
       console.error("Fetch error:", err);
@@ -162,7 +169,5 @@ app.post('/api/nlp', async (req, res) => {
   }
 });
 
-
-// -------------------------
 const PORT = process.env.PORT || 5001;
 app.listen(PORT, () => console.log(`Chatbot backend running on port ${PORT}`));
