@@ -162,26 +162,6 @@ app.post('/api/nlp', async (req, res) => {
   }
 });
 
-// -------------------------
-// Wikipedia summary endpoint
-// -------------------------
-app.get('/api/wiki', async (req, res) => {
-  const topic = req.query.topic;
-  if (!topic) {
-    return res.status(400).json({ error: 'Topic is required' });
-  }
-  try {
-    const response = await fetch(
-      `https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(topic)}`
-    );
-    if (!response.ok) throw new Error('Failed to fetch from Wikipedia');
-    const data = await response.json();
-    res.json({ summary: data.extract || 'No summary available.' });
-  } catch (err) {
-    console.error('Wikipedia fetch error:', err);
-    res.status(500).json({ error: 'Failed to fetch Wikipedia summary' });
-  }
-});
 
 // -------------------------
 const PORT = process.env.PORT || 5001;
