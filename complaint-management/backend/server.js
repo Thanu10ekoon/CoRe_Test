@@ -6,6 +6,7 @@ const path = require('path');
 const fs = require('fs');
 const multer = require('multer');
 require("dotenv").config();
+const { google } = require('googleapis');
 
 const app = express();
 
@@ -30,18 +31,47 @@ if (!fs.existsSync(uploadsDir)) {
 // Serve uploaded files statically
 app.use('/uploads', express.static(uploadsDir));
 
-// Multer config for handling photo uploads
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, uploadsDir);
-  },
-  filename: function (req, file, cb) {
-    const ext = path.extname(file.originalname);
-    const basename = path.basename(file.originalname, ext).replace(/[^a-z0-9_-]/ig, '_');
-    cb(null, `${Date.now()}-${basename}${ext}`);
+// Multer configuration: we'll use memory storage when Google Drive integration
+// is enabled so we can stream the file to Drive. Otherwise, we save to disk
+// (development fallback) and serve from /uploads.
+let upload;
+const useDrive = Boolean(process.env.GOOGLE_SERVICE_ACCOUNT && process.env.DRIVE_FOLDER_ID);
+if (useDrive) {
+  // memory storage to get file.buffer
+  const memoryStorage = multer.memoryStorage();
+  upload = multer({ storage: memoryStorage });
+} else {
+  // disk storage fallback (development/local)
+  const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+      cb(null, uploadsDir);
+    },
+    filename: function (req, file, cb) {
+      const ext = path.extname(file.originalname);
+      const basename = path.basename(file.originalname, ext).replace(/[^a-z0-9_-]/ig, '_');
+      cb(null, `${Date.now()}-${basename}${ext}`);
+    }
+  });
+  upload = multer({ storage });
+}
+
+// Helper: initialize Google Drive client if configured
+let driveClient = null;
+if (useDrive) {
+  try {
+    // GOOGLE_SERVICE_ACCOUNT should be a JSON string (service account key)
+    const serviceAccount = JSON.parse(process.env.GOOGLE_SERVICE_ACCOUNT);
+    const jwtClient = new google.auth.GoogleAuth({
+      credentials: serviceAccount,
+      scopes: ['https://www.googleapis.com/auth/drive']
+    });
+    driveClient = google.drive({ version: 'v3', auth: jwtClient });
+    console.log('Google Drive client initialized');
+  } catch (err) {
+    console.error('Failed to initialize Google Drive client:', err.message);
+    driveClient = null;
   }
-});
-const upload = multer({ storage });
+}
 
 // Database connection
 const db = mysql.createConnection({
@@ -101,10 +131,104 @@ app.post("/api/complaints", (req, res) => {
 });
 
 // Photo upload endpoint
-app.post('/api/upload', upload.single('photo'), (req, res) => {
+/*
+  /api/upload
+
+  Behavior:
+  - If GOOGLE_SERVICE_ACCOUNT and DRIVE_FOLDER_ID env vars are set (and valid),
+    the server will upload the incoming file field `photo` to the specified
+    Google Drive folder and return the Google Drive file's webViewLink.
+    NOTE: For files to be viewable via the returned link, the Drive folder
+    must be shared appropriately (see instructions below). Easiest is to
+    share the folder with the service account email and then programmatically
+    set the file's permissions to allow anyone with link to view.
+
+  - If Drive is not configured, the server falls back to saving the file
+    in the local `uploads/` directory and returns a static URL under /uploads.
+
+  Required environment variables when using Drive:
+  - GOOGLE_SERVICE_ACCOUNT: the full service account JSON (stringified)
+    Example: set this in Vercel as the JSON contents of the service account key.
+  - DRIVE_FOLDER_ID: the id of the Google Drive folder where files should be saved.
+
+  Important setup steps (summary):
+  1) Create a Google Cloud service account, enable Drive API, and create a
+     JSON key. Keep the JSON contents confidential.
+  2) In Google Drive, create (or use) the target folder and share it with
+     the service account's client_email (found inside the JSON key). Give Editor rights.
+  3) Set the two environment variables on Vercel (or your hosting):
+     - GOOGLE_SERVICE_ACCOUNT (value = JSON key contents)
+     - DRIVE_FOLDER_ID (value = folder id, e.g. '1RP8tltwXzZfvdlKDeCx2ukq1-a1tUmmM')
+  4) Deploy. The server will upload to Drive and return a shareable link.
+
+*/
+app.post('/api/upload', upload.single('photo'), async (req, res) => {
   if (!req.file) return res.status(400).json({ error: 'No file uploaded' });
-  const fileUrl = `${req.protocol}://${req.get('host')}/uploads/${req.file.filename}`;
-  res.json({ fileUrl });
+
+  // If Drive is configured and client initialized, upload to Drive
+  if (driveClient) {
+    try {
+      const fileName = req.file.originalname.replace(/[^a-z0-9_.-]/ig, '_');
+      const bufferStream = require('stream').Readable.from(req.file.buffer);
+
+      // Create the file on Drive in the target folder
+      const createRes = await driveClient.files.create({
+        requestBody: {
+          name: `${Date.now()}-${fileName}`,
+          parents: [process.env.DRIVE_FOLDER_ID]
+        },
+        media: {
+          mimeType: req.file.mimetype,
+          body: bufferStream
+        },
+        fields: 'id, name'
+      });
+
+      const fileId = createRes.data.id;
+
+      // Make the file readable by anyone with the link
+      await driveClient.permissions.create({
+        fileId,
+        requestBody: {
+          role: 'reader',
+          type: 'anyone'
+        }
+      });
+
+      // Get a webViewLink for the file
+      const meta = await driveClient.files.get({ fileId, fields: 'webViewLink, webContentLink' });
+
+      // Prefer webContentLink if available (direct download), otherwise webViewLink
+      const fileUrl = meta.data.webContentLink || meta.data.webViewLink || `https://drive.google.com/file/d/${fileId}/view`;
+      return res.json({ fileUrl });
+    } catch (err) {
+      console.error('Drive upload failed:', err);
+      // fall through to disk fallback below if configured
+    }
+  }
+
+  // Fallback: write to disk (uploads/) and return local URL
+  if (req.file.path) {
+    // multer diskStorage sets req.file.path
+    const fileUrl = `${req.protocol}://${req.get('host')}/uploads/${path.basename(req.file.path)}`;
+    return res.json({ fileUrl });
+  } else if (req.file && req.file.buffer) {
+    // If we were using memory storage but Drive failed, persist to disk now
+    try {
+      const ext = path.extname(req.file.originalname);
+      const basename = path.basename(req.file.originalname, ext).replace(/[^a-z0-9_-]/ig, '_');
+      const filename = `${Date.now()}-${basename}${ext}`;
+      const outPath = path.join(uploadsDir, filename);
+      fs.writeFileSync(outPath, req.file.buffer);
+      const fileUrl = `${req.protocol}://${req.get('host')}/uploads/${filename}`;
+      return res.json({ fileUrl });
+    } catch (err) {
+      console.error('Disk fallback write failed:', err);
+      return res.status(500).json({ error: 'File upload failed' });
+    }
+  }
+
+  return res.status(500).json({ error: 'File upload failed' });
 });
 
 // GET complaint details by complaint id with admin details.
