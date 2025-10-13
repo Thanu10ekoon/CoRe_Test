@@ -1,5 +1,8 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:http_parser/http_parser.dart';
+import 'package:mime/mime.dart';
+import 'dart:io';
 
 class ApiService {
   static const String baseUrl = 'https://co-re-test.vercel.app/api';
@@ -82,6 +85,7 @@ class ApiService {
     required String title,
     required String description,
     required String category,
+    String? photoUrl,
   }) async {
     final response = await http.post(
       Uri.parse('$baseUrl/complaints'),
@@ -91,6 +95,7 @@ class ApiService {
         'title': title,
         'description': description,
         'category': category,
+        'photo_url': photoUrl,
       }),
     );
 
@@ -121,5 +126,28 @@ class ApiService {
     } else {
       throw Exception('Failed to update status');
     }
+  }
+
+  // Upload photo and return file URL
+  static Future<String> uploadPhoto(File file) async {
+    final uri = Uri.parse('$baseUrl/upload');
+    final request = http.MultipartRequest('POST', uri);
+    final mimeType = lookupMimeType(file.path) ?? 'image/jpeg';
+    final parts = mimeType.split('/');
+    request.files.add(
+      await http.MultipartFile.fromPath(
+        'photo',
+        file.path,
+        contentType: MediaType(parts[0], parts[1]),
+      ),
+    );
+
+    final streamed = await request.send();
+    final resp = await http.Response.fromStream(streamed);
+    if (resp.statusCode == 200) {
+      final data = json.decode(resp.body);
+      return data['fileUrl'];
+    }
+    throw Exception('Failed to upload photo');
   }
 }

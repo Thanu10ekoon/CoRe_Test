@@ -2,6 +2,9 @@
 const express = require("express");
 const mysql = require("mysql2");
 const cors = require("cors");
+const path = require('path');
+const fs = require('fs');
+const multer = require('multer');
 require("dotenv").config();
 
 const app = express();
@@ -17,6 +20,28 @@ app.use(cors({
   },
   credentials: true
 }));
+
+// Ensure uploads directory exists
+const uploadsDir = path.join(__dirname, 'uploads');
+if (!fs.existsSync(uploadsDir)) {
+  fs.mkdirSync(uploadsDir, { recursive: true });
+}
+
+// Serve uploaded files statically
+app.use('/uploads', express.static(uploadsDir));
+
+// Multer config for handling photo uploads
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, uploadsDir);
+  },
+  filename: function (req, file, cb) {
+    const ext = path.extname(file.originalname);
+    const basename = path.basename(file.originalname, ext).replace(/[^a-z0-9_-]/ig, '_');
+    cb(null, `${Date.now()}-${basename}${ext}`);
+  }
+});
+const upload = multer({ storage });
 
 // Database connection
 const db = mysql.createConnection({
@@ -57,15 +82,16 @@ app.post("/api/login", (req, res) => {
 });
 
 // Complaint submission: now expects a "category" field.
+// Accept complaint creation with optional photo_url
 app.post("/api/complaints", (req, res) => {
-  const { user_id, title, description, category } = req.body;
+  const { user_id, title, description, category, photo_url } = req.body;
   if (!category) {
     return res.status(400).json({ error: "Category is required" });
   }
-  const sql = `INSERT INTO CoReMScomplaints (user_id, title, description, category, status, created_at)
-               VALUES (?, ?, ?, ?, 'Pending', NOW())`;
+  const sql = `INSERT INTO CoReMScomplaints (user_id, title, description, category, status, created_at, photo_url)
+               VALUES (?, ?, ?, ?, 'Pending', NOW(), ?)`;
 
-  db.query(sql, [user_id, title, description, category], (err, result) => {
+  db.query(sql, [user_id, title, description, category, photo_url || null], (err, result) => {
     if (err) return res.status(500).json({ error: "Database error" });
     res.json({ 
       message: "Complaint added successfully",
@@ -74,9 +100,16 @@ app.post("/api/complaints", (req, res) => {
   });
 });
 
+// Photo upload endpoint
+app.post('/api/upload', upload.single('photo'), (req, res) => {
+  if (!req.file) return res.status(400).json({ error: 'No file uploaded' });
+  const fileUrl = `${req.protocol}://${req.get('host')}/uploads/${req.file.filename}`;
+  res.json({ fileUrl });
+});
+
 // GET complaint details by complaint id with admin details.
 app.get("/api/complaints/:id", (req, res) => {
-  const sql = `SELECT c.*, u.username AS admin_username, u.subrole AS admin_subrole 
+  const sql = `SELECT c.*, c.photo_url, u.username AS admin_username, u.subrole AS admin_subrole 
                FROM CoReMScomplaints c
                LEFT JOIN CoReMSusers u ON c.updated_by_admin = u.user_id
                WHERE c.complaint_id = ?`;
@@ -91,7 +124,7 @@ app.get("/api/complaints", (req, res) => {
   const adminId = req.query.admin_id;
   
   // Default full query including JOIN to get admin details
-  const sqlAll = `SELECT c.*, u.username AS admin_username, u.subrole AS admin_subrole
+  const sqlAll = `SELECT c.*, c.photo_url, u.username AS admin_username, u.subrole AS admin_subrole
                   FROM CoReMScomplaints c
                   LEFT JOIN CoReMSusers u ON c.updated_by_admin = u.user_id
                   ORDER BY c.created_at DESC`;

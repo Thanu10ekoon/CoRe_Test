@@ -101,6 +101,17 @@ class _ComplaintDetailsScreenState extends State<ComplaintDetailsScreen> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
+                                if (_complaint!.photoUrl != null &&
+                                    _complaint!.photoUrl!.isNotEmpty) ...[
+                                  Center(
+                                    child: Image.network(
+                                      _complaint!.photoUrl!,
+                                      height: 220,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 12),
+                                ],
                                 Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,

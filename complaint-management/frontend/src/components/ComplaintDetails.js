@@ -51,6 +51,11 @@ const ComplaintDetails = () => {
           ) : complaint ? (
             <Card className="shadow">
               <Card.Body>
+                {complaint.photo_url && (
+                  <div className="text-center mb-3">
+                    <img src={complaint.photo_url} alt="Complaint" style={{ maxWidth: '100%', maxHeight: 400 }} />
+                  </div>
+                )}
                 <Card.Title className="text-primary">{complaint.title}</Card.Title>
                 <Card.Text>{complaint.description}</Card.Text>
                 <ListGroup variant="flush">
