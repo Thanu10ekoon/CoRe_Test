@@ -9,39 +9,17 @@ const NewComplaint = () => {
   const [complaintDescription, setComplaintDescription] = useState("");
   const [complaintCategory, setComplaintCategory] = useState(""); // New state for category
   const [errorMessage, setErrorMessage] = useState("");
-  const [photoFile, setPhotoFile] = useState(null);
-  const [uploading, setUploading] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     const userId = localStorage.getItem("user_id") || 1;
 
-    let photo_url = null;
-    try {
-      if (photoFile) {
-        setUploading(true);
-        const formData = new FormData();
-        formData.append('photo', photoFile);
-        const uploadResp = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/upload`, formData, {
-          headers: { 'Content-Type': 'multipart/form-data' }
-        });
-        photo_url = uploadResp.data.fileUrl;
-      }
-    } catch (err) {
-      setUploading(false);
-      setErrorMessage('Photo upload failed');
-      return;
-    } finally {
-      setUploading(false);
-    }
-
     const complaintData = {
       user_id: userId,
       title: complaintTitle,
       description: complaintDescription,
-      category: complaintCategory,
-      photo_url
+      category: complaintCategory
     };
 
     try {
@@ -105,17 +83,9 @@ const NewComplaint = () => {
                 <option value="Documentation">Documentation</option>
               </Form.Select>
             </Form.Group>
-            <Form.Group controlId="complaintPhoto" className="mb-3">
-              <Form.Label>Photo (optional)</Form.Label>
-              <Form.Control
-                type="file"
-                accept="image/*"
-                onChange={(e) => setPhotoFile(e.target.files[0])}
-              />
-            </Form.Group>
             {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>}
-            <Button variant="primary" type="submit" disabled={uploading}>
-              {uploading ? 'Uploading...' : 'Submit Complaint'}
+            <Button variant="primary" type="submit">
+              Submit Complaint
             </Button>
           </Form>
         </Card.Body>

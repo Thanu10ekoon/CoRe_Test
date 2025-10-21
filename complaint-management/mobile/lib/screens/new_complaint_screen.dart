@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:image_picker/image_picker.dart';
-import 'dart:io';
 import '../services/api_service.dart';
 
 class NewComplaintScreen extends StatefulWidget {
@@ -36,19 +34,6 @@ class _NewComplaintScreenState extends State<NewComplaintScreen> {
     super.dispose();
   }
 
-  File? _pickedImage;
-
-  Future<void> _pickImage() async {
-    final picker = ImagePicker();
-    final XFile? image =
-        await picker.pickImage(source: ImageSource.camera, imageQuality: 80);
-    if (image != null) {
-      setState(() {
-        _pickedImage = File(image.path);
-      });
-    }
-  }
-
   Future<void> _submitComplaint() async {
     if (!_formKey.currentState!.validate()) {
       return;
@@ -71,17 +56,12 @@ class _NewComplaintScreenState extends State<NewComplaintScreen> {
     try {
       final prefs = await SharedPreferences.getInstance();
       final userId = prefs.getString('user_id') ?? '1';
-      String? photoUrl;
-      if (_pickedImage != null) {
-        photoUrl = await ApiService.uploadPhoto(_pickedImage!);
-      }
 
       await ApiService.createComplaint(
         userId: userId,
         title: _titleController.text.trim(),
         description: _descriptionController.text.trim(),
         category: _selectedCategory,
-        photoUrl: photoUrl,
       );
 
       if (mounted) {
@@ -213,24 +193,6 @@ class _NewComplaintScreenState extends State<NewComplaintScreen> {
                           },
                         ),
                         const SizedBox(height: 24),
-                        Row(
-                          children: [
-                            ElevatedButton.icon(
-                              onPressed: _pickImage,
-                              icon: const Icon(Icons.camera_alt),
-                              label: const Text('Take Photo'),
-                            ),
-                            const SizedBox(width: 12),
-                            if (_pickedImage != null)
-                              Expanded(
-                                child: Image.file(
-                                  _pickedImage!,
-                                  height: 80,
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                          ],
-                        ),
                         ElevatedButton(
                           onPressed: _isLoading ? null : _submitComplaint,
                           style: ElevatedButton.styleFrom(

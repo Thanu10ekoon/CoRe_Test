@@ -8,7 +8,6 @@ class Complaint {
   final int? updatedByAdmin;
   final String? adminUsername;
   final String? adminSubrole;
-  final String? photoUrl;
 
   Complaint({
     required this.complaintId,
@@ -20,7 +19,6 @@ class Complaint {
     this.updatedByAdmin,
     this.adminUsername,
     this.adminSubrole,
-    this.photoUrl,
   });
 
   factory Complaint.fromJson(Map<String, dynamic> json) {
@@ -34,7 +32,6 @@ class Complaint {
       updatedByAdmin: json['updated_by_admin'],
       adminUsername: json['admin_username'],
       adminSubrole: json['admin_subrole'],
-      photoUrl: json['photo_url'],
     );
   }
 }
