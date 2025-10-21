@@ -15,6 +15,8 @@ const ComplaintDetails = () => {
         const complaintResponse = await axios.get(
           `${process.env.REACT_APP_API_BASE_URL}/complaints/${id}`
         );
+        console.log('Complaint data:', complaintResponse.data);
+        console.log('Photo URL:', complaintResponse.data.photo_url);
         setComplaint(complaintResponse.data);
 
         const updatesResponse = await axios.get(
@@ -53,6 +55,20 @@ const ComplaintDetails = () => {
               <Card.Body>
                 <Card.Title className="text-primary">{complaint.title}</Card.Title>
                 <Card.Text>{complaint.description}</Card.Text>
+                {complaint.photo_url && (
+                  <div className="mb-3">
+                    <img
+                      src={`${process.env.REACT_APP_API_BASE_URL.replace('/api', '')}${complaint.photo_url}`}
+                      alt="Complaint"
+                      style={{ maxWidth: "100%", maxHeight: "400px", objectFit: "contain" }}
+                      className="img-fluid rounded"
+                      onError={(e) => {
+                        console.error('Image load error:', e.target.src);
+                        e.target.style.display = 'none';
+                      }}
+                    />
+                  </div>
+                )}
                 <ListGroup variant="flush">
                   <ListGroup.Item>
                     <strong>Status:</strong> {complaint.status}

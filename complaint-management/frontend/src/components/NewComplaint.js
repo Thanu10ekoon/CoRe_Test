@@ -8,24 +8,50 @@ const NewComplaint = () => {
   const [complaintTitle, setComplaintTitle] = useState("");
   const [complaintDescription, setComplaintDescription] = useState("");
   const [complaintCategory, setComplaintCategory] = useState(""); // New state for category
+  const [selectedPhoto, setSelectedPhoto] = useState(null);
+  const [photoPreview, setPhotoPreview] = useState(null);
   const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
+
+  const handlePhotoChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      if (file.size > 5 * 1024 * 1024) {
+        setErrorMessage("File size should be less than 5MB");
+        return;
+      }
+      if (!file.type.match(/image\/(jpeg|jpg|png|gif)/)) {
+        setErrorMessage("Only image files (JPEG, PNG, GIF) are allowed");
+        return;
+      }
+      setSelectedPhoto(file);
+      setPhotoPreview(URL.createObjectURL(file));
+      setErrorMessage("");
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     const userId = localStorage.getItem("user_id") || 1;
 
-    const complaintData = {
-      user_id: userId,
-      title: complaintTitle,
-      description: complaintDescription,
-      category: complaintCategory
-    };
+    const formData = new FormData();
+    formData.append("user_id", userId);
+    formData.append("title", complaintTitle);
+    formData.append("description", complaintDescription);
+    formData.append("category", complaintCategory);
+    if (selectedPhoto) {
+      formData.append("photo", selectedPhoto);
+    }
 
     try {
       const response = await axios.post(
         `${process.env.REACT_APP_API_BASE_URL}/complaints`,
-        complaintData
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        }
       );
       if (response.status === 200) {
         alert("Complaint submitted successfully!");
@@ -82,6 +108,26 @@ const NewComplaint = () => {
                 <option value="Security">Security</option>
                 <option value="Documentation">Documentation</option>
               </Form.Select>
+            </Form.Group>
+            <Form.Group controlId="complaintPhoto" className="mb-3">
+              <Form.Label>Upload Photo (Optional)</Form.Label>
+              <Form.Control
+                type="file"
+                accept="image/*"
+                onChange={handlePhotoChange}
+              />
+              <Form.Text className="text-muted">
+                Maximum file size: 5MB. Supported formats: JPEG, PNG, GIF
+              </Form.Text>
+              {photoPreview && (
+                <div className="mt-3">
+                  <img 
+                    src={photoPreview} 
+                    alt="Preview" 
+                    style={{ maxWidth: '100%', maxHeight: '300px', objectFit: 'contain' }}
+                  />
+                </div>
+              )}
             </Form.Group>
             {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>}
             <Button variant="primary" type="submit">

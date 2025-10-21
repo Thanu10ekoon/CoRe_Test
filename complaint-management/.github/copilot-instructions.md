@@ -33,19 +33,29 @@ This is a **full-stack complaint management system** with three components:
 
 ### Database Schema (MySQL)
 - `CoReMSusers`: `user_id`, `username`, `password`, `role`, `subrole`
-- `CoReMScomplaints`: `complaint_id`, `user_id`, `title`, `description`, `category`, `status`, `created_at`, `updated_by_admin`
+- `CoReMScomplaints`: `complaint_id`, `user_id`, `title`, `description`, `category`, `photo_url`, `status`, `created_at`, `updated_by_admin`
 - `CoReMSstatus`: `update_id`, `complaint_id`, `admin_id`, `update_text`, `update_date`
+
+### Photo Upload System
+- **Storage**: Backend `/uploads` directory (temporary for Vercel)
+- **Formats**: JPEG, JPG, PNG, GIF
+- **Size Limit**: 5MB per photo
+- **Field Name**: `photo` (multipart/form-data)
+- **Access**: Photos served at `{BASE_URL}/uploads/{filename}`
+- **Mobile**: Uses `image_picker` package for camera/gallery access
 
 ## Tech Stack
 
 ### Backend (`/backend`)
 - **Framework**: Express.js
 - **Database**: MySQL (Clever Cloud)
+- **File Upload**: Multer middleware for photo uploads
 - **Deployment**: Vercel serverless
 - **Key Files**:
-  - `server.js`: Main API routes, exports Express app
+  - `server.js`: Main API routes, exports Express app, multer configuration
   - `db.js`: Database connection (legacy, credentials in server.js)
   - `vercel.json`: Serverless config
+  - `uploads/`: Photo storage directory
 
 ### Frontend (`/frontend`)
 - **Framework**: React 18 + React Router
@@ -59,10 +69,12 @@ This is a **full-stack complaint management system** with three components:
 - **Framework**: Flutter 3.0+
 - **State**: SharedPreferences for auth
 - **HTTP**: `http` package
+- **Image Picker**: `image_picker` package for camera/gallery
 - **Key Files**:
   - `lib/main.dart`: Entry point with splash screen
-  - `lib/services/api_service.dart`: All API calls (same endpoints as web)
+  - `lib/services/api_service.dart`: All API calls including multipart upload
   - `lib/screens/`: All screens (login, dashboards, details, new complaint)
+  - `android/app/src/main/AndroidManifest.xml`: Camera/storage permissions
 
 ### Chatbot (`/chatbot`)
 - **Purpose**: AI chatbot for web frontend (NOT implemented in mobile)

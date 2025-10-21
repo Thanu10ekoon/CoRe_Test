@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Photo Display</title>
+</head>
+<body>
+    <h1>Photo Upload Test</h1>
+    
+    <h2>Test 1: Direct URL</h2>
+    <img src="http://localhost:5000/uploads/complaint-1761050453168-448539893.jpg" 
+         alt="Direct URL" 
+         style="max-width: 500px; border: 2px solid green;">
+    <p>URL: <code>http://localhost:5000/uploads/complaint-1761050453168-448539893.jpg</code></p>
+    
+    <h2>Test 2: API endpoint for complaint 17</h2>
+    <button onclick="fetchComplaint()">Fetch Complaint 17 Details</button>
+    <pre id="result"></pre>
+    <img id="complaint-photo" style="max-width: 500px; border: 2px solid blue; display: none;">
+    
+    <script>
+        async function fetchComplaint() {
+            try {
+                const response = await fetch('http://localhost:5000/api/complaints/17');
+                const data = await response.json();
+                document.getElementById('result').textContent = JSON.stringify(data, null, 2);
+                
+                if (data.photo_url) {
+                    const imgUrl = 'http://localhost:5000' + data.photo_url;
+                    document.getElementById('complaint-photo').src = imgUrl;
+                    document.getElementById('complaint-photo').style.display = 'block';
+                    console.log('Photo URL from API:', data.photo_url);
+                    console.log('Full URL:', imgUrl);
+                }
+            } catch (error) {
+                document.getElementById('result').textContent = 'Error: ' + error.message;
+            }
+        }
+    </script>
+</body>
+</html>

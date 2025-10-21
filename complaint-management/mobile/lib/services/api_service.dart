@@ -1,5 +1,7 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:http/http.dart' as http;
+import 'package:http_parser/http_parser.dart';
 
 class ApiService {
   static const String baseUrl = 'https://co-re-test.vercel.app/api';
@@ -76,23 +78,41 @@ class ApiService {
     }
   }
 
-  // Create new complaint
+  // Create new complaint with optional photo
   static Future<Map<String, dynamic>> createComplaint({
     required String userId,
     required String title,
     required String description,
     required String category,
+    File? photoFile,
   }) async {
-    final response = await http.post(
+    var request = http.MultipartRequest(
+      'POST',
       Uri.parse('$baseUrl/complaints'),
-      headers: {'Content-Type': 'application/json'},
-      body: json.encode({
-        'user_id': userId,
-        'title': title,
-        'description': description,
-        'category': category,
-      }),
     );
+
+    // Add text fields
+    request.fields['user_id'] = userId;
+    request.fields['title'] = title;
+    request.fields['description'] = description;
+    request.fields['category'] = category;
+
+    // Add photo if provided
+    if (photoFile != null) {
+      var stream = http.ByteStream(photoFile.openRead());
+      var length = await photoFile.length();
+      var multipartFile = http.MultipartFile(
+        'photo',
+        stream,
+        length,
+        filename: photoFile.path.split('/').last,
+        contentType: MediaType('image', 'jpeg'),
+      );
+      request.files.add(multipartFile);
+    }
+
+    var streamedResponse = await request.send();
+    var response = await http.Response.fromStream(streamedResponse);
 
     if (response.statusCode == 200) {
       return json.decode(response.body);
