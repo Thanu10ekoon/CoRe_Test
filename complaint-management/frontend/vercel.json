@@ -1,43 +1,50 @@
 {
-  "buildCommand": "npm run build",
-  "outputDirectory": "build",
-  "rewrites": [
+  "version": 2,
+  "builds": [
     {
-      "source": "/api/login",
-      "destination": "/api/login.js"
-    },
-    {
-      "source": "/api/complaints",
-      "destination": "/api/complaints.js"
-    },
-    {
-      "source": "/api/complaints/user/:userId",
-      "destination": "/api/complaints/user/[userId].js"
-    },
-    {
-      "source": "/api/complaints/:complaintId",
-      "destination": "/api/complaints/[complaintId].js"
-    },
-    {
-      "source": "/api/complaints/:complaintId/status",
-      "destination": "/api/complaints/[complaintId].js"
-    },
-    {
-      "source": "/api/statusupdates/:complaintId",
-      "destination": "/api/statusupdates/[complaintId].js"
-    },
-    {
-      "source": "/api/uploads/:filename",
-      "destination": "/api/uploads/[filename].js"
+      "src": "package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "build"
+      }
     }
   ],
   "routes": [
     {
-      "src": "/api/(.*)",
-      "dest": "/api/$1"
+      "src": "/api/login",
+      "dest": "/api/login.js"
     },
     {
-      "handle": "filesystem"
+      "src": "/api/complaints$",
+      "dest": "/api/complaints.js"
+    },
+    {
+      "src": "/api/complaints/user/([^/]+)",
+      "dest": "/api/complaints/user/$1"
+    },
+    {
+      "src": "/api/complaints/([^/]+)/status",
+      "dest": "/api/complaints/$1?status=true"
+    },
+    {
+      "src": "/api/complaints/([^/]+)",
+      "dest": "/api/complaints/$1"
+    },
+    {
+      "src": "/api/statusupdates/([^/]+)",
+      "dest": "/api/statusupdates/$1"
+    },
+    {
+      "src": "/api/uploads/([^/]+)",
+      "dest": "/api/uploads/$1"
+    },
+    {
+      "src": "/static/(.*)",
+      "dest": "/static/$1"
+    },
+    {
+      "src": "/(.*\\.(js|css|ico|png|jpg|jpeg|svg|gif))",
+      "dest": "/$1"
     },
     {
       "src": "/(.*)",
