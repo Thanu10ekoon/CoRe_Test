@@ -255,8 +255,12 @@ if (process.env.NODE_ENV === 'production') {
 // Export for Vercel
 module.exports = app;
 
-// Local development
-if (process.env.NODE_ENV !== 'production') {
+// Start server (unless running on Vercel)
+// Vercel will not have PORT defined and will handle the app itself
+if (!process.env.VERCEL) {
   const PORT = process.env.PORT || 5000;
-  app.listen(PORT, () => console.log(`Local server running on port ${PORT}`));
+  app.listen(PORT, '0.0.0.0', () => {
+    console.log(`Server running on port ${PORT}`);
+    console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
+  });
 }

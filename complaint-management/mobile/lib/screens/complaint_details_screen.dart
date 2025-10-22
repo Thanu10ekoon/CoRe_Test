@@ -156,7 +156,7 @@ class _ComplaintDetailsScreenState extends State<ComplaintDetailsScreen> {
                                   ClipRRect(
                                     borderRadius: BorderRadius.circular(12),
                                     child: Image.network(
-                                      'https://co-re-test.vercel.app${_complaint!.photoUrl}',
+                                      'http://16.171.69.23:5000${_complaint!.photoUrl}',
                                       width: double.infinity,
                                       fit: BoxFit.cover,
                                       errorBuilder:

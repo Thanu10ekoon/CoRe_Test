@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
 
 class ApiService {
-  static const String baseUrl = 'https://co-re-test.vercel.app/api';
+  static const String baseUrl = 'http://16.171.69.23:5000/api';
 
   // Login
   static Future<Map<String, dynamic>> login(
@@ -86,38 +86,63 @@ class ApiService {
     required String category,
     File? photoFile,
   }) async {
-    var request = http.MultipartRequest(
-      'POST',
-      Uri.parse('$baseUrl/complaints'),
-    );
+    try {
+      print('Creating complaint with photo: ${photoFile != null}');
+      print('API URL: $baseUrl/complaints');
 
-    // Add text fields
-    request.fields['user_id'] = userId;
-    request.fields['title'] = title;
-    request.fields['description'] = description;
-    request.fields['category'] = category;
-
-    // Add photo if provided
-    if (photoFile != null) {
-      var stream = http.ByteStream(photoFile.openRead());
-      var length = await photoFile.length();
-      var multipartFile = http.MultipartFile(
-        'photo',
-        stream,
-        length,
-        filename: photoFile.path.split('/').last,
-        contentType: MediaType('image', 'jpeg'),
+      var request = http.MultipartRequest(
+        'POST',
+        Uri.parse('$baseUrl/complaints'),
       );
-      request.files.add(multipartFile);
-    }
 
-    var streamedResponse = await request.send();
-    var response = await http.Response.fromStream(streamedResponse);
+      // Add text fields
+      request.fields['user_id'] = userId;
+      request.fields['title'] = title;
+      request.fields['description'] = description;
+      request.fields['category'] = category;
 
-    if (response.statusCode == 200) {
-      return json.decode(response.body);
-    } else {
-      throw Exception('Failed to create complaint');
+      print('Request fields: ${request.fields}');
+
+      // Add photo if provided
+      if (photoFile != null) {
+        print('Photo file path: ${photoFile.path}');
+        print('Photo exists: ${await photoFile.exists()}');
+
+        if (await photoFile.exists()) {
+          var length = await photoFile.length();
+          print('Photo size: $length bytes');
+
+          var stream = http.ByteStream(photoFile.openRead());
+          var multipartFile = http.MultipartFile(
+            'photo',
+            stream,
+            length,
+            filename: photoFile.path.split('/').last,
+            contentType: MediaType('image', 'jpeg'),
+          );
+          request.files.add(multipartFile);
+          print('Photo added to request');
+        } else {
+          print('ERROR: Photo file does not exist!');
+        }
+      }
+
+      print('Sending request...');
+      var streamedResponse = await request.send();
+      var response = await http.Response.fromStream(streamedResponse);
+
+      print('Response status: ${response.statusCode}');
+      print('Response body: ${response.body}');
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return json.decode(response.body);
+      } else {
+        throw Exception(
+            'Failed to create complaint: ${response.statusCode} - ${response.body}');
+      }
+    } catch (e) {
+      print('ERROR in createComplaint: $e');
+      rethrow;
     }
   }
 

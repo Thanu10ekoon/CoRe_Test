@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+    <!-- Allow cleartext (HTTP) traffic for EC2 backend -->
+    <domain-config cleartextTrafficPermitted="true">
+        <domain includeSubdomains="true">16.171.69.23</domain>
+    </domain-config>
+    
+    <!-- For production, you should use HTTPS and remove this config -->
+    <base-config cleartextTrafficPermitted="true">
+        <trust-anchors>
+            <certificates src="system" />
+        </trust-anchors>
+    </base-config>
+</network-security-config>

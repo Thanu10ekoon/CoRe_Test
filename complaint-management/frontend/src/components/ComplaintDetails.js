@@ -58,7 +58,11 @@ const ComplaintDetails = () => {
                 {complaint.photo_url && (
                   <div className="mb-3">
                     <img
-                      src={`${process.env.REACT_APP_API_BASE_URL.replace('/api', '')}${complaint.photo_url}`}
+                      src={
+                        process.env.REACT_APP_API_BASE_URL === '/api'
+                          ? `/api${complaint.photo_url}`
+                          : `${process.env.REACT_APP_API_BASE_URL.replace('/api', '')}${complaint.photo_url}`
+                      }
                       alt="Complaint"
                       style={{ maxWidth: "100%", maxHeight: "400px", objectFit: "contain" }}
                       className="img-fluid rounded"
