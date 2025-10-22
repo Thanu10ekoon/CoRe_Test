@@ -7,7 +7,7 @@ import ComplaintDetails from "./components/ComplaintDetails";
 import NewComplaint from "./components/NewComplaint";
 import Unauthorized from "./components/Unauthorized"; // Unauthorized page
 import AuthGuard from "./components/AuthGuard"; // Import the AuthGuard
-import Chatbot from "./Chatbot";
+// import Chatbot from "./Chatbot"; // Chatbot commented out - not used in mobile
 
 function App() {
   return (
