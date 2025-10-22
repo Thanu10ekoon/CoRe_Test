@@ -1,54 +1,12 @@
 {
-  "version": 2,
-  "builds": [
+  "rewrites": [
     {
-      "src": "package.json",
-      "use": "@vercel/static-build",
-      "config": {
-        "distDir": "build"
-      }
-    }
-  ],
-  "routes": [
-    {
-      "src": "/api/login",
-      "dest": "/api/login.js"
+      "source": "/api/:path*",
+      "destination": "/api/:path*"
     },
     {
-      "src": "/api/complaints$",
-      "dest": "/api/complaints.js"
-    },
-    {
-      "src": "/api/complaints/user/([^/]+)",
-      "dest": "/api/complaints/user/$1"
-    },
-    {
-      "src": "/api/complaints/([^/]+)/status",
-      "dest": "/api/complaints/$1?status=true"
-    },
-    {
-      "src": "/api/complaints/([^/]+)",
-      "dest": "/api/complaints/$1"
-    },
-    {
-      "src": "/api/statusupdates/([^/]+)",
-      "dest": "/api/statusupdates/$1"
-    },
-    {
-      "src": "/api/uploads/([^/]+)",
-      "dest": "/api/uploads/$1"
-    },
-    {
-      "src": "/static/(.*)",
-      "dest": "/static/$1"
-    },
-    {
-      "src": "/(.*\\.(js|css|ico|png|jpg|jpeg|svg|gif))",
-      "dest": "/$1"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/index.html"
+      "source": "/(.*)",
+      "destination": "/index.html"
     }
   ]
 }
