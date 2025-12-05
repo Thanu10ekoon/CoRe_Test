@@ -11,7 +11,7 @@ router.post("/login", (req, res) => {
   }
 
   // Query to check if user exists
-  const query = "SELECT user_id, username, role FROM users WHERE user_id = ?";
+  const query = "SELECT user_id, username, role FROM CoReMSusers WHERE user_id = ?";
   
   db.query(query, [user_id], (err, results) => {
     if (err) {

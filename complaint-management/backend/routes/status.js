@@ -7,7 +7,7 @@ router.put('/update', (req, res) => {
     const { complaint_id, admin_id, status_text } = req.body;
 
     const sql1 = 'INSERT INTO status_updates (complaint_id, admin_id, update_text) VALUES (?, ?, ?)';
-    const sql2 = 'UPDATE complaints SET status = ?, updated_by_admin = ? WHERE complaint_id = ?';
+    const sql2 = 'UPDATE CoReMScomplaints SET status = ?, updated_by_admin = ? WHERE complaint_id = ?';
 
     db.query(sql1, [complaint_id, admin_id, status_text], (err, result) => {
         if (err) return res.status(500).json(err);

@@ -5,7 +5,7 @@ const router = express.Router();
 // Login (No Registration)
 router.post('/login', (req, res) => {
     const { username, password } = req.body;
-    const sql = 'SELECT * FROM users WHERE username = ? AND password = ?';
+    const sql = 'SELECT * FROM CoReMSusers WHERE username = ? AND password = ?';
     
     db.query(sql, [username, password], (err, results) => {
         if (err) return res.status(500).json(err);
