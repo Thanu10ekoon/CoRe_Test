@@ -29,6 +29,11 @@ class _NewComplaintScreenState extends State<NewComplaintScreen> {
     'Library',
     'Security',
     'Documentation',
+    'DEIE',
+    'DMME',
+    'DIS',
+    'DMENA',
+    'DCEE',
   ];
 
   @override

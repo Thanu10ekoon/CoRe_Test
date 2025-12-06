@@ -29,13 +29,19 @@ class ApiService {
 
   // Signup
   static Future<Map<String, dynamic>> signup(
-      String username, String password) async {
+    String username,
+    String password, {
+    String role = 'user',
+    String subrole = 'user',
+  }) async {
     final response = await http.post(
       Uri.parse('$baseUrl/signup'),
       headers: {'Content-Type': 'application/json'},
       body: json.encode({
         'username': username,
         'password': password,
+        'role': role,
+        'subrole': subrole,
       }),
     );
 

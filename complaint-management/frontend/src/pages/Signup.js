@@ -166,15 +166,30 @@ const Signup = () => {
                   </Form.Group>
 
                   <Form.Group controlId="subrole" className="mt-3">
-                    <Form.Label>Position</Form.Label>
-                    <Form.Control
-                      type="text"
+                    <Form.Label>Admin Position</Form.Label>
+                    <Form.Select
                       name="subrole"
-                      placeholder="Enter Position (e.g., HOD_DEIE, AR, Librarian)"
                       value={formData.subrole}
                       onChange={handleChange}
                       required
-                    />
+                    >
+                      <option value="">Select position...</option>
+                      <option value="Dean">Dean</option>
+                      <option value="ComplaintsManager">Complaints Manager</option>
+                      <option value="Warden">Warden (Hostel)</option>
+                      <option value="AR">AR (Documentation)</option>
+                      <option value="CanteenCordinator">Canteen Coordinator</option>
+                      <option value="AcademicCordinator">Academic Coordinator</option>
+                      <option value="SportCordinator">Sport Coordinator</option>
+                      <option value="MaintainanceCordinator">Maintenance Coordinator</option>
+                      <option value="Librarian">Librarian</option>
+                      <option value="SecurityCordinator">Security Coordinator</option>
+                      <option value="HOD_DEIE">HOD - DEIE</option>
+                      <option value="HOD_DMME">HOD - DMME</option>
+                      <option value="HOD_DIS">HOD - DIS</option>
+                      <option value="HOD_DMENA">HOD - DMENA</option>
+                      <option value="HOD_DCEE">HOD - DCEE</option>
+                    </Form.Select>
                   </Form.Group>
                 </>
               )}

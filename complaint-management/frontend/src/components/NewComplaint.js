@@ -107,6 +107,11 @@ const NewComplaint = () => {
                 <option value="Library">Library</option>
                 <option value="Security">Security</option>
                 <option value="Documentation">Documentation</option>
+                <option value="DEIE">DEIE</option>
+                <option value="DMME">DMME</option>
+                <option value="DIS">DIS</option>
+                <option value="DMENA">DMENA</option>
+                <option value="DCEE">DCEE</option>
               </Form.Select>
             </Form.Group>
             <Form.Group controlId="complaintPhoto" className="mb-3">

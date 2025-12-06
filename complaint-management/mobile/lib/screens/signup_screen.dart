@@ -13,15 +13,20 @@ class _SignupScreenState extends State<SignupScreen> {
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
+  final _adminPasswordController = TextEditingController();
   bool _isLoading = false;
   bool _obscurePassword = true;
   bool _obscureConfirmPassword = true;
+  bool _obscureAdminPassword = true;
+  String _selectedRole = 'user';
+  String _selectedSubrole = '';
 
   @override
   void dispose() {
     _usernameController.dispose();
     _passwordController.dispose();
     _confirmPasswordController.dispose();
+    _adminPasswordController.dispose();
     super.dispose();
   }
 
@@ -40,6 +45,29 @@ class _SignupScreenState extends State<SignupScreen> {
       return;
     }
 
+    // Admin password verification
+    if (_selectedRole == 'admin' &&
+        _adminPasswordController.text != 'RuhPass#1999') {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Invalid admin password'),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
+
+    // Admin must provide subrole
+    if (_selectedRole == 'admin' && _selectedSubrole.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please select a position for admin'),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
+
     setState(() {
       _isLoading = true;
     });
@@ -48,6 +76,8 @@ class _SignupScreenState extends State<SignupScreen> {
       await ApiService.signup(
         _usernameController.text,
         _passwordController.text,
+        role: _selectedRole,
+        subrole: _selectedRole == 'admin' ? _selectedSubrole : 'user',
       );
 
       if (!mounted) return;
@@ -225,6 +255,128 @@ class _SignupScreenState extends State<SignupScreen> {
                               return null;
                             },
                           ),
+                          const SizedBox(height: 20),
+                          DropdownButtonFormField<String>(
+                            value: _selectedRole,
+                            decoration: InputDecoration(
+                              labelText: 'Role',
+                              prefixIcon: const Icon(Icons.badge),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                            ),
+                            items: const [
+                              DropdownMenuItem(
+                                  value: 'user', child: Text('User')),
+                              DropdownMenuItem(
+                                  value: 'admin', child: Text('Admin')),
+                            ],
+                            onChanged: (value) {
+                              setState(() {
+                                _selectedRole = value!;
+                              });
+                            },
+                          ),
+                          if (_selectedRole == 'admin') ...[
+                            const SizedBox(height: 20),
+                            TextFormField(
+                              controller: _adminPasswordController,
+                              obscureText: _obscureAdminPassword,
+                              decoration: InputDecoration(
+                                labelText: 'Admin Password',
+                                prefixIcon:
+                                    const Icon(Icons.admin_panel_settings),
+                                suffixIcon: IconButton(
+                                  icon: Icon(
+                                    _obscureAdminPassword
+                                        ? Icons.visibility_off
+                                        : Icons.visibility,
+                                  ),
+                                  onPressed: () {
+                                    setState(() {
+                                      _obscureAdminPassword =
+                                          !_obscureAdminPassword;
+                                    });
+                                  },
+                                ),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                helperText:
+                                    'Contact administrator for admin password',
+                              ),
+                            ),
+                            const SizedBox(height: 20),
+                            DropdownButtonFormField<String>(
+                              value: _selectedSubrole.isEmpty
+                                  ? null
+                                  : _selectedSubrole,
+                              decoration: InputDecoration(
+                                labelText: 'Admin Position',
+                                prefixIcon: const Icon(Icons.work_outline),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                              ),
+                              items: const [
+                                DropdownMenuItem(
+                                    value: 'Dean', child: Text('Dean')),
+                                DropdownMenuItem(
+                                    value: 'ComplaintsManager',
+                                    child: Text('Complaints Manager')),
+                                DropdownMenuItem(
+                                    value: 'Warden',
+                                    child: Text('Warden (Hostel)')),
+                                DropdownMenuItem(
+                                    value: 'AR',
+                                    child: Text('AR (Documentation)')),
+                                DropdownMenuItem(
+                                    value: 'CanteenCordinator',
+                                    child: Text('Canteen Coordinator')),
+                                DropdownMenuItem(
+                                    value: 'AcademicCordinator',
+                                    child: Text('Academic Coordinator')),
+                                DropdownMenuItem(
+                                    value: 'SportCordinator',
+                                    child: Text('Sport Coordinator')),
+                                DropdownMenuItem(
+                                    value: 'MaintainanceCordinator',
+                                    child: Text('Maintenance Coordinator')),
+                                DropdownMenuItem(
+                                    value: 'Librarian',
+                                    child: Text('Librarian')),
+                                DropdownMenuItem(
+                                    value: 'SecurityCordinator',
+                                    child: Text('Security Coordinator')),
+                                DropdownMenuItem(
+                                    value: 'HOD_DEIE',
+                                    child: Text('HOD - DEIE')),
+                                DropdownMenuItem(
+                                    value: 'HOD_DMME',
+                                    child: Text('HOD - DMME')),
+                                DropdownMenuItem(
+                                    value: 'HOD_DIS', child: Text('HOD - DIS')),
+                                DropdownMenuItem(
+                                    value: 'HOD_DMENA',
+                                    child: Text('HOD - DMENA')),
+                                DropdownMenuItem(
+                                    value: 'HOD_DCEE',
+                                    child: Text('HOD - DCEE')),
+                              ],
+                              onChanged: (value) {
+                                setState(() {
+                                  _selectedSubrole = value ?? '';
+                                });
+                              },
+                              validator: (value) {
+                                if (_selectedRole == 'admin' &&
+                                    (value == null || value.isEmpty)) {
+                                  return 'Please select a position';
+                                }
+                                return null;
+                              },
+                            ),
+                          ],
                           const SizedBox(height: 30),
                           ElevatedButton(
                             onPressed: _isLoading ? null : _handleSignup,

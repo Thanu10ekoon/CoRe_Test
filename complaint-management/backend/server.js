@@ -147,7 +147,12 @@ app.get("/api/complaints", (req, res) => {
           "SportCordinator": "Sports",
           "MaintainanceCordinator": "Maintainance",
           "Librarian": "Library",
-          "SecurityCordinator": "Security"
+          "SecurityCordinator": "Security",
+          "HOD_DEIE": "DEIE",
+          "HOD_DMME": "DMME",
+          "HOD_DIS": "DIS",
+          "HOD_DMENA": "DMENA",
+          "HOD_DCEE": "DCEE"
         };
         const complaintCategory = categoryMapping[admin.subrole];
         if (!complaintCategory) {
