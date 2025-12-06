@@ -155,37 +155,49 @@ class _ComplaintDetailsScreenState extends State<ComplaintDetailsScreen> {
                                   const SizedBox(height: 16),
                                   Builder(
                                     builder: (context) {
-                                      final imageUrl = '${ApiService.imageBaseUrl}${_complaint!.photoUrl}';
+                                      final imageUrl =
+                                          '${ApiService.imageBaseUrl}${_complaint!.photoUrl}';
                                       print('Loading image from: $imageUrl');
-                                      print('Photo URL from API: ${_complaint!.photoUrl}');
+                                      print(
+                                          'Photo URL from API: ${_complaint!.photoUrl}');
                                       return ClipRRect(
                                         borderRadius: BorderRadius.circular(12),
                                         child: Image.network(
                                           imageUrl,
                                           width: double.infinity,
                                           fit: BoxFit.cover,
-                                          loadingBuilder: (context, child, loadingProgress) {
-                                            if (loadingProgress == null) return child;
+                                          loadingBuilder: (context, child,
+                                              loadingProgress) {
+                                            if (loadingProgress == null)
+                                              return child;
                                             return Center(
                                               child: CircularProgressIndicator(
-                                                value: loadingProgress.expectedTotalBytes != null
-                                                    ? loadingProgress.cumulativeBytesLoaded /
-                                                        loadingProgress.expectedTotalBytes!
+                                                value: loadingProgress
+                                                            .expectedTotalBytes !=
+                                                        null
+                                                    ? loadingProgress
+                                                            .cumulativeBytesLoaded /
+                                                        loadingProgress
+                                                            .expectedTotalBytes!
                                                     : null,
                                               ),
                                             );
                                           },
-                                          errorBuilder: (context, error, stackTrace) {
+                                          errorBuilder:
+                                              (context, error, stackTrace) {
                                             return Container(
                                               padding: const EdgeInsets.all(16),
                                               decoration: BoxDecoration(
                                                 color: Colors.grey[200],
-                                                borderRadius: BorderRadius.circular(12),
+                                                borderRadius:
+                                                    BorderRadius.circular(12),
                                               ),
                                               child: const Row(
-                                                mainAxisAlignment: MainAxisAlignment.center,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
                                                 children: [
-                                                  Icon(Icons.broken_image, color: Colors.grey),
+                                                  Icon(Icons.broken_image,
+                                                      color: Colors.grey),
                                                   SizedBox(width: 8),
                                                   Text('Image not available'),
                                                 ],
