@@ -9,6 +9,9 @@ require("dotenv").config();
 
 const app = express();
 
+// Import routes
+const authRoutes = require("./routes/authRoutes");
+
 // Create uploads directory if it doesn't exist
 const uploadsDir = path.join(__dirname, 'uploads');
 if (!fs.existsSync(uploadsDir)) {
@@ -55,43 +58,15 @@ app.use(cors({
   credentials: true
 }));
 
-// Database connection
-const db = mysql.createConnection({
-  host: 'bp2juxysn0nszxvmkkzj-mysql.services.clever-cloud.com',  // Update with Clever Cloud host
-  user: 'udflccbdblfustx7',  // Your MySQL username
-  password: 'qgnCvYDdKjXJIfaLe8hL',  // Your MySQL password
-  database: 'bp2juxysn0nszxvmkkzj'
-});
+// Database connection - import from db.js
+const db = require('./db');
 
-db.connect((err) => {
-  if (err) {
-    console.error("Database connection failed:", err);
-    process.exit(1);
-  }
-  console.log("Connected to database");
-});
+// Mount routes
+app.use("/api", authRoutes);
 
 // API Routes
 
-// Login route returns user details including subrole.
-app.post("/api/login", (req, res) => {
-  const { username, password } = req.body;
-  const sql = "SELECT * FROM CoReMSusers WHERE username = ?";
-
-  db.query(sql, [username], (err, results) => {
-    if (err) return res.status(500).json({ error: "Database error" });
-    if (results.length === 0 || results[0].password !== password) {
-      return res.status(400).json({ error: "Invalid credentials" });
-    }
-    const user = results[0];
-    res.json({ 
-      user_id: user.user_id,
-      username: user.username,
-      role: user.role,
-      subrole: user.subrole  // New property
-    });
-  });
-});
+// Login route moved to authRoutes.js
 
 // Complaint submission with photo upload
 app.post("/api/complaints", upload.single('photo'), (req, res) => {
@@ -240,17 +215,6 @@ app.get("/api/statusupdates/:complaintId", (req, res) => {
     res.json(results);
   });
 });
-
-// Vercel deployment requirements
-if (process.env.NODE_ENV === 'production') {
-  app.use((req, res, next) => {
-    if (req.header('x-forwarded-proto') !== 'https') {
-      res.redirect(`https://${req.header('host')}${req.url}`);
-    } else {
-      next();
-    }
-  });
-}
 
 // Export for Vercel
 module.exports = app;

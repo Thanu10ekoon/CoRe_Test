@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Form, Button, Container, Card } from "react-bootstrap";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
 
 const Login = () => {
@@ -81,6 +81,13 @@ const Login = () => {
                 Login
               </Button>
             </Form>
+
+            <div className="text-center mt-3">
+              <p>
+                Don't have an account?{" "}
+                <Link to="/signup">Sign Up</Link>
+              </p>
+            </div>
           </Card.Body>
         </Card>
       </div>

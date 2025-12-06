@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <network-security-config>
-    <!-- Allow cleartext (HTTP) traffic for EC2 backend -->
+    <!-- Allow cleartext (HTTP) traffic for Oracle Cloud backend -->
     <domain-config cleartextTrafficPermitted="true">
-        <domain includeSubdomains="true">16.171.69.23</domain>
+        <domain includeSubdomains="true">140.245.253.253</domain>
     </domain-config>
     
     <!-- For production, you should use HTTPS and remove this config -->

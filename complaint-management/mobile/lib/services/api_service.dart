@@ -4,7 +4,8 @@ import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
 
 class ApiService {
-  static const String baseUrl = 'http://16.171.69.23:5000/api';
+  static const String baseUrl = 'http://140.245.253.253/api';
+  static const String imageBaseUrl = 'http://140.245.253.253'; // For loading images
 
   // Login
   static Future<Map<String, dynamic>> login(
