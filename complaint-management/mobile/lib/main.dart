@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'screens/login_screen.dart';
+import 'screens/signup_screen.dart';
 import 'screens/user_dashboard_screen.dart';
 import 'screens/admin_dashboard_screen.dart';
 import 'screens/new_complaint_screen.dart';
@@ -31,6 +32,7 @@ class MyApp extends StatelessWidget {
       routes: {
         '/': (context) => const SplashScreen(),
         '/login': (context) => const LoginScreen(),
+        '/signup': (context) => const SignupScreen(),
         '/user-dashboard': (context) => const UserDashboardScreen(),
         '/admin-dashboard': (context) => const AdminDashboardScreen(),
         '/new-complaint': (context) => const NewComplaintScreen(),

@@ -8,6 +8,9 @@ const Signup = () => {
     username: "",
     password: "",
     confirmPassword: "",
+    role: "user",
+    subrole: "",
+    adminPassword: "",
   });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -35,6 +38,18 @@ const Signup = () => {
       return;
     }
 
+    // Admin password verification
+    if (formData.role === "admin" && formData.adminPassword !== "RuhPass#1999") {
+      setError("Invalid admin password");
+      return;
+    }
+
+    // Admin must select subrole
+    if (formData.role === "admin" && !formData.subrole) {
+      setError("Please select a subrole for admin");
+      return;
+    }
+
     setLoading(true);
     try {
       const response = await axios.post(
@@ -42,6 +57,8 @@ const Signup = () => {
         {
           username: formData.username,
           password: formData.password,
+          role: formData.role,
+          subrole: formData.role === "admin" ? formData.subrole : "user",
         }
       );
 
@@ -117,6 +134,50 @@ const Signup = () => {
                   minLength={4}
                 />
               </Form.Group>
+
+              <Form.Group controlId="role" className="mt-3">
+                <Form.Label>Role</Form.Label>
+                <Form.Select
+                  name="role"
+                  value={formData.role}
+                  onChange={handleChange}
+                  required
+                >
+                  <option value="user">User</option>
+                  <option value="admin">Admin</option>
+                </Form.Select>
+              </Form.Group>
+
+              {formData.role === "admin" && (
+                <>
+                  <Form.Group controlId="adminPassword" className="mt-3">
+                    <Form.Label>Admin Password</Form.Label>
+                    <Form.Control
+                      type="password"
+                      name="adminPassword"
+                      placeholder="Enter admin password"
+                      value={formData.adminPassword}
+                      onChange={handleChange}
+                      required
+                    />
+                    <Form.Text className="text-muted">
+                      Contact administrator for admin password
+                    </Form.Text>
+                  </Form.Group>
+
+                  <Form.Group controlId="subrole" className="mt-3">
+                    <Form.Label>Position</Form.Label>
+                    <Form.Control
+                      type="text"
+                      name="subrole"
+                      placeholder="Enter Position (e.g., HOD_DEIE, AR, Librarian)"
+                      value={formData.subrole}
+                      onChange={handleChange}
+                      required
+                    />
+                  </Form.Group>
+                </>
+              )}
 
               <Button 
                 className="w-100 mt-4" 

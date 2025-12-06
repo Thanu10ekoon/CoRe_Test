@@ -5,7 +5,7 @@ const bcrypt = require("bcryptjs");
 
 // Signup route
 router.post("/signup", async (req, res) => {
-  const { username, password } = req.body;
+  const { username, password, role, subrole } = req.body;
 
   if (!username || !password) {
     return res.status(400).json({ error: "Username and password are required" });
@@ -18,6 +18,10 @@ router.post("/signup", async (req, res) => {
   if (password.length < 4) {
     return res.status(400).json({ error: "Password must be at least 4 characters long" });
   }
+
+  // Set default role and subrole if not provided
+  const userRole = role || "user";
+  const userSubrole = subrole || "user";
 
   try {
     // Check if username already exists
@@ -35,10 +39,10 @@ router.post("/signup", async (req, res) => {
       // Hash password
       const hashedPassword = await bcrypt.hash(password, 10);
 
-      // Insert new user (default role: user, subrole: user)
-      const insertQuery = "INSERT INTO CoReMSusers (username, password, role, subrole) VALUES (?, ?, 'user', 'user')";
+      // Insert new user with provided role and subrole
+      const insertQuery = "INSERT INTO CoReMSusers (username, password, role, subrole) VALUES (?, ?, ?, ?)";
       
-      db.query(insertQuery, [username, hashedPassword], (err, result) => {
+      db.query(insertQuery, [username, hashedPassword, userRole, userSubrole], (err, result) => {
         if (err) {
           console.error("Database error:", err);
           return res.status(500).json({ error: "Failed to create account" });

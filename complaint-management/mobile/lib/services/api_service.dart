@@ -27,6 +27,26 @@ class ApiService {
     }
   }
 
+  // Signup
+  static Future<Map<String, dynamic>> signup(
+      String username, String password) async {
+    final response = await http.post(
+      Uri.parse('$baseUrl/signup'),
+      headers: {'Content-Type': 'application/json'},
+      body: json.encode({
+        'username': username,
+        'password': password,
+      }),
+    );
+
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      return json.decode(response.body);
+    } else {
+      final error = json.decode(response.body);
+      throw Exception(error['error'] ?? 'Signup failed');
+    }
+  }
+
   // Get user's complaints
   static Future<List<dynamic>> getUserComplaints(String userId) async {
     final response = await http.get(

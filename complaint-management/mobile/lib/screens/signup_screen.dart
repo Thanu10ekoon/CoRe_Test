@@ -1,30 +1,42 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import '../services/api_service.dart';
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+class SignupScreen extends StatefulWidget {
+  const SignupScreen({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<SignupScreen> createState() => _SignupScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _SignupScreenState extends State<SignupScreen> {
   final _formKey = GlobalKey<FormState>();
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _confirmPasswordController = TextEditingController();
   bool _isLoading = false;
   bool _obscurePassword = true;
+  bool _obscureConfirmPassword = true;
 
   @override
   void dispose() {
     _usernameController.dispose();
     _passwordController.dispose();
+    _confirmPasswordController.dispose();
     super.dispose();
   }
 
-  Future<void> _handleLogin() async {
+  Future<void> _handleSignup() async {
     if (!_formKey.currentState!.validate()) {
+      return;
+    }
+
+    if (_passwordController.text != _confirmPasswordController.text) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Passwords do not match'),
+          backgroundColor: Colors.red,
+        ),
+      );
       return;
     }
 
@@ -33,32 +45,26 @@ class _LoginScreenState extends State<LoginScreen> {
     });
 
     try {
-      final response = await ApiService.login(
+      await ApiService.signup(
         _usernameController.text,
         _passwordController.text,
       );
 
-      if (response['user_id'] != null && response['role'] != null) {
-        final prefs = await SharedPreferences.getInstance();
-        await prefs.setString('user_id', response['user_id'].toString());
-        await prefs.setString('username', response['username']);
-        await prefs.setString(
-            'role', response['role'].toString().toLowerCase());
-        await prefs.setString('subrole', response['subrole'] ?? '');
+      if (!mounted) return;
 
-        if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Account created successfully! Please login.'),
+          backgroundColor: Colors.green,
+        ),
+      );
 
-        if (response['role'].toString().toLowerCase() == 'admin') {
-          Navigator.of(context).pushReplacementNamed('/admin-dashboard');
-        } else {
-          Navigator.of(context).pushReplacementNamed('/user-dashboard');
-        }
-      }
+      Navigator.of(context).pop(); // Go back to login screen
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Login failed: ${e.toString()}'),
+            content: Text('Signup failed: ${e.toString()}'),
             backgroundColor: Colors.red,
           ),
         );
@@ -76,6 +82,11 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
+      appBar: AppBar(
+        title: const Text('Sign Up'),
+        backgroundColor: Colors.blue[700],
+        foregroundColor: Colors.white,
+      ),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
@@ -83,40 +94,32 @@ class _LoginScreenState extends State<LoginScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const SizedBox(height: 60),
+                const SizedBox(height: 40),
                 Image.network(
                   'https://i.ibb.co/cXsYwrCh/core-ms-high-resolution-logo.png',
-                  width: 300,
+                  width: 250,
                   errorBuilder: (context, error, stackTrace) {
                     return Column(
                       children: [
                         Icon(
-                          Icons.report_problem_outlined,
+                          Icons.person_add_outlined,
                           size: 80,
                           color: Colors.blue[700],
                         ),
                         const SizedBox(height: 20),
                         Text(
-                          'CoreMS',
+                          'Create Account',
                           style: TextStyle(
-                            fontSize: 32,
+                            fontSize: 28,
                             fontWeight: FontWeight.bold,
                             color: Colors.blue[900],
-                          ),
-                        ),
-                        const SizedBox(height: 10),
-                        Text(
-                          'Complaint Management System',
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.grey[700],
                           ),
                         ),
                       ],
                     );
                   },
                 ),
-                const SizedBox(height: 50),
+                const SizedBox(height: 40),
                 Card(
                   elevation: 4,
                   shape: RoundedRectangleBorder(
@@ -130,7 +133,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
                           Text(
-                            'Login',
+                            'Sign Up',
                             style: TextStyle(
                               fontSize: 24,
                               fontWeight: FontWeight.bold,
@@ -151,6 +154,9 @@ class _LoginScreenState extends State<LoginScreen> {
                             validator: (value) {
                               if (value == null || value.isEmpty) {
                                 return 'Please enter username';
+                              }
+                              if (value.length < 3) {
+                                return 'Username must be at least 3 characters';
                               }
                               return null;
                             },
@@ -182,12 +188,46 @@ class _LoginScreenState extends State<LoginScreen> {
                               if (value == null || value.isEmpty) {
                                 return 'Please enter password';
                               }
+                              if (value.length < 4) {
+                                return 'Password must be at least 4 characters';
+                              }
+                              return null;
+                            },
+                          ),
+                          const SizedBox(height: 20),
+                          TextFormField(
+                            controller: _confirmPasswordController,
+                            obscureText: _obscureConfirmPassword,
+                            decoration: InputDecoration(
+                              labelText: 'Confirm Password',
+                              prefixIcon: const Icon(Icons.lock_outline),
+                              suffixIcon: IconButton(
+                                icon: Icon(
+                                  _obscureConfirmPassword
+                                      ? Icons.visibility_off
+                                      : Icons.visibility,
+                                ),
+                                onPressed: () {
+                                  setState(() {
+                                    _obscureConfirmPassword =
+                                        !_obscureConfirmPassword;
+                                  });
+                                },
+                              ),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                            ),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please confirm password';
+                              }
                               return null;
                             },
                           ),
                           const SizedBox(height: 30),
                           ElevatedButton(
-                            onPressed: _isLoading ? null : _handleLogin,
+                            onPressed: _isLoading ? null : _handleSignup,
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.blue[700],
                               foregroundColor: Colors.white,
@@ -208,29 +248,29 @@ class _LoginScreenState extends State<LoginScreen> {
                                     ),
                                   )
                                 : const Text(
-                                    'Login',
+                                    'Sign Up',
                                     style: TextStyle(fontSize: 18),
                                   ),
+                          ),
+                          const SizedBox(height: 20),
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: Text(
+                              'Already have an account? Login',
+                              style: TextStyle(
+                                color: Colors.blue[700],
+                                fontSize: 16,
+                              ),
+                            ),
                           ),
                         ],
                       ),
                     ),
                   ),
                 ),
-                const SizedBox(height: 20),
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pushNamed('/signup');
-                  },
-                  child: Text(
-                    "Don't have an account? Sign up",
-                    style: TextStyle(
-                      color: Colors.blue[700],
-                      fontSize: 16,
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 40),
                 Text(
                   'Developed by Scorpion X',
                   style: TextStyle(
