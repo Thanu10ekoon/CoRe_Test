@@ -4,13 +4,15 @@
 
 
 ## Overview
-The Complaint Management System is a web application that allows users to submit complaints and track their status. The system includes role-based authentication, where users can submit and view complaints, while admins can manage and update complaint statuses.
+The Complaint Management System is a comprehensive multi-platform application that allows users to submit complaints and track their status. The system includes a web interface, mobile application, and role-based authentication, where users can submit and view complaints, while admins can manage and update complaint statuses.
 
 ## ⚙️ Tech Stack
 
-- **Frontend:** React.js  
+- **Web Frontend:** React.js  
+- **Mobile App:** Flutter (Dart)  
 - **Backend:** Node.js with Express.js  
 - **Database:** MySQL (Clever Cloud)  
+- **Cloud Infrastructure:** Oracle Cloud Infrastructure (OCI)  
 - **AI Chatbot:** `node-nlp` (nlp.js)
 
 ---
@@ -18,11 +20,13 @@ The Complaint Management System is a web application that allows users to submit
 ## ✨ Features
 
 ### 👤 User Features:
-- Submit a new complaint with a title and description.
+- Submit a new complaint with a title and description via **web or mobile app**.
+- **Upload photos** with complaints for better documentation (mobile app).
 - View a list of previously submitted complaints with status and update history.
 - View **complete status history** for each complaint.
 - Get assistance from **Ms. CoRe**, the AI chatbot, for complaint submission and tracking.
 - Complaints are categorized (e.g., hostel, academic) and auto-directed to the relevant admin type.
+- **Cross-platform access** - Web, Android mobile app, and more.
 
 ### 🛡️ Admin Features:
 - Role and subrole-based admin dashboard (e.g., Dean, Warden).
@@ -40,7 +44,7 @@ The Complaint Management System is a web application that allows users to submit
 
 ---
 
-## 🧠 Ms. CoRe - AI Chatbot Assistant
+<!-- ## 🧠 Ms. CoRe - AI Chatbot Assistant
 <p align="left"><img src="https://i.ibb.co/hR7WRM5j/MSCoRe.png" width = "100px"></p>
 Meet **Ms. CoRe**, your intelligent assistant built with `node-nlp`.  
 She can:
@@ -49,7 +53,7 @@ She can:
 - Retrieve current complaint status when given a complaint ID.
 - Clarify confusion about complaint categories, steps, and admin roles.
 
-> Ms. CoRe is powered by **NLPManager from node-nlp**, trained with domain-specific intents, and works as a smart frontend-side assistant.
+> Ms. CoRe is powered by **NLPManager from node-nlp**, trained with domain-specific intents, and works as a smart frontend-side assistant. -->
 
 ---
 
@@ -86,7 +90,26 @@ She can:
 
 ---
 
-## 🔧 Usage Guide
+## � Deployment & Infrastructure
+
+### Backend Hosting
+- **Platform:** Oracle Cloud Infrastructure (OCI)
+- **Server IP:** `54.220.183.213`
+- **Status:** Backend services are actively running on OCI
+- **API Endpoint:** `http://54.220.183.213:5000`
+
+### Mobile Application
+- **Framework:** Flutter
+- **Platform Support:** Android (primary), Web, Windows
+- **Key Features:** 
+  - Cross-platform complaint submission
+  - Photo upload functionality
+  - Real-time status tracking
+  - Offline capability with local storage
+
+---
+
+## �🔧 Usage Guide
 
 - **Login:** Use pre-registered credentials.
 - **Users:** Can submit categorized complaints, track status, view full history, or ask **Ms. CoRe** for help.
