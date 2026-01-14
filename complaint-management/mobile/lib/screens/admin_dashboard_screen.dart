@@ -1,3 +1,4 @@
+// Admin Dashboard screen to view complaints, update statuses, and open details.
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../services/api_service.dart';
