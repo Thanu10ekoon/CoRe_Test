@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'services/theme_service.dart';
 import 'screens/login_screen.dart';
 import 'screens/signup_screen.dart';
 import 'screens/user_dashboard_screen.dart';
@@ -7,7 +8,9 @@ import 'screens/admin_dashboard_screen.dart';
 import 'screens/new_complaint_screen.dart';
 import 'screens/complaint_details_screen.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await ThemeService.init();
   runApp(const MyApp());
 }
 
@@ -16,36 +19,54 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'CoreMS',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        useMaterial3: true,
-        appBarTheme: AppBarTheme(
-          backgroundColor: Colors.blue[700],
-          foregroundColor: Colors.white,
-          elevation: 2,
-        ),
-      ),
-      initialRoute: '/',
-      routes: {
-        '/': (context) => const SplashScreen(),
-        '/login': (context) => const LoginScreen(),
-        '/signup': (context) => const SignupScreen(),
-        '/user-dashboard': (context) => const UserDashboardScreen(),
-        '/admin-dashboard': (context) => const AdminDashboardScreen(),
-        '/new-complaint': (context) => const NewComplaintScreen(),
-      },
-      onGenerateRoute: (settings) {
-        if (settings.name == '/complaint-details') {
-          final complaintId = settings.arguments as int;
-          return MaterialPageRoute(
-            builder: (context) =>
-                ComplaintDetailsScreen(complaintId: complaintId),
-          );
-        }
-        return null;
+    return ValueListenableBuilder<ThemeMode>(
+      valueListenable: ThemeService.themeMode,
+      builder: (context, mode, _) {
+        return MaterialApp(
+          title: 'CoreMS',
+          debugShowCheckedModeBanner: false,
+          theme: ThemeData(
+            colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
+            useMaterial3: true,
+            appBarTheme: AppBarTheme(
+              backgroundColor: Colors.blue[700],
+              foregroundColor: Colors.white,
+              elevation: 2,
+            ),
+          ),
+          darkTheme: ThemeData(
+            colorScheme: ColorScheme.fromSeed(
+              seedColor: Colors.blue,
+              brightness: Brightness.dark,
+            ),
+            useMaterial3: true,
+            appBarTheme: const AppBarTheme(
+              backgroundColor: Color(0xFF121212),
+              foregroundColor: Colors.white,
+              elevation: 2,
+            ),
+          ),
+          themeMode: mode,
+          initialRoute: '/',
+          routes: {
+            '/': (context) => const SplashScreen(),
+            '/login': (context) => const LoginScreen(),
+            '/signup': (context) => const SignupScreen(),
+            '/user-dashboard': (context) => const UserDashboardScreen(),
+            '/admin-dashboard': (context) => const AdminDashboardScreen(),
+            '/new-complaint': (context) => const NewComplaintScreen(),
+          },
+          onGenerateRoute: (settings) {
+            if (settings.name == '/complaint-details') {
+              final complaintId = settings.arguments as int;
+              return MaterialPageRoute(
+                builder: (context) =>
+                    ComplaintDetailsScreen(complaintId: complaintId),
+              );
+            }
+            return null;
+          },
+        );
       },
     );
   }
@@ -88,7 +109,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).colorScheme.background,
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,

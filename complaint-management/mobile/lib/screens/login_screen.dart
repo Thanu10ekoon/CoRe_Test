@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../services/theme_service.dart';
 import '../services/api_service.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -75,7 +76,27 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      appBar: AppBar(
+        title: const Text('Login'),
+        actions: [
+          ValueListenableBuilder<ThemeMode>(
+            valueListenable: ThemeService.themeMode,
+            builder: (context, mode, _) {
+              return IconButton(
+                icon: Icon(
+                  mode == ThemeMode.dark
+                      ? Icons.light_mode
+                      : Icons.dark_mode,
+                ),
+                onPressed: ThemeService.toggleTheme,
+                tooltip:
+                    mode == ThemeMode.dark ? 'Light mode' : 'Dark mode',
+              );
+            },
+          ),
+        ],
+      ),
+      backgroundColor: Theme.of(context).colorScheme.background,
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
