@@ -3,6 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:intl/intl.dart';
 import '../services/api_service.dart';
 import '../models/complaint_model.dart';
+import '../services/theme_service.dart';
 
 class UserDashboardScreen extends StatefulWidget {
   const UserDashboardScreen({super.key});
@@ -67,6 +68,21 @@ class _UserDashboardScreenState extends State<UserDashboardScreen> {
       appBar: AppBar(
         title: const Text('Your Complaints'),
         actions: [
+          ValueListenableBuilder<ThemeMode>(
+            valueListenable: ThemeService.themeMode,
+            builder: (context, mode, _) {
+              return IconButton(
+                icon: Icon(
+                  mode == ThemeMode.dark
+                      ? Icons.light_mode
+                      : Icons.dark_mode,
+                ),
+                onPressed: ThemeService.toggleTheme,
+                tooltip:
+                    mode == ThemeMode.dark ? 'Light mode' : 'Dark mode',
+              );
+            },
+          ),
           IconButton(
             icon: const Icon(Icons.logout),
             onPressed: _handleLogout,
