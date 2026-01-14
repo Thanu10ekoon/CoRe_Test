@@ -261,14 +261,19 @@ class _NewComplaintScreenState extends State<NewComplaintScreen> {
                           },
                         ),
                         const SizedBox(height: 16),
-                        OutlinedButton.icon(
-                          onPressed: _showImageSourceDialog,
-                          icon: const Icon(Icons.add_photo_alternate),
-                          label: const Text('Add Photo (Optional)'),
-                          style: OutlinedButton.styleFrom(
-                            padding: const EdgeInsets.symmetric(vertical: 16),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
+                        SizedBox(
+                          width: double.infinity,
+                          child: OutlinedButton.icon(
+                            onPressed: _showImageSourceDialog,
+                            icon: const Icon(Icons.add_photo_alternate),
+                            label: const Text('Add Photo (Optional)'),
+                            style: OutlinedButton.styleFrom(
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 16),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              minimumSize: const Size.fromHeight(48),
                             ),
                           ),
                         ),
@@ -305,31 +310,39 @@ class _NewComplaintScreenState extends State<NewComplaintScreen> {
                           ),
                         ],
                         const SizedBox(height: 24),
-                        ElevatedButton(
-                          onPressed: _isLoading ? null : _submitComplaint,
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.blue[700],
-                            foregroundColor: Colors.white,
-                            padding: const EdgeInsets.symmetric(vertical: 16),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
+                        SizedBox(
+                          width: double.infinity,
+                          child: ElevatedButton(
+                            onPressed: _isLoading ? null : _submitComplaint,
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor:
+                                  Theme.of(context).colorScheme.primary,
+                              foregroundColor:
+                                  Theme.of(context).colorScheme.onPrimary,
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 16),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              minimumSize: const Size.fromHeight(48),
                             ),
-                          ),
-                          child: _isLoading
-                              ? const SizedBox(
-                                  height: 20,
-                                  width: 20,
-                                  child: CircularProgressIndicator(
-                                    strokeWidth: 2,
-                                    valueColor: AlwaysStoppedAnimation<Color>(
-                                      Colors.white,
+                            child: _isLoading
+                                ? const SizedBox(
+                                    height: 20,
+                                    width: 20,
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 2,
+                                      valueColor:
+                                          AlwaysStoppedAnimation<Color>(
+                                        Colors.white,
+                                      ),
                                     ),
+                                  )
+                                : const Text(
+                                    'Submit Complaint',
+                                    style: TextStyle(fontSize: 16),
                                   ),
-                                )
-                              : const Text(
-                                  'Submit Complaint',
-                                  style: TextStyle(fontSize: 16),
-                                ),
+                          ),
                         ),
                       ],
                     ),
