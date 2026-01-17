@@ -1,5 +1,6 @@
 // Admin Dashboard screen to view complaints, update statuses, and open details.
 import 'package:flutter/material.dart';
+import 'dart:async';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../services/theme_service.dart';
 import '../services/api_service.dart';
@@ -24,6 +25,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
   String _searchQuery = '';
   final Set<String> _statusFilters = {};
   final Set<String> _categoryFilters = {};
+  Timer? _searchDebounce;
 
   @override
   void initState() {
@@ -258,7 +260,10 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
               ),
               onChanged: (value) {
                 _searchQuery = value;
-                _applyFilters();
+                _searchDebounce?.cancel();
+                _searchDebounce = Timer(const Duration(milliseconds: 250), () {
+                  _applyFilters();
+                });
               },
             ),
           ),
