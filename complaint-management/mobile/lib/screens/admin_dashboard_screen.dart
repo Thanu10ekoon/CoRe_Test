@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../services/theme_service.dart';
 import '../services/api_service.dart';
 import '../models/complaint_model.dart';
+import '../utils/filter_utils.dart';
 
 class AdminDashboardScreen extends StatefulWidget {
   const AdminDashboardScreen({super.key});
@@ -13,11 +14,16 @@ class AdminDashboardScreen extends StatefulWidget {
 }
 
 class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
+  List<Complaint> _allComplaints = [];
   List<Complaint> _complaints = [];
   bool _isLoading = true;
   String _username = '';
   String _subrole = '';
   final Map<int, TextEditingController> _statusControllers = {};
+  // Search & filter state
+  String _searchQuery = '';
+  final Set<String> _statusFilters = {};
+  final Set<String> _categoryFilters = {};
 
   @override
   void initState() {
@@ -45,9 +51,11 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
       _subrole = prefs.getString('subrole') ?? '';
 
       final complaintsData = await ApiService.getAdminComplaints(adminId);
+      final list =
+          complaintsData.map((json) => Complaint.fromJson(json)).toList();
       setState(() {
-        _complaints =
-            complaintsData.map((json) => Complaint.fromJson(json)).toList();
+        _allComplaints = list;
+        _applyFilters();
         _isLoading = false;
       });
     } catch (e) {
@@ -63,6 +71,42 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
         );
       }
     }
+  }
+
+  void _applyFilters() {
+    List<Complaint> filtered = List.of(_allComplaints);
+
+    // Search
+    if (_searchQuery.trim().isNotEmpty) {
+      final q = _searchQuery.toLowerCase();
+      filtered = filtered.where((c) {
+        return c.title.toLowerCase().contains(q) ||
+            c.description.toLowerCase().contains(q) ||
+            c.category.toLowerCase().contains(q) ||
+            c.status.toLowerCase().contains(q) ||
+            c.complaintId.toString().contains(q);
+      }).toList();
+    }
+
+    // Status filters
+    if (_statusFilters.isNotEmpty) {
+      filtered = filtered.where((c) {
+        final s = FilterUtils.normalizeStatus(c.status);
+        return _statusFilters.any((f) => s == f.toLowerCase());
+      }).toList();
+    }
+
+    // Category filters
+    if (_categoryFilters.isNotEmpty) {
+      filtered = filtered.where((c) {
+        final cat = c.category.toLowerCase();
+        return _categoryFilters.any((f) => cat == f.toLowerCase());
+      }).toList();
+    }
+
+    setState(() {
+      _complaints = filtered;
+    });
   }
 
   Future<void> _updateStatus(int complaintId) async {
@@ -128,13 +172,10 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
             builder: (context, mode, _) {
               return IconButton(
                 icon: Icon(
-                  mode == ThemeMode.dark
-                      ? Icons.light_mode
-                      : Icons.dark_mode,
+                  mode == ThemeMode.dark ? Icons.light_mode : Icons.dark_mode,
                 ),
                 onPressed: ThemeService.toggleTheme,
-                tooltip:
-                    mode == ThemeMode.dark ? 'Light mode' : 'Dark mode',
+                tooltip: mode == ThemeMode.dark ? 'Light mode' : 'Dark mode',
               );
             },
           ),
