@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:async';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:intl/intl.dart';
 import '../services/api_service.dart';
@@ -23,6 +24,7 @@ class _UserDashboardScreenState extends State<UserDashboardScreen> {
   String _searchQuery = '';
   final Set<String> _statusFilters = {};
   final Set<String> _categoryFilters = {};
+  Timer? _searchDebounce;
 
   @override
   void initState() {
@@ -130,7 +132,10 @@ class _UserDashboardScreenState extends State<UserDashboardScreen> {
               ),
               onChanged: (value) {
                 _searchQuery = value;
-                _applyFilters();
+                _searchDebounce?.cancel();
+                _searchDebounce = Timer(const Duration(milliseconds: 250), () {
+                  _applyFilters();
+                });
               },
             ),
           ),
