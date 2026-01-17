@@ -262,6 +262,47 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
               },
             ),
           ),
+          // Category filters
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Wrap(
+              spacing: 8,
+              runSpacing: 4,
+              children: [
+                for (final category
+                    in FilterUtils.uniqueCategories(_allComplaints))
+                  FilterChip(
+                    label: Text(category),
+                    selected: _categoryFilters.contains(category.toLowerCase()),
+                    onSelected: (selected) {
+                      setState(() {
+                        if (selected) {
+                          _categoryFilters.add(category.toLowerCase());
+                        } else {
+                          _categoryFilters.remove(category.toLowerCase());
+                        }
+                      });
+                      _applyFilters();
+                    },
+                  ),
+                if (_categoryFilters.isNotEmpty ||
+                    _statusFilters.isNotEmpty ||
+                    _searchQuery.isNotEmpty)
+                  ActionChip(
+                    label: const Text('Clear filters'),
+                    avatar: const Icon(Icons.clear),
+                    onPressed: () {
+                      setState(() {
+                        _searchQuery = '';
+                        _statusFilters.clear();
+                        _categoryFilters.clear();
+                      });
+                      _applyFilters();
+                    },
+                  ),
+              ],
+            ),
+          ),
           Expanded(
             child: _isLoading
                 ? const Center(child: CircularProgressIndicator())
@@ -297,157 +338,167 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                               complaint.complaintId,
                               () => TextEditingController(),
                             );
-
-                            return Card(
-                              margin: const EdgeInsets.only(bottom: 16),
-                              elevation: 2,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.all(16),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Expanded(
-                                          child: Text(
-                                            complaint.title,
-                                            style: const TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                        ),
-                                        Text(
-                                          '#${complaint.complaintId}',
-                                          style: TextStyle(
-                                            color: Colors.grey[600],
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      ],
+                            if (index == 0) {
+                              return Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Showing ${_complaints.length} of ${_allComplaints.length}',
+                                    style: TextStyle(
+                                      color: Colors.grey[700],
+                                      fontWeight: FontWeight.w600,
                                     ),
-                                    const SizedBox(height: 8),
-                                    Row(
-                                      children: [
-                                        Container(
-                                          padding: const EdgeInsets.symmetric(
-                                            horizontal: 12,
-                                            vertical: 6,
-                                          ),
-                                          decoration: BoxDecoration(
-                                            color: Colors.purple[100],
-                                            borderRadius:
-                                                BorderRadius.circular(20),
-                                          ),
-                                          child: Text(
-                                            complaint.category,
-                                            style: TextStyle(
-                                              color: Colors.purple[900],
-                                              fontSize: 12,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                        ),
-                                        const SizedBox(width: 8),
-                                        Container(
-                                          padding: const EdgeInsets.symmetric(
-                                            horizontal: 12,
-                                            vertical: 6,
-                                          ),
-                                          decoration: BoxDecoration(
-                                            color: _getStatusColor(
-                                                complaint.status),
-                                            borderRadius:
-                                                BorderRadius.circular(20),
-                                          ),
-                                          child: Text(
-                                            complaint.status,
-                                            style: const TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 12,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    if (complaint.updatedByAdmin != null) ...[
-                                      const SizedBox(height: 8),
-                                      Text(
-                                        'Updated by: ${complaint.adminSubrole ?? complaint.adminUsername ?? "Admin ID: ${complaint.updatedByAdmin}"}',
-                                        style: TextStyle(
-                                          fontSize: 12,
-                                          color: Colors.grey[600],
-                                          fontStyle: FontStyle.italic,
-                                        ),
-                                      ),
-                                    ],
-                                    const SizedBox(height: 12),
-                                    ElevatedButton.icon(
-                                      onPressed: () {
-                                        Navigator.of(context).pushNamed(
-                                          '/complaint-details',
-                                          arguments: complaint.complaintId,
-                                        );
-                                      },
-                                      icon: const Icon(Icons.visibility),
-                                      label: const Text('View Details'),
-                                      style: ElevatedButton.styleFrom(
-                                        minimumSize:
-                                            const Size(double.infinity, 40),
-                                      ),
-                                    ),
-                                    const SizedBox(height: 12),
-                                    Row(
-                                      children: [
-                                        Expanded(
-                                          child: TextField(
-                                            controller: _statusControllers[
-                                                complaint.complaintId],
-                                            decoration: InputDecoration(
-                                              hintText: 'Update status',
-                                              border: OutlineInputBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(8),
-                                              ),
-                                              contentPadding:
-                                                  const EdgeInsets.symmetric(
-                                                horizontal: 12,
-                                                vertical: 8,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                        const SizedBox(width: 8),
-                                        ElevatedButton(
-                                          onPressed: () => _updateStatus(
-                                              complaint.complaintId),
-                                          style: ElevatedButton.styleFrom(
-                                            backgroundColor: Colors.green,
-                                            foregroundColor: Colors.white,
-                                            padding: const EdgeInsets.symmetric(
-                                              horizontal: 16,
-                                              vertical: 12,
-                                            ),
-                                          ),
-                                          child: const Text('Update'),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            );
+                                  ),
+                                  const SizedBox(height: 8),
+                                  _buildAdminComplaintCard(complaint),
+                                ],
+                              );
+                            }
+                            return _buildAdminComplaintCard(complaint);
                           },
                         ),
                       ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildAdminComplaintCard(Complaint complaint) {
+    return Card(
+      margin: const EdgeInsets.only(bottom: 16),
+      elevation: 2,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: Text(
+                    complaint.title,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                Text(
+                  '#${complaint.complaintId}',
+                  style: TextStyle(
+                    color: Colors.grey[600],
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+            Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 6,
+                  ),
+                  decoration: BoxDecoration(
+                    color: Colors.purple[100],
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Text(
+                    complaint.category,
+                    style: TextStyle(
+                      color: Colors.purple[900],
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 6,
+                  ),
+                  decoration: BoxDecoration(
+                    color: _getStatusColor(complaint.status),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Text(
+                    complaint.status,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            if (complaint.updatedByAdmin != null) ...[
+              const SizedBox(height: 8),
+              Text(
+                'Updated by: ${complaint.adminSubrole ?? complaint.adminUsername ?? "Admin ID: ${complaint.updatedByAdmin}"}',
+                style: TextStyle(
+                  fontSize: 12,
+                  color: Colors.grey[600],
+                  fontStyle: FontStyle.italic,
+                ),
+              ),
+            ],
+            const SizedBox(height: 12),
+            ElevatedButton.icon(
+              onPressed: () {
+                Navigator.of(context).pushNamed(
+                  '/complaint-details',
+                  arguments: complaint.complaintId,
+                );
+              },
+              icon: const Icon(Icons.visibility),
+              label: const Text('View Details'),
+              style: ElevatedButton.styleFrom(
+                minimumSize: const Size(double.infinity, 40),
+              ),
+            ),
+            const SizedBox(height: 12),
+            Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    controller: _statusControllers[complaint.complaintId],
+                    decoration: InputDecoration(
+                      hintText: 'Update status',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 8,
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                ElevatedButton(
+                  onPressed: () => _updateStatus(complaint.complaintId),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.green,
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 12,
+                    ),
+                  ),
+                  child: const Text('Update'),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
