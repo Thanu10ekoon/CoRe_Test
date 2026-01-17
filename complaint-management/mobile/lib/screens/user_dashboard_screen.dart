@@ -13,9 +13,15 @@ class UserDashboardScreen extends StatefulWidget {
 }
 
 class _UserDashboardScreenState extends State<UserDashboardScreen> {
+  // Full dataset and filtered view
+  List<Complaint> _allComplaints = [];
   List<Complaint> _complaints = [];
   bool _isLoading = true;
   String _username = '';
+  // Search & filter state
+  String _searchQuery = '';
+  final Set<String> _statusFilters = {};
+  final Set<String> _categoryFilters = {};
 
   @override
   void initState() {
@@ -34,9 +40,11 @@ class _UserDashboardScreenState extends State<UserDashboardScreen> {
       _username = prefs.getString('username') ?? '';
 
       final complaintsData = await ApiService.getUserComplaints(userId);
+      final list =
+          complaintsData.map((json) => Complaint.fromJson(json)).toList();
       setState(() {
-        _complaints =
-            complaintsData.map((json) => Complaint.fromJson(json)).toList();
+        _allComplaints = list;
+        _applyFilters();
         _isLoading = false;
       });
     } catch (e) {
@@ -52,6 +60,42 @@ class _UserDashboardScreenState extends State<UserDashboardScreen> {
         );
       }
     }
+  }
+
+  void _applyFilters() {
+    List<Complaint> filtered = List.of(_allComplaints);
+
+    // Apply search
+    if (_searchQuery.trim().isNotEmpty) {
+      final q = _searchQuery.toLowerCase();
+      filtered = filtered.where((c) {
+        return c.title.toLowerCase().contains(q) ||
+            c.description.toLowerCase().contains(q) ||
+            c.category.toLowerCase().contains(q) ||
+            c.status.toLowerCase().contains(q) ||
+            c.complaintId.toString().contains(q);
+      }).toList();
+    }
+
+    // Apply status filters (OR across selected statuses)
+    if (_statusFilters.isNotEmpty) {
+      filtered = filtered.where((c) {
+        final s = c.status.toLowerCase();
+        return _statusFilters.any((f) => s == f.toLowerCase());
+      }).toList();
+    }
+
+    // Apply category filters (OR across selected categories)
+    if (_categoryFilters.isNotEmpty) {
+      filtered = filtered.where((c) {
+        final cat = c.category.toLowerCase();
+        return _categoryFilters.any((f) => cat == f.toLowerCase());
+      }).toList();
+    }
+
+    setState(() {
+      _complaints = filtered;
+    });
   }
 
   Future<void> _handleLogout() async {
@@ -72,6 +116,98 @@ class _UserDashboardScreenState extends State<UserDashboardScreen> {
             valueListenable: ThemeService.themeMode,
             builder: (context, mode, _) {
               return IconButton(
+          // Search bar
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
+            child: TextField(
+              decoration: InputDecoration(
+                hintText: 'Search complaints (title, ID, status, category)',
+                prefixIcon: const Icon(Icons.search),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+              onChanged: (value) {
+                _searchQuery = value;
+                _applyFilters();
+              },
+            ),
+          ),
+          // Status filters
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Wrap(
+              spacing: 8,
+              runSpacing: 4,
+              children: [
+                for (final status in const [
+                  'Pending',
+                  'In Progress',
+                  'Resolved',
+                  'Rejected',
+                ])
+                  FilterChip(
+                    label: Text(status),
+                    selected: _statusFilters.contains(status.toLowerCase()),
+                    onSelected: (selected) {
+                      setState(() {
+                        if (selected) {
+                          _statusFilters.add(status.toLowerCase());
+                        } else {
+                          _statusFilters.remove(status.toLowerCase());
+                        }
+                      });
+                      _applyFilters();
+                    },
+                  ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 8),
+          // Category filters (derived from data)
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Wrap(
+              spacing: 8,
+              runSpacing: 4,
+              children: [
+                for (final category in _allComplaints
+                    .map((c) => c.category)
+                    .toSet()
+                    .toList())
+                  FilterChip(
+                    label: Text(category),
+                    selected: _categoryFilters
+                        .contains(category.toLowerCase()),
+                    onSelected: (selected) {
+                      setState(() {
+                        if (selected) {
+                          _categoryFilters.add(category.toLowerCase());
+                        } else {
+                          _categoryFilters.remove(category.toLowerCase());
+                        }
+                      });
+                      _applyFilters();
+                    },
+                  ),
+                if (_categoryFilters.isNotEmpty ||
+                    _statusFilters.isNotEmpty ||
+                    _searchQuery.isNotEmpty)
+                  ActionChip(
+                    label: const Text('Clear filters'),
+                    avatar: const Icon(Icons.clear),
+                    onPressed: () {
+                      setState(() {
+                        _searchQuery = '';
+                        _statusFilters.clear();
+                        _categoryFilters.clear();
+                      });
+                      _applyFilters();
+                    },
+                  ),
+              ],
+            ),
+          ),
                 icon: Icon(
                   mode == ThemeMode.dark
                       ? Icons.light_mode
@@ -86,13 +222,17 @@ class _UserDashboardScreenState extends State<UserDashboardScreen> {
           IconButton(
             icon: const Icon(Icons.logout),
             onPressed: _handleLogout,
-            tooltip: 'Logout',
-          ),
-        ],
-      ),
-      body: Column(
-        children: [
-          if (_username.isNotEmpty)
+                            Text(
+                              _searchQuery.isEmpty &&
+                                      _statusFilters.isEmpty &&
+                                      _categoryFilters.isEmpty
+                                  ? 'No complaints found'
+                                  : 'No results match current search/filters',
+                              style: TextStyle(
+                                fontSize: 18,
+                                color: Colors.grey[600],
+                              ),
+                            ),
             Container(
               width: double.infinity,
               padding: const EdgeInsets.all(16),
@@ -103,6 +243,24 @@ class _UserDashboardScreenState extends State<UserDashboardScreen> {
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
                   color: Colors.blue[900],
+                            // Result count header (first item)
+                            if (index == 0) {
+                              return Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Showing ${_complaints.length} of ${_allComplaints.length}',
+                                    style: TextStyle(
+                                      color: Colors.grey[700],
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 8),
+                                  _buildComplaintTile(complaint),
+                                ],
+                              );
+                            }
+                            return _buildComplaintTile(complaint);
                 ),
               ),
             ),
@@ -143,59 +301,7 @@ class _UserDashboardScreenState extends State<UserDashboardScreen> {
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(12),
                               ),
-                              child: ListTile(
-                                contentPadding: const EdgeInsets.all(16),
-                                title: Text(
-                                  complaint.title,
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 16,
-                                  ),
-                                ),
-                                subtitle: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    const SizedBox(height: 8),
-                                    Text(
-                                      'ID: ${complaint.complaintId}',
-                                      style: TextStyle(color: Colors.grey[600]),
-                                    ),
-                                    const SizedBox(height: 4),
-                                    Text(
-                                      DateFormat('MMM dd, yyyy - HH:mm').format(
-                                          DateTime.parse(complaint.createdAt)),
-                                      style: TextStyle(color: Colors.grey[600]),
-                                    ),
-                                    const SizedBox(height: 8),
-                                    Container(
-                                      padding: const EdgeInsets.symmetric(
-                                        horizontal: 12,
-                                        vertical: 6,
-                                      ),
-                                      decoration: BoxDecoration(
-                                        color:
-                                            _getStatusColor(complaint.status),
-                                        borderRadius: BorderRadius.circular(20),
-                                      ),
-                                      child: Text(
-                                        complaint.status,
-                                        style: const TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                trailing: const Icon(Icons.arrow_forward_ios),
-                                onTap: () {
-                                  Navigator.of(context).pushNamed(
-                                    '/complaint-details',
-                                    arguments: complaint.complaintId,
-                                  );
-                                },
-                              ),
+                              child: _buildComplaintContent(complaint),
                             );
                           },
                         ),
@@ -215,6 +321,72 @@ class _UserDashboardScreenState extends State<UserDashboardScreen> {
         label: const Text('New Complaint'),
         backgroundColor: Colors.blue[700],
       ),
+    );
+  }
+
+  Widget _buildComplaintTile(Complaint complaint) {
+    return Card(
+      margin: const EdgeInsets.only(bottom: 12),
+      elevation: 2,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: _buildComplaintContent(complaint),
+    );
+  }
+
+  Widget _buildComplaintContent(Complaint complaint) {
+    return ListTile(
+      contentPadding: const EdgeInsets.all(16),
+      title: Text(
+        complaint.title,
+        style: const TextStyle(
+          fontWeight: FontWeight.bold,
+          fontSize: 16,
+        ),
+      ),
+      subtitle: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const SizedBox(height: 8),
+          Text(
+            'ID: ${complaint.complaintId}',
+            style: TextStyle(color: Colors.grey[600]),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            DateFormat('MMM dd, yyyy - HH:mm')
+                .format(DateTime.parse(complaint.createdAt)),
+            style: TextStyle(color: Colors.grey[600]),
+          ),
+          const SizedBox(height: 8),
+          Container(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 12,
+              vertical: 6,
+            ),
+            decoration: BoxDecoration(
+              color: _getStatusColor(complaint.status),
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Text(
+              complaint.status,
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 12,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ],
+      ),
+      trailing: const Icon(Icons.arrow_forward_ios),
+      onTap: () {
+        Navigator.of(context).pushNamed(
+          '/complaint-details',
+          arguments: complaint.complaintId,
+        );
+      },
     );
   }
 
