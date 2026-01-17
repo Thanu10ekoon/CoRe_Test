@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import '../services/api_service.dart';
 import '../models/complaint_model.dart';
 import '../services/theme_service.dart';
+import '../utils/filter_utils.dart';
 
 class UserDashboardScreen extends StatefulWidget {
   const UserDashboardScreen({super.key});
@@ -77,10 +78,10 @@ class _UserDashboardScreenState extends State<UserDashboardScreen> {
       }).toList();
     }
 
-    // Apply status filters (OR across selected statuses)
+    // Apply status filters (OR across selected statuses, normalized)
     if (_statusFilters.isNotEmpty) {
       filtered = filtered.where((c) {
-        final s = c.status.toLowerCase();
+        final s = FilterUtils.normalizeStatus(c.status);
         return _statusFilters.any((f) => s == f.toLowerCase());
       }).toList();
     }
@@ -171,10 +172,8 @@ class _UserDashboardScreenState extends State<UserDashboardScreen> {
               spacing: 8,
               runSpacing: 4,
               children: [
-                for (final category in _allComplaints
-                    .map((c) => c.category)
-                    .toSet()
-                    .toList())
+                for (final category in
+                    FilterUtils.uniqueCategories(_allComplaints))
                   FilterChip(
                     label: Text(category),
                     selected: _categoryFilters
