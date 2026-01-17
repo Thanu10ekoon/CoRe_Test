@@ -318,7 +318,11 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                             ),
                             const SizedBox(height: 16),
                             Text(
-                              'No complaints found',
+                              _searchQuery.isEmpty &&
+                                      _statusFilters.isEmpty &&
+                                      _categoryFilters.isEmpty
+                                  ? 'No complaints found'
+                                  : 'No results match current search/filters',
                               style: TextStyle(
                                 fontSize: 18,
                                 color: Colors.grey[600],
