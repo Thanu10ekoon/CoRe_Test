@@ -71,39 +71,6 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
             content: Text('Error loading complaints: ${e.toString()}'),
             backgroundColor: Colors.red,
           ),
-          // Status filters
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Wrap(
-              spacing: 8,
-              runSpacing: 4,
-              children: [
-                for (final status in const [
-                  'Pending',
-                  'In Progress',
-                  'Resolved',
-                  'Rejected',
-                ])
-                  FilterChip(
-                    label: Text(status),
-                    selected: _statusFilters.contains(status.toLowerCase()),
-                    selectedColor: Colors.blue[100],
-                    checkmarkColor: Colors.blue[900],
-                    onSelected: (selected) {
-                      setState(() {
-                        if (selected) {
-                          _statusFilters.add(status.toLowerCase());
-                        } else {
-                          _statusFilters.remove(status.toLowerCase());
-                        }
-                      });
-                      _applyFilters();
-                    },
-                  ),
-              ],
-            ),
-          ),
-          const SizedBox(height: 8),
         );
       }
     }
