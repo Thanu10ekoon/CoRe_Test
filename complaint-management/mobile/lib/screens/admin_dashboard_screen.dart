@@ -86,6 +86,8 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                   FilterChip(
                     label: Text(status),
                     selected: _statusFilters.contains(status.toLowerCase()),
+                    selectedColor: Colors.blue[100],
+                    checkmarkColor: Colors.blue[900],
                     onSelected: (selected) {
                       setState(() {
                         if (selected) {
@@ -279,6 +281,8 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                   FilterChip(
                     label: Text(category),
                     selected: _categoryFilters.contains(category.toLowerCase()),
+                    selectedColor: Colors.purple[100],
+                    checkmarkColor: Colors.purple[900],
                     onSelected: (selected) {
                       setState(() {
                         if (selected) {
