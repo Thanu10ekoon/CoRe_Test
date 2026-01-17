@@ -4,15 +4,15 @@ A Flutter mobile application for the CoreMS (CoRe Complaint Management System).
 
 ## Features
 
-- **User Authentication**: Secure login system with role-based access
-- **Complaint Management**: 
   - Create new complaints with photo upload support
   - View complaints (role-based filtering)
   - Track complaint status updates
   - View detailed complaint history
-- **Real-time Updates**: Live status tracking and notifications
-- **Photo Upload**: Capture and upload images for complaints
-- **Cross-platform**: iOS and Android support
+- Advanced search & filtering (NEW)
+  - Search by title, description, status, category, or ID
+  - Filter by status (Pending, In Progress, Resolved, Rejected)
+  - Filter by category (derived from existing complaints)
+  - Clear filters quickly; result count shown
 
 ## Technical Stack
 
@@ -22,6 +22,7 @@ A Flutter mobile application for the CoreMS (CoRe Complaint Management System).
 - **Image Handling**: image_picker package for camera/gallery access
 - **UI Components**: Material Design with custom theming
 
+- Use the search bar and chips on dashboards to narrow results.
 ## Setup & Installation
 
 ### Prerequisites
