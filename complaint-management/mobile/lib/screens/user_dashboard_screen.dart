@@ -32,6 +32,12 @@ class _UserDashboardScreenState extends State<UserDashboardScreen> {
     _loadComplaints();
   }
 
+  @override
+  void dispose() {
+    _searchDebounce?.cancel();
+    super.dispose();
+  }
+
   Future<void> _loadComplaints() async {
     setState(() {
       _isLoading = true;

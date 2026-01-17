@@ -38,6 +38,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
     for (var controller in _statusControllers.values) {
       controller.dispose();
     }
+    _searchDebounce?.cancel();
     super.dispose();
   }
 
