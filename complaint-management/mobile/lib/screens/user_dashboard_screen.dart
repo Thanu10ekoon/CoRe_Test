@@ -125,6 +125,37 @@ class _UserDashboardScreenState extends State<UserDashboardScreen> {
             valueListenable: ThemeService.themeMode,
             builder: (context, mode, _) {
               return IconButton(
+                icon: Icon(
+                  mode == ThemeMode.dark ? Icons.light_mode : Icons.dark_mode,
+                ),
+                onPressed: ThemeService.toggleTheme,
+                tooltip: mode == ThemeMode.dark ? 'Light mode' : 'Dark mode',
+              );
+            },
+          ),
+          IconButton(
+            icon: const Icon(Icons.logout),
+            onPressed: _handleLogout,
+            tooltip: 'Logout',
+          ),
+        ],
+      ),
+      body: Column(
+        children: [
+          if (_username.isNotEmpty)
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(16),
+              color: Colors.blue[50],
+              child: Text(
+                'Welcome, $_username!',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.blue[900],
+                ),
+              ),
+            ),
           // Search bar
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
@@ -185,12 +216,11 @@ class _UserDashboardScreenState extends State<UserDashboardScreen> {
               spacing: 8,
               runSpacing: 4,
               children: [
-                for (final category in
-                    FilterUtils.uniqueCategories(_allComplaints))
+                for (final category
+                    in FilterUtils.uniqueCategories(_allComplaints))
                   FilterChip(
                     label: Text(category),
-                    selected:
-                        _categoryFilters.contains(category.toLowerCase()),
+                    selected: _categoryFilters.contains(category.toLowerCase()),
                     selectedColor: Colors.purple[100],
                     checkmarkColor: Colors.purple[900],
                     onSelected: (selected) {
@@ -222,62 +252,6 @@ class _UserDashboardScreenState extends State<UserDashboardScreen> {
               ],
             ),
           ),
-                icon: Icon(
-                  mode == ThemeMode.dark
-                      ? Icons.light_mode
-                      : Icons.dark_mode,
-                ),
-                onPressed: ThemeService.toggleTheme,
-                tooltip:
-                    mode == ThemeMode.dark ? 'Light mode' : 'Dark mode',
-              );
-            },
-          ),
-          IconButton(
-            icon: const Icon(Icons.logout),
-            onPressed: _handleLogout,
-                            Text(
-                              _searchQuery.isEmpty &&
-                                      _statusFilters.isEmpty &&
-                                      _categoryFilters.isEmpty
-                                  ? 'No complaints found'
-                                  : 'No results match current search/filters',
-                              style: TextStyle(
-                                fontSize: 18,
-                                color: Colors.grey[600],
-                              ),
-                            ),
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(16),
-              color: Colors.blue[50],
-              child: Text(
-                'Welcome, $_username!',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.blue[900],
-                            // Result count header (first item)
-                            if (index == 0) {
-                              return Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'Showing ${_complaints.length} of ${_allComplaints.length}',
-                                    style: TextStyle(
-                                      color: Colors.grey[700],
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 8),
-                                  _buildComplaintTile(complaint),
-                                ],
-                              );
-                            }
-                            return _buildComplaintTile(complaint);
-                ),
-              ),
-            ),
           Expanded(
             child: _isLoading
                 ? const Center(child: CircularProgressIndicator())
@@ -309,14 +283,7 @@ class _UserDashboardScreenState extends State<UserDashboardScreen> {
                           itemCount: _complaints.length,
                           itemBuilder: (context, index) {
                             final complaint = _complaints[index];
-                            return Card(
-                              margin: const EdgeInsets.only(bottom: 12),
-                              elevation: 2,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              child: _buildComplaintContent(complaint),
-                            );
+                            return _buildComplaintTile(complaint);
                           },
                         ),
                       ),
