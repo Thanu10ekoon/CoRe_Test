@@ -314,13 +314,19 @@ class _ComplaintDetailsScreenState extends State<ComplaintDetailsScreen> {
   }
 
   Widget _buildStatusTimeline() {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final timelineColor = isDark ? Colors.teal[300]! : Colors.teal[600]!;
+    final lineColor = isDark ? Colors.teal[700]! : Colors.teal[400]!;
+    final titleColor = isDark ? Colors.white : Colors.black87;
+    final subtitleColor = isDark ? Colors.grey[400]! : Colors.grey[700]!;
+    final dateColor = isDark ? Colors.teal[300]! : Colors.teal[600]!;
+    
     return Container(
       padding: const EdgeInsets.only(left: 8),
       child: Column(
         children: List.generate(_statusUpdates.length, (index) {
           final update = _statusUpdates[index];
           final isLast = index == _statusUpdates.length - 1;
-          final statusColor = _getTimelineColor(update.updateText);
 
           return Row(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -333,7 +339,7 @@ class _ComplaintDetailsScreenState extends State<ComplaintDetailsScreen> {
                     width: 28,
                     height: 28,
                     decoration: BoxDecoration(
-                      color: statusColor,
+                      color: timelineColor,
                       shape: BoxShape.circle,
                     ),
                     child: Icon(
@@ -347,7 +353,7 @@ class _ComplaintDetailsScreenState extends State<ComplaintDetailsScreen> {
                     Container(
                       width: 2,
                       height: 80,
-                      color: Colors.teal[400],
+                      color: lineColor,
                     ),
                 ],
               ),
@@ -362,10 +368,10 @@ class _ComplaintDetailsScreenState extends State<ComplaintDetailsScreen> {
                       // Status text (bold title)
                       Text(
                         update.updateText,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 15,
-                          color: Colors.black87,
+                          color: titleColor,
                         ),
                       ),
                       const SizedBox(height: 4),
@@ -373,7 +379,7 @@ class _ComplaintDetailsScreenState extends State<ComplaintDetailsScreen> {
                       Text(
                         update.adminUsername ?? 'Admin ID: ${update.adminId}',
                         style: TextStyle(
-                          color: Colors.grey[700],
+                          color: subtitleColor,
                           fontSize: 13,
                         ),
                       ),
@@ -383,7 +389,7 @@ class _ComplaintDetailsScreenState extends State<ComplaintDetailsScreen> {
                         DateFormat('dd/MM/yyyy, HH:mm')
                             .format(DateTime.parse(update.updateDate)),
                         style: TextStyle(
-                          color: Colors.teal[600],
+                          color: dateColor,
                           fontSize: 13,
                         ),
                       ),
@@ -396,26 +402,6 @@ class _ComplaintDetailsScreenState extends State<ComplaintDetailsScreen> {
         }),
       ),
     );
-  }
-
-  Color _getTimelineColor(String status) {
-    final normalizedStatus = status.toLowerCase();
-    if (normalizedStatus.contains('pending')) {
-      return Colors.teal;
-    } else if (normalizedStatus.contains('progress') ||
-        normalizedStatus.contains('review') ||
-        normalizedStatus.contains('processing')) {
-      return Colors.teal;
-    } else if (normalizedStatus.contains('resolved') ||
-        normalizedStatus.contains('completed') ||
-        normalizedStatus.contains('done')) {
-      return Colors.teal;
-    } else if (normalizedStatus.contains('rejected') ||
-        normalizedStatus.contains('cancelled') ||
-        normalizedStatus.contains('closed')) {
-      return Colors.teal;
-    }
-    return Colors.teal;
   }
 
   IconData _getTimelineIcon(String status) {
