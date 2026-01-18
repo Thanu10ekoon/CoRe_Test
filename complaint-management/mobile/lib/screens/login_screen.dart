@@ -84,13 +84,10 @@ class _LoginScreenState extends State<LoginScreen> {
             builder: (context, mode, _) {
               return IconButton(
                 icon: Icon(
-                  mode == ThemeMode.dark
-                      ? Icons.light_mode
-                      : Icons.dark_mode,
+                  mode == ThemeMode.dark ? Icons.light_mode : Icons.dark_mode,
                 ),
                 onPressed: ThemeService.toggleTheme,
-                tooltip:
-                    mode == ThemeMode.dark ? 'Light mode' : 'Dark mode',
+                tooltip: mode == ThemeMode.dark ? 'Light mode' : 'Dark mode',
               );
             },
           ),
@@ -210,7 +207,8 @@ class _LoginScreenState extends State<LoginScreen> {
                           ElevatedButton(
                             onPressed: _isLoading ? null : _handleLogin,
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.blue[700],
+                              backgroundColor:
+                                  Theme.of(context).colorScheme.primary,
                               foregroundColor: Colors.white,
                               padding: const EdgeInsets.symmetric(vertical: 16),
                               shape: RoundedRectangleBorder(
@@ -246,7 +244,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   child: Text(
                     "Don't have an account? Sign up",
                     style: TextStyle(
-                      color: Colors.blue[700],
+                      color: Theme.of(context).colorScheme.primary,
                       fontSize: 16,
                     ),
                   ),

@@ -146,13 +146,13 @@ class _UserDashboardScreenState extends State<UserDashboardScreen> {
             Container(
               width: double.infinity,
               padding: const EdgeInsets.all(16),
-              color: Colors.blue[50],
+              color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
               child: Text(
                 'Welcome, $_username!',
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
-                  color: Colors.blue[900],
+                  color: Theme.of(context).colorScheme.primary,
                 ),
               ),
             ),
@@ -214,8 +214,11 @@ class _UserDashboardScreenState extends State<UserDashboardScreen> {
                               style: const TextStyle(fontSize: 12)),
                           selected:
                               _statusFilters.contains(status.toLowerCase()),
-                          selectedColor: Colors.blue[100],
-                          checkmarkColor: Colors.blue[900],
+                          selectedColor: Theme.of(context)
+                              .colorScheme
+                              .secondary
+                              .withOpacity(0.3),
+                          checkmarkColor: Theme.of(context).colorScheme.primary,
                           visualDensity: VisualDensity.compact,
                           onSelected: (selected) {
                             setState(() {
@@ -264,8 +267,12 @@ class _UserDashboardScreenState extends State<UserDashboardScreen> {
                                 style: const TextStyle(fontSize: 12)),
                             selected: _categoryFilters
                                 .contains(category.toLowerCase()),
-                            selectedColor: Colors.purple[100],
-                            checkmarkColor: Colors.purple[900],
+                            selectedColor: Theme.of(context)
+                                .colorScheme
+                                .secondary
+                                .withOpacity(0.3),
+                            checkmarkColor:
+                                Theme.of(context).colorScheme.primary,
                             visualDensity: VisualDensity.compact,
                             onSelected: (selected) {
                               setState(() {
@@ -370,7 +377,7 @@ class _UserDashboardScreenState extends State<UserDashboardScreen> {
         },
         icon: const Icon(Icons.add),
         label: const Text('New Complaint'),
-        backgroundColor: Colors.blue[700],
+        backgroundColor: Theme.of(context).colorScheme.primary,
       ),
     );
   }

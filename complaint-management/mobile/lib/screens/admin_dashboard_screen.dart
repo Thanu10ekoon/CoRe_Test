@@ -194,7 +194,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
           Container(
             width: double.infinity,
             padding: const EdgeInsets.all(16),
-            color: Colors.blue[50],
+            color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -203,7 +203,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
-                    color: Colors.blue[900],
+                    color: Theme.of(context).colorScheme.primary,
                   ),
                 ),
                 if (_subrole.isNotEmpty)
@@ -211,7 +211,10 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                     'Role: $_subrole',
                     style: TextStyle(
                       fontSize: 14,
-                      color: Colors.blue[700],
+                      color: Theme.of(context)
+                          .colorScheme
+                          .primary
+                          .withOpacity(0.8),
                     ),
                   ),
               ],
@@ -275,8 +278,11 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                               style: const TextStyle(fontSize: 12)),
                           selected:
                               _statusFilters.contains(status.toLowerCase()),
-                          selectedColor: Colors.blue[100],
-                          checkmarkColor: Colors.blue[900],
+                          selectedColor: Theme.of(context)
+                              .colorScheme
+                              .secondary
+                              .withOpacity(0.3),
+                          checkmarkColor: Theme.of(context).colorScheme.primary,
                           visualDensity: VisualDensity.compact,
                           onSelected: (selected) {
                             setState(() {
@@ -325,8 +331,12 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                                 style: const TextStyle(fontSize: 12)),
                             selected: _categoryFilters
                                 .contains(category.toLowerCase()),
-                            selectedColor: Colors.purple[100],
-                            checkmarkColor: Colors.purple[900],
+                            selectedColor: Theme.of(context)
+                                .colorScheme
+                                .secondary
+                                .withOpacity(0.3),
+                            checkmarkColor:
+                                Theme.of(context).colorScheme.primary,
                             visualDensity: VisualDensity.compact,
                             onSelected: (selected) {
                               setState(() {
@@ -482,13 +492,16 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                     vertical: 6,
                   ),
                   decoration: BoxDecoration(
-                    color: Colors.purple[100],
+                    color: Theme.of(context)
+                        .colorScheme
+                        .secondary
+                        .withOpacity(0.3),
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Text(
                     complaint.category,
                     style: TextStyle(
-                      color: Colors.purple[900],
+                      color: Theme.of(context).colorScheme.primary,
                       fontSize: 12,
                       fontWeight: FontWeight.bold,
                     ),

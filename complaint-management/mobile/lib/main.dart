@@ -26,24 +26,56 @@ class MyApp extends StatelessWidget {
           title: 'CoreMS',
           debugShowCheckedModeBanner: false,
           theme: ThemeData(
-            colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
-            useMaterial3: true,
-            appBarTheme: AppBarTheme(
-              backgroundColor: Colors.blue[700],
-              foregroundColor: Colors.white,
-              elevation: 2,
-            ),
-          ),
-          darkTheme: ThemeData(
-            colorScheme: ColorScheme.fromSeed(
-              seedColor: Colors.blue,
-              brightness: Brightness.dark,
+            colorScheme: ColorScheme.light(
+              primary: const Color(0xFF5F0A0C), // Maroon
+              secondary: const Color(0xFFFDC134), // Golden
+              surface: Colors.white,
+              background: const Color(0xFFFAFAFA),
+              onPrimary: Colors.white,
+              onSecondary: const Color(0xFF5F0A0C),
+              onSurface: const Color(0xFF212121),
+              onBackground: const Color(0xFF212121),
             ),
             useMaterial3: true,
             appBarTheme: const AppBarTheme(
-              backgroundColor: Color(0xFF121212),
+              backgroundColor: Color(0xFF5F0A0C),
               foregroundColor: Colors.white,
               elevation: 2,
+            ),
+            floatingActionButtonTheme: const FloatingActionButtonThemeData(
+              backgroundColor: Color(0xFF5F0A0C),
+              foregroundColor: Colors.white,
+            ),
+            chipTheme: ChipThemeData(
+              selectedColor: const Color(0xFFFDC134).withOpacity(0.3),
+              checkmarkColor: const Color(0xFF5F0A0C),
+            ),
+          ),
+          darkTheme: ThemeData(
+            colorScheme: ColorScheme.dark(
+              primary: const Color(0xFF8B1214), // Lighter maroon for dark mode
+              secondary:
+                  const Color(0xFFFFD666), // Lighter golden for dark mode
+              surface: const Color(0xFF1E1E1E),
+              background: const Color(0xFF121212),
+              onPrimary: Colors.white,
+              onSecondary: const Color(0xFF1E1E1E),
+              onSurface: const Color(0xFFE0E0E0),
+              onBackground: const Color(0xFFE0E0E0),
+            ),
+            useMaterial3: true,
+            appBarTheme: const AppBarTheme(
+              backgroundColor: Color(0xFF8B1214),
+              foregroundColor: Colors.white,
+              elevation: 2,
+            ),
+            floatingActionButtonTheme: const FloatingActionButtonThemeData(
+              backgroundColor: Color(0xFF8B1214),
+              foregroundColor: Colors.white,
+            ),
+            chipTheme: ChipThemeData(
+              selectedColor: const Color(0xFFFFD666).withOpacity(0.3),
+              checkmarkColor: const Color(0xFF8B1214),
             ),
           ),
           themeMode: mode,

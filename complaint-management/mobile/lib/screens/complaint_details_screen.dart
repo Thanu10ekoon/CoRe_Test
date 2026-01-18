@@ -315,12 +315,18 @@ class _ComplaintDetailsScreenState extends State<ComplaintDetailsScreen> {
 
   Widget _buildStatusTimeline() {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final timelineColor = isDark ? Colors.teal[300]! : Colors.teal[600]!;
-    final lineColor = isDark ? Colors.teal[700]! : Colors.teal[400]!;
-    final titleColor = isDark ? Colors.white : Colors.black87;
+    final timelineColor = isDark
+        ? const Color(0xFF8B1214) // Lighter maroon for dark mode
+        : const Color(0xFF5F0A0C); // Maroon for light mode
+    final lineColor = isDark
+        ? const Color(0xFF8B1214).withOpacity(0.5)
+        : const Color(0xFF5F0A0C).withOpacity(0.4);
+    final titleColor = Theme.of(context).colorScheme.onSurface;
     final subtitleColor = isDark ? Colors.grey[400]! : Colors.grey[700]!;
-    final dateColor = isDark ? Colors.teal[300]! : Colors.teal[600]!;
-    
+    final dateColor = isDark
+        ? const Color(0xFFFFD666) // Lighter golden for dark mode
+        : const Color(0xFFFDC134); // Golden for light mode;
+
     return Container(
       padding: const EdgeInsets.only(left: 8),
       child: Column(
