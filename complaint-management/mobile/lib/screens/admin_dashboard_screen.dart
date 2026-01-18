@@ -237,45 +237,140 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
               },
             ),
           ),
-          // Category filters
-          Padding(
+          // Filter Section
+          Container(
             padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Wrap(
-              spacing: 8,
-              runSpacing: 4,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                for (final category
-                    in FilterUtils.uniqueCategories(_allComplaints))
-                  FilterChip(
-                    label: Text(category),
-                    selected: _categoryFilters.contains(category.toLowerCase()),
-                    selectedColor: Colors.purple[100],
-                    checkmarkColor: Colors.purple[900],
-                    onSelected: (selected) {
-                      setState(() {
-                        if (selected) {
-                          _categoryFilters.add(category.toLowerCase());
-                        } else {
-                          _categoryFilters.remove(category.toLowerCase());
-                        }
-                      });
-                      _applyFilters();
-                    },
+                // Status filters row
+                Row(
+                  children: [
+                    Icon(Icons.flag_outlined,
+                        size: 16, color: Colors.grey[600]),
+                    const SizedBox(width: 8),
+                    Text(
+                      'Status:',
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.grey[700],
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 8),
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: [
+                      for (final status in const [
+                        'Pending',
+                        'In Progress',
+                        'Resolved',
+                        'Rejected',
+                      ]) ...[
+                        FilterChip(
+                          label: Text(status,
+                              style: const TextStyle(fontSize: 12)),
+                          selected:
+                              _statusFilters.contains(status.toLowerCase()),
+                          selectedColor: Colors.blue[100],
+                          checkmarkColor: Colors.blue[900],
+                          visualDensity: VisualDensity.compact,
+                          onSelected: (selected) {
+                            setState(() {
+                              if (selected) {
+                                _statusFilters.add(status.toLowerCase());
+                              } else {
+                                _statusFilters.remove(status.toLowerCase());
+                              }
+                            });
+                            _applyFilters();
+                          },
+                        ),
+                        const SizedBox(width: 8),
+                      ],
+                    ],
                   ),
+                ),
+                const SizedBox(height: 12),
+                // Category filters row
+                if (FilterUtils.uniqueCategories(_allComplaints)
+                    .isNotEmpty) ...[
+                  Row(
+                    children: [
+                      Icon(Icons.category_outlined,
+                          size: 16, color: Colors.grey[600]),
+                      const SizedBox(width: 8),
+                      Text(
+                        'Category:',
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.grey[700],
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+                  SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      children: [
+                        for (final category in FilterUtils.uniqueCategories(
+                            _allComplaints)) ...[
+                          FilterChip(
+                            label: Text(category,
+                                style: const TextStyle(fontSize: 12)),
+                            selected: _categoryFilters
+                                .contains(category.toLowerCase()),
+                            selectedColor: Colors.purple[100],
+                            checkmarkColor: Colors.purple[900],
+                            visualDensity: VisualDensity.compact,
+                            onSelected: (selected) {
+                              setState(() {
+                                if (selected) {
+                                  _categoryFilters.add(category.toLowerCase());
+                                } else {
+                                  _categoryFilters
+                                      .remove(category.toLowerCase());
+                                }
+                              });
+                              _applyFilters();
+                            },
+                          ),
+                          const SizedBox(width: 8),
+                        ],
+                      ],
+                    ),
+                  ),
+                ],
+                // Clear filters row
                 if (_categoryFilters.isNotEmpty ||
                     _statusFilters.isNotEmpty ||
                     _searchQuery.isNotEmpty)
-                  ActionChip(
-                    label: const Text('Clear filters'),
-                    avatar: const Icon(Icons.clear),
-                    onPressed: () {
-                      setState(() {
-                        _searchQuery = '';
-                        _statusFilters.clear();
-                        _categoryFilters.clear();
-                      });
-                      _applyFilters();
-                    },
+                  Padding(
+                    padding: const EdgeInsets.only(top: 12),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        ActionChip(
+                          label: const Text('Clear all filters',
+                              style: TextStyle(fontSize: 12)),
+                          avatar: const Icon(Icons.clear, size: 16),
+                          visualDensity: VisualDensity.compact,
+                          onPressed: () {
+                            setState(() {
+                              _searchQuery = '';
+                              _statusFilters.clear();
+                              _categoryFilters.clear();
+                            });
+                            _applyFilters();
+                          },
+                        ),
+                      ],
+                    ),
                   ),
               ],
             ),

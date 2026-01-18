@@ -238,14 +238,14 @@ class _ComplaintDetailsScreenState extends State<ComplaintDetailsScreen> {
                         ),
                         const SizedBox(height: 24),
                         Text(
-                          'Status Update History',
+                          'Status Update Timeline',
                           style: TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.bold,
                             color: Colors.blue[900],
                           ),
                         ),
-                        const SizedBox(height: 12),
+                        const SizedBox(height: 16),
                         _statusUpdates.isEmpty
                             ? Card(
                                 elevation: 2,
@@ -258,7 +258,7 @@ class _ComplaintDetailsScreenState extends State<ComplaintDetailsScreen> {
                                     child: Column(
                                       children: [
                                         Icon(
-                                          Icons.history,
+                                          Icons.timeline,
                                           size: 48,
                                           color: Colors.grey[400],
                                         ),
@@ -270,69 +270,20 @@ class _ComplaintDetailsScreenState extends State<ComplaintDetailsScreen> {
                                             color: Colors.grey[600],
                                           ),
                                         ),
+                                        const SizedBox(height: 4),
+                                        Text(
+                                          'Updates will appear here as they happen',
+                                          style: TextStyle(
+                                            fontSize: 12,
+                                            color: Colors.grey[500],
+                                          ),
+                                        ),
                                       ],
                                     ),
                                   ),
                                 ),
                               )
-                            : ListView.builder(
-                                shrinkWrap: true,
-                                physics: const NeverScrollableScrollPhysics(),
-                                itemCount: _statusUpdates.length,
-                                itemBuilder: (context, index) {
-                                  final update = _statusUpdates[index];
-                                  return Card(
-                                    margin: const EdgeInsets.only(bottom: 12),
-                                    elevation: 2,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(12),
-                                    ),
-                                    child: ListTile(
-                                      contentPadding: const EdgeInsets.all(16),
-                                      leading: CircleAvatar(
-                                        backgroundColor: Colors.blue[700],
-                                        child: Text(
-                                          '${index + 1}',
-                                          style: const TextStyle(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      ),
-                                      title: Text(
-                                        update.updateText,
-                                        style: const TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 16,
-                                        ),
-                                      ),
-                                      subtitle: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          const SizedBox(height: 8),
-                                          Text(
-                                            'Updated by: ${update.adminUsername ?? "Admin ID: ${update.adminId}"}',
-                                            style: TextStyle(
-                                              color: Colors.grey[700],
-                                            ),
-                                          ),
-                                          const SizedBox(height: 4),
-                                          Text(
-                                            DateFormat('MMM dd, yyyy - HH:mm')
-                                                .format(DateTime.parse(
-                                                    update.updateDate)),
-                                            style: TextStyle(
-                                              color: Colors.grey[600],
-                                              fontSize: 12,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  );
-                                },
-                              ),
+                            : _buildStatusTimeline(),
                       ],
                     ),
                   ),
@@ -360,6 +311,131 @@ class _ComplaintDetailsScreenState extends State<ComplaintDetailsScreen> {
         ),
       ),
     );
+  }
+
+  Widget _buildStatusTimeline() {
+    return Container(
+      padding: const EdgeInsets.only(left: 8),
+      child: Column(
+        children: List.generate(_statusUpdates.length, (index) {
+          final update = _statusUpdates[index];
+          final isLast = index == _statusUpdates.length - 1;
+          final statusColor = _getTimelineColor(update.updateText);
+
+          return Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Timeline column with line and circle
+              Column(
+                children: [
+                  // Circle with checkmark/icon
+                  Container(
+                    width: 28,
+                    height: 28,
+                    decoration: BoxDecoration(
+                      color: statusColor,
+                      shape: BoxShape.circle,
+                    ),
+                    child: Icon(
+                      _getTimelineIcon(update.updateText),
+                      size: 16,
+                      color: Colors.white,
+                    ),
+                  ),
+                  // Vertical line (hidden for last item)
+                  if (!isLast)
+                    Container(
+                      width: 2,
+                      height: 80,
+                      color: Colors.teal[400],
+                    ),
+                ],
+              ),
+              const SizedBox(width: 16),
+              // Content
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.only(bottom: 24),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Status text (bold title)
+                      Text(
+                        update.updateText,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 15,
+                          color: Colors.black87,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      // Admin name
+                      Text(
+                        update.adminUsername ?? 'Admin ID: ${update.adminId}',
+                        style: TextStyle(
+                          color: Colors.grey[700],
+                          fontSize: 13,
+                        ),
+                      ),
+                      const SizedBox(height: 2),
+                      // Date and time
+                      Text(
+                        DateFormat('dd/MM/yyyy, HH:mm')
+                            .format(DateTime.parse(update.updateDate)),
+                        style: TextStyle(
+                          color: Colors.teal[600],
+                          fontSize: 13,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          );
+        }),
+      ),
+    );
+  }
+
+  Color _getTimelineColor(String status) {
+    final normalizedStatus = status.toLowerCase();
+    if (normalizedStatus.contains('pending')) {
+      return Colors.teal;
+    } else if (normalizedStatus.contains('progress') ||
+        normalizedStatus.contains('review') ||
+        normalizedStatus.contains('processing')) {
+      return Colors.teal;
+    } else if (normalizedStatus.contains('resolved') ||
+        normalizedStatus.contains('completed') ||
+        normalizedStatus.contains('done')) {
+      return Colors.teal;
+    } else if (normalizedStatus.contains('rejected') ||
+        normalizedStatus.contains('cancelled') ||
+        normalizedStatus.contains('closed')) {
+      return Colors.teal;
+    }
+    return Colors.teal;
+  }
+
+  IconData _getTimelineIcon(String status) {
+    final normalizedStatus = status.toLowerCase();
+    if (normalizedStatus.contains('pending')) {
+      return Icons.check;
+    } else if (normalizedStatus.contains('progress') ||
+        normalizedStatus.contains('review') ||
+        normalizedStatus.contains('processing')) {
+      return Icons.check;
+    } else if (normalizedStatus.contains('resolved') ||
+        normalizedStatus.contains('completed') ||
+        normalizedStatus.contains('done')) {
+      return Icons.check;
+    } else if (normalizedStatus.contains('rejected') ||
+        normalizedStatus.contains('cancelled') ||
+        normalizedStatus.contains('closed')) {
+      return Icons.arrow_forward;
+    }
+    return Icons.check;
   }
 
   Widget _buildInfoRow(String label, String value, IconData icon) {
