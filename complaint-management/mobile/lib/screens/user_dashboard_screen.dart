@@ -182,60 +182,7 @@ class _UserDashboardScreenState extends State<UserDashboardScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Status filters row
-                Row(
-                  children: [
-                    Icon(Icons.flag_outlined,
-                        size: 16, color: Colors.grey[600]),
-                    const SizedBox(width: 8),
-                    Text(
-                      'Status:',
-                      style: TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.grey[700],
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 8),
-                SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    children: [
-                      for (final status in const [
-                        'Pending',
-                        'In Progress',
-                        'Resolved',
-                        'Rejected',
-                      ]) ...[
-                        FilterChip(
-                          label: Text(status,
-                              style: const TextStyle(fontSize: 12)),
-                          selected:
-                              _statusFilters.contains(status.toLowerCase()),
-                          selectedColor: Theme.of(context)
-                              .colorScheme
-                              .secondary
-                              .withOpacity(0.3),
-                          checkmarkColor: Theme.of(context).colorScheme.primary,
-                          visualDensity: VisualDensity.compact,
-                          onSelected: (selected) {
-                            setState(() {
-                              if (selected) {
-                                _statusFilters.add(status.toLowerCase());
-                              } else {
-                                _statusFilters.remove(status.toLowerCase());
-                              }
-                            });
-                            _applyFilters();
-                          },
-                        ),
-                        const SizedBox(width: 8),
-                      ],
-                    ],
-                  ),
-                ),
+                
                 const SizedBox(height: 12),
                 // Category filters row
                 if (FilterUtils.uniqueCategories(_allComplaints)
