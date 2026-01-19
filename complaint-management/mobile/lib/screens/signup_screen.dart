@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../services/api_service.dart';
+import '../services/theme_service.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
@@ -111,12 +112,24 @@ class _SignupScreenState extends State<SignupScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
       appBar: AppBar(
         title: const Text('Sign Up'),
-        backgroundColor: Colors.blue[700],
-        foregroundColor: Colors.white,
+        actions: [
+          ValueListenableBuilder<ThemeMode>(
+            valueListenable: ThemeService.themeMode,
+            builder: (context, mode, _) {
+              return IconButton(
+                icon: Icon(
+                  mode == ThemeMode.dark ? Icons.light_mode : Icons.dark_mode,
+                ),
+                onPressed: ThemeService.toggleTheme,
+                tooltip: mode == ThemeMode.dark ? 'Light mode' : 'Dark mode',
+              );
+            },
+          ),
+        ],
       ),
+      backgroundColor: Theme.of(context).colorScheme.background,
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
@@ -134,7 +147,7 @@ class _SignupScreenState extends State<SignupScreen> {
                         Icon(
                           Icons.person_add_outlined,
                           size: 80,
-                          color: Colors.blue[700],
+                          color: Theme.of(context).colorScheme.primary,
                         ),
                         const SizedBox(height: 20),
                         Text(
@@ -142,7 +155,7 @@ class _SignupScreenState extends State<SignupScreen> {
                           style: TextStyle(
                             fontSize: 28,
                             fontWeight: FontWeight.bold,
-                            color: Colors.blue[900],
+                            color: Theme.of(context).colorScheme.primary,
                           ),
                         ),
                       ],
@@ -167,7 +180,7 @@ class _SignupScreenState extends State<SignupScreen> {
                             style: TextStyle(
                               fontSize: 24,
                               fontWeight: FontWeight.bold,
-                              color: Colors.blue[900],
+                              color: Theme.of(context).colorScheme.primary,
                             ),
                             textAlign: TextAlign.center,
                           ),
@@ -381,7 +394,8 @@ class _SignupScreenState extends State<SignupScreen> {
                           ElevatedButton(
                             onPressed: _isLoading ? null : _handleSignup,
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.blue[700],
+                              backgroundColor:
+                                  Theme.of(context).colorScheme.primary,
                               foregroundColor: Colors.white,
                               padding: const EdgeInsets.symmetric(vertical: 16),
                               shape: RoundedRectangleBorder(
@@ -412,7 +426,7 @@ class _SignupScreenState extends State<SignupScreen> {
                             child: Text(
                               'Already have an account? Login',
                               style: TextStyle(
-                                color: Colors.blue[700],
+                                color: Theme.of(context).colorScheme.primary,
                                 fontSize: 16,
                               ),
                             ),
