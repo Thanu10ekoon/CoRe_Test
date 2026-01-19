@@ -152,7 +152,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             style: TextStyle(
                               fontSize: 24,
                               fontWeight: FontWeight.bold,
-                              color: Colors.blue[900],
+                              color: Theme.of(context).colorScheme.primary,
                             ),
                             textAlign: TextAlign.center,
                           ),
