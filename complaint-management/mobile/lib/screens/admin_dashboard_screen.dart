@@ -244,6 +244,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
               spacing: 8,
               runSpacing: 4,
               children: [
+<<<<<<< Updated upstream
                 for (final category
                     in FilterUtils.uniqueCategories(_allComplaints))
                   FilterChip(
@@ -262,6 +263,65 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                       _applyFilters();
                     },
                   ),
+=======
+
+                // Category filters row
+                if (FilterUtils.uniqueCategories(_allComplaints)
+                    .isNotEmpty) ...[
+                  Row(
+                    children: [
+                      Icon(Icons.category_outlined,
+                          size: 16, color: Colors.grey[600]),
+                      const SizedBox(width: 8),
+                      Text(
+                        'Category:',
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.grey[700],
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+                  SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      children: [
+                        for (final category in FilterUtils.uniqueCategories(
+                            _allComplaints)) ...[
+                          FilterChip(
+                            label: Text(category,
+                                style: const TextStyle(fontSize: 12)),
+                            selected: _categoryFilters
+                                .contains(category.toLowerCase()),
+                            selectedColor: Theme.of(context)
+                                .colorScheme
+                                .secondary
+                                .withOpacity(0.3),
+                            checkmarkColor:
+                                Theme.of(context).colorScheme.primary,
+                            visualDensity: VisualDensity.compact,
+                            onSelected: (selected) {
+                              setState(() {
+                                if (selected) {
+                                  _categoryFilters.add(category.toLowerCase());
+                                } else {
+                                  _categoryFilters
+                                      .remove(category.toLowerCase());
+                                }
+                              });
+                              _applyFilters();
+                            },
+                          ),
+                          const SizedBox(width: 8),
+                        ],
+                      ],
+                    ),
+                  ),
+                ],
+                // Clear filters row
+>>>>>>> Stashed changes
                 if (_categoryFilters.isNotEmpty ||
                     _statusFilters.isNotEmpty ||
                     _searchQuery.isNotEmpty)

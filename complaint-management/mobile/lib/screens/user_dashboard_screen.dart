@@ -183,6 +183,7 @@ class _UserDashboardScreenState extends State<UserDashboardScreen> {
               spacing: 8,
               runSpacing: 4,
               children: [
+<<<<<<< Updated upstream
                 for (final status in const [
                   'Pending',
                   'In Progress',
@@ -233,6 +234,26 @@ class _UserDashboardScreenState extends State<UserDashboardScreen> {
                       });
                       _applyFilters();
                     },
+=======
+
+                // Category filters row
+                if (FilterUtils.uniqueCategories(_allComplaints)
+                    .isNotEmpty) ...[
+                  Row(
+                    children: [
+                      Icon(Icons.category_outlined,
+                          size: 16, color: Colors.grey[600]),
+                      const SizedBox(width: 8),
+                      Text(
+                        'Category:',
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.grey[700],
+                        ),
+                      ),
+                    ],
+>>>>>>> Stashed changes
                   ),
                 if (_categoryFilters.isNotEmpty ||
                     _statusFilters.isNotEmpty ||
