@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { Container, Card, Table, Button } from "react-bootstrap";
-import ThemeToggle from "./ThemeToggle";
 
 const UserDashboard = () => {
   const [complaints, setComplaints] = useState([]);

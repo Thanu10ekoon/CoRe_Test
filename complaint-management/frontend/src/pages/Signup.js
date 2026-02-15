@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { Form, Button, Container, Card, Alert } from "react-bootstrap";
 import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
-import ThemeToggle from "../components/ThemeToggle";
 
 const Signup = () => {
   const [formData, setFormData] = useState({
@@ -109,23 +108,23 @@ const Signup = () => {
   return (
     <Container
       className="d-flex align-items-center justify-content-center"
-      style={{ minHeight: "100vh" }}
+      style={{ minHeight: "100vh", paddingTop: "20px", paddingBottom: "20px" }}
     >
+      <div className="text-center">
         <img
           src="https://i.ibb.co/cXsYwrCh/core-ms-high-resolution-logo.png"
           alt="Logo"
-          className="logo-img"
-          style={{ width: "400px", marginTop: "-50px", marginBottom: "-10px" }}
+          style={{ width: "400px", marginBottom: "20px" }}
         />
 
-      <div className="w-100" style={{ maxWidth: "400px" }}>
-        <Card>
-          <Card.Body>
-            <h2 className="text-center mb-4">Sign Up</h2>
-            
-            {error && <Alert variant="danger">{error}</Alert>}
-            
-            <Form onSubmit={handleSignup}>
+        <div className="w-100" style={{ maxWidth: "400px" }}>
+          <Card>
+            <Card.Body>
+              <h2 className="text-center mb-4">Sign Up</h2>
+              
+              {error && <Alert variant="danger">{error}</Alert>}
+              
+              <Form onSubmit={handleSignup}>
               <Form.Group controlId="username">
                 <Form.Label>Username</Form.Label>
                 <Form.Control
@@ -252,6 +251,7 @@ const Signup = () => {
           </a>
         </p>
       </footer>
+      </div>
     </Container>
   );
 };

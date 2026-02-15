@@ -3,7 +3,6 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { Container, Card, Table, Button, Tab, Tabs, Badge, Spinner } from "react-bootstrap";
-import ThemeToggle from "./ThemeToggle";
 
 const ObserverDashboard = () => {
   const [myComplaints, setMyComplaints] = useState([]);
