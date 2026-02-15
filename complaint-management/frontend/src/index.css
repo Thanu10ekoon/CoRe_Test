@@ -1,3 +1,21 @@
+:root {
+  /* Light Theme Colors - Matching Mobile App */
+  --primary-color: #5F0A0C;
+  --secondary-color: #FDC134;
+  --background-color: #FAFAFA;
+  --surface-color: #FFFFFF;
+  --text-primary: #212121;
+  --text-secondary: #757575;
+  --border-color: #E0E0E0;
+  --shadow: rgba(0, 0, 0, 0.1);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -5,9 +23,215 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: var(--background-color);
+  color: var(--text-primary);
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+/* Card styling */
+.card {
+  background-color: var(--surface-color);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+}
+
+/* Button styling */
+.btn-primary {
+  background-color: var(--primary-color) !important;
+  border-color: var(--primary-color) !important;
+  color: white !important;
+}
+
+.btn-primary:hover {
+  background-color: #7D0E10 !important;
+  border-color: #7D0E10 !important;
+}
+
+.btn-secondary {
+  background-color: var(--secondary-color) !important;
+  border-color: var(--secondary-color) !important;
+  color: var(--primary-color) !important;
+}
+
+.btn-secondary:hover {
+  background-color: #FFDB4D !important;
+  border-color: #FFDB4D !important;
+}
+
+/* Input styling */
+.form-control {
+  background-color: var(--surface-color);
+  border-color: var(--border-color);
+  color: var(--text-primary);
+}
+
+.form-control:focus {
+  background-color: var(--surface-color);
+  border-color: var(--primary-color);
+  color: var(--text-primary);
+  box-shadow: 0 0 0 0.2rem rgba(95, 10, 12, 0.25);
+}
+
+/* Table styling */
+.table {
+  color: var(--text-primary);
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+  background-color: var(--background-color);
+}
+
+/* Badge styling */
+.badge-primary {
+  background-color: var(--primary-color);
+}
+
+.badge-secondary {
+  background-color: var(--secondary-color);
+  color: var(--primary-color);
+}
+
+/* Modal styling */
+.modal-content {
+  background-color: var(--surface-color);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+}
+
+.modal-header {
+  border-bottom-color: var(--border-color);
+  background-color: var(--surface-color);
+}
+
+.modal-footer {
+  border-top-color: var(--border-color);
+  background-color: var(--surface-color);
+}
+
+.modal-body {
+  background-color: var(--surface-color);
+  color: var(--text-primary);
+}
+
+/* Container and general layout */
+.container,
+.container-fluid {
+  background-color: var(--background-color);
+}
+
+/* Text colors */
+h1, h2, h3, h4, h5, h6,
+p, span, div, label {
+  color: var(--text-primary);
+}
+
+small, .text-muted {
+  color: var(--text-secondary) !important;
+}
+
+/* List group */
+.list-group-item {
+  background-color: var(--surface-color);
+  border-color: var(--border-color);
+  color: var(--text-primary);
+}
+
+.list-group-item:hover {
+  background-color: var(--background-color);
+}
+
+/* Nav tabs */
+.nav-tabs {
+  border-bottom-color: var(--border-color);
+}
+
+.nav-tabs .nav-link {
+  color: var(--text-secondary);
+  border-color: transparent;
+}
+
+.nav-tabs .nav-link:hover {
+  border-color: var(--border-color);
+  color: var(--text-primary);
+}
+
+.nav-tabs .nav-link.active {
+  background-color: var(--surface-color);
+  border-color: var(--border-color) var(--border-color) var(--surface-color);
+  color: var(--primary-color);
+}
+
+/* Tab content */
+.tab-content {
+  background-color: var(--background-color);
+  color: var(--text-primary);
+}
+
+/* Dropdown */
+.dropdown-menu {
+  background-color: var(--surface-color);
+  border-color: var(--border-color);
+}
+
+.dropdown-item {
+  color: var(--text-primary);
+}
+
+.dropdown-item:hover {
+  background-color: var(--background-color);
+  color: var(--text-primary);
+}
+
+/* Alert */
+.alert {
+  background-color: var(--surface-color);
+  border-color: var(--border-color);
+  color: var(--text-primary);
+}
+
+/* Select dropdown */
+select.form-control,
+select.form-select {
+  background-color: var(--surface-color);
+  border-color: var(--border-color);
+  color: var(--text-primary);
+}
+
+select.form-control option,
+select.form-select option {
+  background-color: var(--surface-color);
+  color: var(--text-primary);
+}
+
+/* Textarea */
+textarea.form-control {
+  background-color: var(--surface-color);
+  border-color: var(--border-color);
+  color: var(--text-primary);
+}
+
+/* Input group */
+.input-group-text {
+  background-color: var(--surface-color);
+  border-color: var(--border-color);
+  color: var(--text-primary);
+}
+
+/* Links */
+a {
+  color: var(--primary-color);
+}
+
+a:hover {
+  color: var(--secondary-color);
+}
+
+/* HR divider */
+hr {
+  border-color: var(--border-color);
+  opacity: 1;
 }

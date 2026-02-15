@@ -5,6 +5,8 @@ import 'screens/login_screen.dart';
 import 'screens/signup_screen.dart';
 import 'screens/user_dashboard_screen.dart';
 import 'screens/admin_dashboard_screen.dart';
+import 'screens/observer_dashboard_screen.dart';
+import 'screens/superadmin_dashboard_screen.dart';
 import 'screens/new_complaint_screen.dart';
 import 'screens/complaint_details_screen.dart';
 
@@ -86,6 +88,9 @@ class MyApp extends StatelessWidget {
             '/signup': (context) => const SignupScreen(),
             '/user-dashboard': (context) => const UserDashboardScreen(),
             '/admin-dashboard': (context) => const AdminDashboardScreen(),
+            '/observer-dashboard': (context) => const ObserverDashboardScreen(),
+            '/superadmin-dashboard': (context) =>
+                const SuperAdminDashboardScreen(),
             '/new-complaint': (context) => const NewComplaintScreen(),
           },
           onGenerateRoute: (settings) {
@@ -128,10 +133,18 @@ class _SplashScreenState extends State<SplashScreen> {
     if (!mounted) return;
 
     if (userId != null && role != null) {
-      if (role.toLowerCase() == 'admin') {
-        Navigator.of(context).pushReplacementNamed('/admin-dashboard');
-      } else {
-        Navigator.of(context).pushReplacementNamed('/user-dashboard');
+      switch (role.toLowerCase()) {
+        case 'superadmin':
+          Navigator.of(context).pushReplacementNamed('/superadmin-dashboard');
+          break;
+        case 'admin':
+          Navigator.of(context).pushReplacementNamed('/admin-dashboard');
+          break;
+        case 'observer':
+          Navigator.of(context).pushReplacementNamed('/observer-dashboard');
+          break;
+        default:
+          Navigator.of(context).pushReplacementNamed('/user-dashboard');
       }
     } else {
       Navigator.of(context).pushReplacementNamed('/login');

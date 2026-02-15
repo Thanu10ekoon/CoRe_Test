@@ -14,21 +14,77 @@ class _SignupScreenState extends State<SignupScreen> {
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
-  final _adminPasswordController = TextEditingController();
+  final _specialPasswordController = TextEditingController();
   bool _isLoading = false;
   bool _obscurePassword = true;
   bool _obscureConfirmPassword = true;
-  bool _obscureAdminPassword = true;
+  bool _obscureSpecialPassword = true;
   String _selectedRole = 'user';
-  String _selectedSubrole = '';
+  List<dynamic> _categories = [];
+  List<int> _selectedCategoryIds = [];
+  bool _loadingCategories = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadCategories();
+  }
 
   @override
   void dispose() {
     _usernameController.dispose();
     _passwordController.dispose();
     _confirmPasswordController.dispose();
-    _adminPasswordController.dispose();
+    _specialPasswordController.dispose();
     super.dispose();
+  }
+
+  Future<void> _loadCategories() async {
+    setState(() {
+      _loadingCategories = true;
+    });
+    try {
+      final categories = await ApiService.getCategories();
+      if (mounted) {
+        setState(() {
+          _categories = categories;
+          _loadingCategories = false;
+        });
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          _loadingCategories = false;
+        });
+      }
+    }
+  }
+
+  String _getSpecialPasswordLabel() {
+    switch (_selectedRole) {
+      case 'admin':
+        return 'Admin Password';
+      case 'superadmin':
+        return 'Super Admin Password';
+      case 'observer':
+        return 'Observer Password';
+      default:
+        return 'Special Password';
+    }
+  }
+
+  bool _verifySpecialPassword() {
+    final password = _specialPasswordController.text;
+    switch (_selectedRole) {
+      case 'admin':
+        return password == 'RuhPass#1999';
+      case 'superadmin':
+        return password == 'SuperRuhPass#2024';
+      case 'observer':
+        return password == 'ObserverPass#2024';
+      default:
+        return true;
+    }
   }
 
   Future<void> _handleSignup() async {
@@ -46,23 +102,22 @@ class _SignupScreenState extends State<SignupScreen> {
       return;
     }
 
-    // Admin password verification
-    if (_selectedRole == 'admin' &&
-        _adminPasswordController.text != 'RuhPass#1999') {
+    // Special password verification for non-user roles
+    if (_selectedRole != 'user' && !_verifySpecialPassword()) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Invalid admin password'),
+        SnackBar(
+          content: Text('Invalid ${_selectedRole} password'),
           backgroundColor: Colors.red,
         ),
       );
       return;
     }
 
-    // Admin must provide subrole
-    if (_selectedRole == 'admin' && _selectedSubrole.isEmpty) {
+    // Admin must select at least one category
+    if (_selectedRole == 'admin' && _selectedCategoryIds.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Please select a position for admin'),
+          content: Text('Please select at least one category for admin'),
           backgroundColor: Colors.red,
         ),
       );
@@ -78,7 +133,7 @@ class _SignupScreenState extends State<SignupScreen> {
         _usernameController.text,
         _passwordController.text,
         role: _selectedRole,
-        subrole: _selectedRole == 'admin' ? _selectedSubrole : 'user',
+        categories: _selectedRole == 'admin' ? _selectedCategoryIds : null,
       );
 
       if (!mounted) return;
@@ -282,33 +337,39 @@ class _SignupScreenState extends State<SignupScreen> {
                               DropdownMenuItem(
                                   value: 'user', child: Text('User')),
                               DropdownMenuItem(
+                                  value: 'observer', child: Text('Observer')),
+                              DropdownMenuItem(
                                   value: 'admin', child: Text('Admin')),
+                              DropdownMenuItem(
+                                  value: 'superadmin',
+                                  child: Text('Super Admin')),
                             ],
                             onChanged: (value) {
                               setState(() {
                                 _selectedRole = value!;
+                                _selectedCategoryIds.clear();
                               });
                             },
                           ),
-                          if (_selectedRole == 'admin') ...[
+                          if (_selectedRole != 'user') ...[
                             const SizedBox(height: 20),
                             TextFormField(
-                              controller: _adminPasswordController,
-                              obscureText: _obscureAdminPassword,
+                              controller: _specialPasswordController,
+                              obscureText: _obscureSpecialPassword,
                               decoration: InputDecoration(
-                                labelText: 'Admin Password',
+                                labelText: _getSpecialPasswordLabel(),
                                 prefixIcon:
                                     const Icon(Icons.admin_panel_settings),
                                 suffixIcon: IconButton(
                                   icon: Icon(
-                                    _obscureAdminPassword
+                                    _obscureSpecialPassword
                                         ? Icons.visibility_off
                                         : Icons.visibility,
                                   ),
                                   onPressed: () {
                                     setState(() {
-                                      _obscureAdminPassword =
-                                          !_obscureAdminPassword;
+                                      _obscureSpecialPassword =
+                                          !_obscureSpecialPassword;
                                     });
                                   },
                                 ),
@@ -316,78 +377,81 @@ class _SignupScreenState extends State<SignupScreen> {
                                   borderRadius: BorderRadius.circular(12),
                                 ),
                                 helperText:
-                                    'Contact administrator for admin password',
+                                    'Contact administrator for ${_selectedRole} password',
                               ),
                             ),
+                          ],
+                          if (_selectedRole == 'admin') ...[
                             const SizedBox(height: 20),
-                            DropdownButtonFormField<String>(
-                              value: _selectedSubrole.isEmpty
-                                  ? null
-                                  : _selectedSubrole,
-                              decoration: InputDecoration(
-                                labelText: 'Admin Position',
-                                prefixIcon: const Icon(Icons.work_outline),
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
+                            Container(
+                              padding: const EdgeInsets.all(12),
+                              decoration: BoxDecoration(
+                                border: Border.all(color: Colors.grey),
+                                borderRadius: BorderRadius.circular(12),
                               ),
-                              items: const [
-                                DropdownMenuItem(
-                                    value: 'Dean', child: Text('Dean')),
-                                DropdownMenuItem(
-                                    value: 'ComplaintsManager',
-                                    child: Text('Complaints Manager')),
-                                DropdownMenuItem(
-                                    value: 'Warden',
-                                    child: Text('Warden (Hostel)')),
-                                DropdownMenuItem(
-                                    value: 'AR',
-                                    child: Text('AR (Documentation)')),
-                                DropdownMenuItem(
-                                    value: 'CanteenCordinator',
-                                    child: Text('Canteen Coordinator')),
-                                DropdownMenuItem(
-                                    value: 'AcademicCordinator',
-                                    child: Text('Academic Coordinator')),
-                                DropdownMenuItem(
-                                    value: 'SportCordinator',
-                                    child: Text('Sport Coordinator')),
-                                DropdownMenuItem(
-                                    value: 'MaintainanceCordinator',
-                                    child: Text('Maintenance Coordinator')),
-                                DropdownMenuItem(
-                                    value: 'Librarian',
-                                    child: Text('Librarian')),
-                                DropdownMenuItem(
-                                    value: 'SecurityCordinator',
-                                    child: Text('Security Coordinator')),
-                                DropdownMenuItem(
-                                    value: 'HOD_DEIE',
-                                    child: Text('HOD - DEIE')),
-                                DropdownMenuItem(
-                                    value: 'HOD_DMME',
-                                    child: Text('HOD - DMME')),
-                                DropdownMenuItem(
-                                    value: 'HOD_DIS', child: Text('HOD - DIS')),
-                                DropdownMenuItem(
-                                    value: 'HOD_DMENA',
-                                    child: Text('HOD - DMENA')),
-                                DropdownMenuItem(
-                                    value: 'HOD_DCEE',
-                                    child: Text('HOD - DCEE')),
-                              ],
-                              onChanged: (value) {
-                                setState(() {
-                                  _selectedSubrole = value ?? '';
-                                });
-                              },
-                              validator: (value) {
-                                if (_selectedRole == 'admin' &&
-                                    (value == null || value.isEmpty)) {
-                                  return 'Please select a position';
-                                }
-                                return null;
-                              },
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    children: [
+                                      const Icon(Icons.category,
+                                          color: Colors.grey),
+                                      const SizedBox(width: 8),
+                                      Text(
+                                        'Select Categories',
+                                        style: TextStyle(
+                                          color: Colors.grey[700],
+                                          fontSize: 16,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 8),
+                                  if (_loadingCategories)
+                                    const Center(
+                                        child: CircularProgressIndicator())
+                                  else if (_categories.isEmpty)
+                                    const Text('No categories available')
+                                  else
+                                    Wrap(
+                                      spacing: 8,
+                                      children: _categories.map((category) {
+                                        final categoryId =
+                                            category['id'] as int;
+                                        final isSelected = _selectedCategoryIds
+                                            .contains(categoryId);
+                                        return FilterChip(
+                                          label: Text(category['name'] ?? ''),
+                                          selected: isSelected,
+                                          onSelected: (selected) {
+                                            setState(() {
+                                              if (selected) {
+                                                _selectedCategoryIds
+                                                    .add(categoryId);
+                                              } else {
+                                                _selectedCategoryIds
+                                                    .remove(categoryId);
+                                              }
+                                            });
+                                          },
+                                        );
+                                      }).toList(),
+                                    ),
+                                  if (_selectedCategoryIds.isNotEmpty)
+                                    Padding(
+                                      padding: const EdgeInsets.only(top: 8),
+                                      child: Text(
+                                        '${_selectedCategoryIds.length} selected',
+                                        style: TextStyle(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .primary,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
+                                ],
+                              ),
                             ),
                           ],
                           const SizedBox(height: 30),

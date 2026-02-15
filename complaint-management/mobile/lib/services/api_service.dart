@@ -32,7 +32,7 @@ class ApiService {
     String username,
     String password, {
     String role = 'user',
-    String subrole = 'user',
+    List<int>? categories,
   }) async {
     final response = await http.post(
       Uri.parse('$baseUrl/signup'),
@@ -41,7 +41,7 @@ class ApiService {
         'username': username,
         'password': password,
         'role': role,
-        'subrole': subrole,
+        'categories': categories ?? [],
       }),
     );
 
@@ -50,6 +50,19 @@ class ApiService {
     } else {
       final error = json.decode(response.body);
       throw Exception(error['error'] ?? 'Signup failed');
+    }
+  }
+
+  // Get categories
+  static Future<List<dynamic>> getCategories() async {
+    final response = await http.get(
+      Uri.parse('$baseUrl/categories'),
+    );
+
+    if (response.statusCode == 200) {
+      return json.decode(response.body);
+    } else {
+      throw Exception('Failed to load categories');
     }
   }
 

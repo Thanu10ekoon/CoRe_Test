@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { Container, Card, Table, Button } from "react-bootstrap";
-import Chatbot from "../Chatbot";
+import ThemeToggle from "./ThemeToggle";
 
 const UserDashboard = () => {
   const [complaints, setComplaints] = useState([]);
@@ -35,12 +35,13 @@ const UserDashboard = () => {
 
   return (
     <Container className="d-flex flex-column min-vh-100">
-      <div className="d-flex justify-content-center mt-4">
-        <img
-          src="https://i.ibb.co/cXsYwrCh/core-ms-high-resolution-logo.png"
-          alt="Logo"
-          style={{ width: "400px" }}
-        />
+        <div className="d-flex justify-content-center mt-4">
+          <img
+            src="https://i.ibb.co/cXsYwrCh/core-ms-high-resolution-logo.png"
+            alt="Logo"
+            className="logo-img"
+            style={{ width: "400px" }}
+          />
       </div>
 
       <div className="flex-grow-1 d-flex flex-column align-items-center mt-3">
@@ -111,8 +112,6 @@ const UserDashboard = () => {
           </a>
         </p>
       </footer>
-
-      <Chatbot userType="user" />
     </Container>
   );
 };

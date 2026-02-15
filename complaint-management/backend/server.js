@@ -123,7 +123,7 @@ app.get("/api/complaints", (req, res) => {
                   ORDER BY c.created_at DESC`;
   
   if (adminId) {
-    // Lookup the admin info first to check subrole.
+    // Lookup the admin info first to check role.
     const getAdminSql = "SELECT * FROM CoReMSusers WHERE user_id = ?";
     db.query(getAdminSql, [adminId], (err, adminResults) => {
       if (err) return res.status(500).json({ error: "Database error" });
@@ -131,40 +131,33 @@ app.get("/api/complaints", (req, res) => {
         return res.status(400).json({ error: "Invalid admin" });
       }
       const admin = adminResults[0];
-      // Full access: Dean or ComplaintsManager should see all complaints.
-      if (admin.role === "admin" && (admin.subrole === "Dean" || admin.subrole === "ComplaintsManager")) {
+      
+      // Superadmin and Observer can see all complaints
+      if (admin.role === "superadmin" || admin.role === "observer") {
         db.query(sqlAll, (err, results) => {
           if (err) return res.status(500).json({ error: "Database error" });
           res.json(results);
         });
       } else if (admin.role === "admin") {
-        // Map admin subrole to the complaint category.
-        const categoryMapping = {
-          "Warden": "Hostel",
-          "AR": "Documentation",
-          "CanteenCordinator": "Canteen",
-          "AcademicCordinator": "Academic",
-          "SportCordinator": "Sports",
-          "MaintainanceCordinator": "Maintainance",
-          "Librarian": "Library",
-          "SecurityCordinator": "Security",
-          "HOD_DEIE": "DEIE",
-          "HOD_DMME": "DMME",
-          "HOD_DIS": "DIS",
-          "HOD_DMENA": "DMENA",
-          "HOD_DCEE": "DCEE"
-        };
-        const complaintCategory = categoryMapping[admin.subrole];
-        if (!complaintCategory) {
-          return res.status(400).json({ error: "No mapping for admin subrole" });
-        }
-        const filteredSql = `SELECT c.*, u.username AS admin_username, u.subrole AS admin_subrole
-                             FROM CoReMScomplaints c
-                             LEFT JOIN CoReMSusers u ON c.updated_by_admin = u.user_id
-                             WHERE c.category = ? ORDER BY c.created_at DESC`;
-        db.query(filteredSql, [complaintCategory], (err, results) => {
+        // Regular admin sees only complaints from their assigned categories
+        const catQuery = `SELECT c.name FROM CoReMSadmin_categories ac 
+                          JOIN CoReMScategories c ON ac.category_id = c.category_id 
+                          WHERE ac.user_id = ?`;
+        db.query(catQuery, [adminId], (err, categories) => {
           if (err) return res.status(500).json({ error: "Database error" });
-          res.json(results);
+          if (!categories || categories.length === 0) {
+            return res.json([]); // No categories assigned
+          }
+          const categoryNames = categories.map(c => c.name);
+          const placeholders = categoryNames.map(() => '?').join(',');
+          const filteredSql = `SELECT c.*, u.username AS admin_username, u.subrole AS admin_subrole
+                               FROM CoReMScomplaints c
+                               LEFT JOIN CoReMSusers u ON c.updated_by_admin = u.user_id
+                               WHERE c.category IN (${placeholders}) ORDER BY c.created_at DESC`;
+          db.query(filteredSql, categoryNames, (err, results) => {
+            if (err) return res.status(500).json({ error: "Database error" });
+            res.json(results);
+          });
         });
       } else {
         return res.status(403).json({ error: "Unauthorized" });
@@ -216,6 +209,161 @@ app.get("/api/statusupdates/:complaintId", (req, res) => {
                WHERE su.complaint_id = ?
                ORDER BY su.update_date ASC`;
   db.query(sql, [req.params.complaintId], (err, results) => {
+    if (err) return res.status(500).json({ error: "Database error" });
+    res.json(results);
+  });
+});
+
+// ==================== CATEGORIES ROUTES ====================
+
+// GET all categories
+app.get("/api/categories", (req, res) => {
+  const sql = "SELECT * FROM CoReMScategories ORDER BY name ASC";
+  db.query(sql, (err, results) => {
+    if (err) return res.status(500).json({ error: "Database error" });
+    res.json(results);
+  });
+});
+
+// POST create new category (superadmin only)
+app.post("/api/categories", (req, res) => {
+  const { name, description, admin_id } = req.body;
+  
+  if (!name) {
+    return res.status(400).json({ error: "Category name is required" });
+  }
+
+  // Verify superadmin
+  const checkAdminSql = "SELECT role FROM CoReMSusers WHERE user_id = ?";
+  db.query(checkAdminSql, [admin_id], (err, results) => {
+    if (err) return res.status(500).json({ error: "Database error" });
+    if (!results[0] || results[0].role !== "superadmin") {
+      return res.status(403).json({ error: "Only superadmins can create categories" });
+    }
+
+    const insertSql = "INSERT INTO CoReMScategories (name, description) VALUES (?, ?)";
+    db.query(insertSql, [name, description || null], (err, result) => {
+      if (err) {
+        if (err.code === 'ER_DUP_ENTRY') {
+          return res.status(409).json({ error: "Category already exists" });
+        }
+        return res.status(500).json({ error: "Database error" });
+      }
+      res.json({ 
+        message: "Category created successfully",
+        category_id: result.insertId 
+      });
+    });
+  });
+});
+
+// DELETE category (superadmin only)
+app.delete("/api/categories/:id", (req, res) => {
+  const { admin_id } = req.body;
+  
+  // Verify superadmin
+  const checkAdminSql = "SELECT role FROM CoReMSusers WHERE user_id = ?";
+  db.query(checkAdminSql, [admin_id], (err, results) => {
+    if (err) return res.status(500).json({ error: "Database error" });
+    if (!results[0] || results[0].role !== "superadmin") {
+      return res.status(403).json({ error: "Only superadmins can delete categories" });
+    }
+
+    const deleteSql = "DELETE FROM CoReMScategories WHERE category_id = ?";
+    db.query(deleteSql, [req.params.id], (err, result) => {
+      if (err) return res.status(500).json({ error: "Database error" });
+      if (result.affectedRows === 0) {
+        return res.status(404).json({ error: "Category not found" });
+      }
+      res.json({ message: "Category deleted successfully" });
+    });
+  });
+});
+
+// ==================== USER MANAGEMENT ROUTES ====================
+
+// GET all users (superadmin only)
+app.get("/api/users", (req, res) => {
+  const admin_id = req.query.admin_id;
+  
+  // Verify superadmin
+  const checkAdminSql = "SELECT role FROM CoReMSusers WHERE user_id = ?";
+  db.query(checkAdminSql, [admin_id], (err, results) => {
+    if (err) return res.status(500).json({ error: "Database error" });
+    if (!results[0] || results[0].role !== "superadmin") {
+      return res.status(403).json({ error: "Only superadmins can view users" });
+    }
+
+    const sql = `SELECT u.user_id, u.username, u.role, u.subrole, u.created_at,
+                 GROUP_CONCAT(c.name) AS categories
+                 FROM CoReMSusers u
+                 LEFT JOIN CoReMSadmin_categories ac ON u.user_id = ac.user_id
+                 LEFT JOIN CoReMScategories c ON ac.category_id = c.category_id
+                 GROUP BY u.user_id
+                 ORDER BY u.created_at DESC`;
+    db.query(sql, (err, results) => {
+      if (err) return res.status(500).json({ error: "Database error" });
+      res.json(results);
+    });
+  });
+});
+
+// PUT update user role (superadmin only)
+app.put("/api/users/:id/role", (req, res) => {
+  const { role, categories, admin_id } = req.body;
+  const userId = req.params.id;
+  
+  const validRoles = ["user", "observer", "admin", "superadmin"];
+  if (!validRoles.includes(role)) {
+    return res.status(400).json({ error: "Invalid role" });
+  }
+
+  // Verify superadmin
+  const checkAdminSql = "SELECT role FROM CoReMSusers WHERE user_id = ?";
+  db.query(checkAdminSql, [admin_id], (err, results) => {
+    if (err) return res.status(500).json({ error: "Database error" });
+    if (!results[0] || results[0].role !== "superadmin") {
+      return res.status(403).json({ error: "Only superadmins can change user roles" });
+    }
+
+    // Update user role
+    const updateSql = "UPDATE CoReMSusers SET role = ?, subrole = ? WHERE user_id = ?";
+    const subroleValue = role === "admin" ? "CategoryAdmin" : role;
+    
+    db.query(updateSql, [role, subroleValue, userId], (err) => {
+      if (err) return res.status(500).json({ error: "Database error" });
+
+      // Clear existing category assignments
+      const deleteCatSql = "DELETE FROM CoReMSadmin_categories WHERE user_id = ?";
+      db.query(deleteCatSql, [userId], (err) => {
+        if (err) return res.status(500).json({ error: "Database error" });
+
+        // If admin, assign new categories
+        if (role === "admin" && categories && categories.length > 0) {
+          const categoryInserts = categories.map(catId => [userId, catId]);
+          const catInsertSql = "INSERT INTO CoReMSadmin_categories (user_id, category_id) VALUES ?";
+          
+          db.query(catInsertSql, [categoryInserts], (err) => {
+            if (err) {
+              console.error("Error assigning categories:", err);
+            }
+            res.json({ message: "User role updated successfully" });
+          });
+        } else {
+          res.json({ message: "User role updated successfully" });
+        }
+      });
+    });
+  });
+});
+
+// GET user's assigned categories
+app.get("/api/users/:id/categories", (req, res) => {
+  const sql = `SELECT c.category_id, c.name 
+               FROM CoReMSadmin_categories ac 
+               JOIN CoReMScategories c ON ac.category_id = c.category_id 
+               WHERE ac.user_id = ?`;
+  db.query(sql, [req.params.id], (err, results) => {
     if (err) return res.status(500).json({ error: "Database error" });
     res.json(results);
   });

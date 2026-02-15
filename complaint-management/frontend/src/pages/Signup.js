@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Form, Button, Container, Card, Alert } from "react-bootstrap";
 import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
+import ThemeToggle from "../components/ThemeToggle";
 
 const Signup = () => {
   const [formData, setFormData] = useState({
@@ -9,12 +10,20 @@ const Signup = () => {
     password: "",
     confirmPassword: "",
     role: "user",
-    subrole: "",
+    selectedCategories: [],
     adminPassword: "",
   });
+  const [categories, setCategories] = useState([]);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+
+  // Fetch categories on mount
+  useEffect(() => {
+    axios.get(`${process.env.REACT_APP_API_BASE_URL}/categories`)
+      .then(res => setCategories(res.data))
+      .catch(err => console.error("Error fetching categories:", err));
+  }, []);
 
   const handleChange = (e) => {
     setFormData({
@@ -22,6 +31,16 @@ const Signup = () => {
       [e.target.name]: e.target.value,
     });
     setError("");
+  };
+
+  const handleCategoryChange = (categoryId) => {
+    const catId = parseInt(categoryId);
+    setFormData(prev => ({
+      ...prev,
+      selectedCategories: prev.selectedCategories.includes(catId)
+        ? prev.selectedCategories.filter(id => id !== catId)
+        : [...prev.selectedCategories, catId]
+    }));
   };
 
   const handleSignup = async (e) => {
@@ -38,15 +57,25 @@ const Signup = () => {
       return;
     }
 
-    // Admin password verification
-    if (formData.role === "admin" && formData.adminPassword !== "RuhPass#1999") {
-      setError("Invalid admin password");
-      return;
+    // Admin/SuperAdmin/Observer password verification
+    if (["admin", "superadmin", "observer"].includes(formData.role)) {
+      if (formData.role === "superadmin" && formData.adminPassword !== "SuperRuhPass#2024") {
+        setError("Invalid super admin password");
+        return;
+      }
+      if (formData.role === "admin" && formData.adminPassword !== "RuhPass#1999") {
+        setError("Invalid admin password");
+        return;
+      }
+      if (formData.role === "observer" && formData.adminPassword !== "ObserverPass#2024") {
+        setError("Invalid observer password");
+        return;
+      }
     }
 
-    // Admin must select subrole
-    if (formData.role === "admin" && !formData.subrole) {
-      setError("Please select a subrole for admin");
+    // Admin must select at least one category
+    if (formData.role === "admin" && formData.selectedCategories.length === 0) {
+      setError("Please select at least one category for admin");
       return;
     }
 
@@ -58,7 +87,7 @@ const Signup = () => {
           username: formData.username,
           password: formData.password,
           role: formData.role,
-          subrole: formData.role === "admin" ? formData.subrole : "user",
+          categories: formData.role === "admin" ? formData.selectedCategories : [],
         }
       );
 
@@ -79,14 +108,15 @@ const Signup = () => {
 
   return (
     <Container
-      className="d-flex flex-column align-items-center justify-content-center"
+      className="d-flex align-items-center justify-content-center"
       style={{ minHeight: "100vh" }}
     >
-      <img
-        src="https://i.ibb.co/cXsYwrCh/core-ms-high-resolution-logo.png"
-        alt="Logo"
-        style={{ width: "400px", marginTop: "-50px", marginBottom: "-10px" }}
-      />
+        <img
+          src="https://i.ibb.co/cXsYwrCh/core-ms-high-resolution-logo.png"
+          alt="Logo"
+          className="logo-img"
+          style={{ width: "400px", marginTop: "-50px", marginBottom: "-10px" }}
+        />
 
       <div className="w-100" style={{ maxWidth: "400px" }}>
         <Card>
@@ -144,54 +174,51 @@ const Signup = () => {
                   required
                 >
                   <option value="user">User</option>
+                  <option value="observer">Observer</option>
                   <option value="admin">Admin</option>
+                  <option value="superadmin">Super Admin</option>
                 </Form.Select>
               </Form.Group>
 
-              {formData.role === "admin" && (
-                <>
-                  <Form.Group controlId="adminPassword" className="mt-3">
-                    <Form.Label>Admin Password</Form.Label>
-                    <Form.Control
-                      type="password"
-                      name="adminPassword"
-                      placeholder="Enter admin password"
-                      value={formData.adminPassword}
-                      onChange={handleChange}
-                      required
-                    />
-                    <Form.Text className="text-muted">
-                      Contact administrator for admin password
-                    </Form.Text>
-                  </Form.Group>
+              {["admin", "superadmin", "observer"].includes(formData.role) && (
+                <Form.Group controlId="adminPassword" className="mt-3">
+                  <Form.Label>
+                    {formData.role === "superadmin" ? "Super Admin" : 
+                     formData.role === "observer" ? "Observer" : "Admin"} Password
+                  </Form.Label>
+                  <Form.Control
+                    type="password"
+                    name="adminPassword"
+                    placeholder={`Enter ${formData.role} password`}
+                    value={formData.adminPassword}
+                    onChange={handleChange}
+                    required
+                  />
+                  <Form.Text className="text-muted">
+                    Contact administrator for the password
+                  </Form.Text>
+                </Form.Group>
+              )}
 
-                  <Form.Group controlId="subrole" className="mt-3">
-                    <Form.Label>Admin Position</Form.Label>
-                    <Form.Select
-                      name="subrole"
-                      value={formData.subrole}
-                      onChange={handleChange}
-                      required
-                    >
-                      <option value="">Select position...</option>
-                      <option value="Dean">Dean</option>
-                      <option value="ComplaintsManager">Complaints Manager</option>
-                      <option value="Warden">Warden (Hostel)</option>
-                      <option value="AR">AR (Documentation)</option>
-                      <option value="CanteenCordinator">Canteen Coordinator</option>
-                      <option value="AcademicCordinator">Academic Coordinator</option>
-                      <option value="SportCordinator">Sport Coordinator</option>
-                      <option value="MaintainanceCordinator">Maintenance Coordinator</option>
-                      <option value="Librarian">Librarian</option>
-                      <option value="SecurityCordinator">Security Coordinator</option>
-                      <option value="HOD_DEIE">HOD - DEIE</option>
-                      <option value="HOD_DMME">HOD - DMME</option>
-                      <option value="HOD_DIS">HOD - DIS</option>
-                      <option value="HOD_DMENA">HOD - DMENA</option>
-                      <option value="HOD_DCEE">HOD - DCEE</option>
-                    </Form.Select>
-                  </Form.Group>
-                </>
+              {formData.role === "admin" && (
+                <Form.Group controlId="categories" className="mt-3">
+                  <Form.Label>Assigned Categories (Select one or more)</Form.Label>
+                  <div style={{ maxHeight: "200px", overflowY: "auto", border: "1px solid #ced4da", borderRadius: "4px", padding: "10px" }}>
+                    {categories.map(cat => (
+                      <Form.Check
+                        key={cat.category_id}
+                        type="checkbox"
+                        id={`cat-${cat.category_id}`}
+                        label={cat.name}
+                        checked={formData.selectedCategories.includes(cat.category_id)}
+                        onChange={() => handleCategoryChange(cat.category_id)}
+                      />
+                    ))}
+                  </div>
+                  <Form.Text className="text-muted">
+                    You will only see complaints from selected categories
+                  </Form.Text>
+                </Form.Group>
               )}
 
               <Button 

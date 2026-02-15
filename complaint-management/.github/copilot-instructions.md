@@ -76,11 +76,6 @@ This is a **full-stack complaint management system** with three components:
   - `lib/screens/`: All screens (login, dashboards, details, new complaint)
   - `android/app/src/main/AndroidManifest.xml`: Camera/storage permissions
 
-### Chatbot (`/chatbot`)
-- **Purpose**: AI chatbot for web frontend (NOT implemented in mobile)
-- **Framework**: NLP.js
-- **Files**: `botserver.js`, `nlpManager.js`, `model.nlp`
-
 ## Critical Workflows
 
 ### Running the Project
@@ -106,13 +101,6 @@ cd mobile
 flutter pub get
 flutter run
 # Build APK: flutter build apk --release
-```
-
-**Chatbot:**
-```bash
-cd chatbot
-npm install
-node botserver.js  # Port 3001
 ```
 
 ### Authentication Flow
@@ -172,7 +160,7 @@ cors({
 
 ## Common Pitfalls
 
-1. **Do NOT modify backend/frontend/chatbot when working on mobile** - They are separate deployments
+1. **Do NOT modify backend/frontend when working on mobile** - They are separate deployments
 2. **Category is required** when creating complaints (added in recent update)
 3. **Admin filtering is server-side** - don't filter complaints in frontend/mobile
 4. **Vercel deployment**: `module.exports = app` in server.js, local dev checks `NODE_ENV`
@@ -196,8 +184,7 @@ cors({
 
 - **Adding new complaint categories**: Update both backend mapping AND frontend/mobile dropdowns
 - **Changing API endpoints**: Update `server.js` AND both frontends (React + Flutter)
-- **Adding features to mobile**: Check if chatbot-related - if yes, skip it
-- **Deployment**: Backend/Frontend/Chatbot are on Vercel, mobile is standalone APK/IPA
+- **Deployment**: Backend/Frontend are on Vercel, mobile is standalone APK/IPA
 
 ---
 

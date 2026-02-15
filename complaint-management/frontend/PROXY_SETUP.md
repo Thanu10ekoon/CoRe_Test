@@ -20,9 +20,6 @@ Frontend (HTTPS) → Vercel Proxy (HTTPS) → EC2 Backend (HTTP) → Response
 ```properties
 # Frontend calls Vercel proxy functions at /api/*
 REACT_APP_API_BASE_URL=/api
-
-# Chatbot API
-REACT_APP_API_BOT_URL=http://localhost:5001/api
 ```
 
 ### Serverless Functions (.env.local)

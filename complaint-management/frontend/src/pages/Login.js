@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Form, Button, Container, Card } from "react-bootstrap";
 import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
+import ThemeToggle from "../components/ThemeToggle";
 
 const Login = () => {
   const [username, setUsername] = useState("");
@@ -15,18 +16,32 @@ const Login = () => {
         { username, password }
       );
 
-      // Expect response to include user_id, username, role, and subrole.
+      // Expect response to include user_id, username, role, and optionally categories for admin.
       if (response.data.user_id && response.data.role) {
         localStorage.setItem("user_id", response.data.user_id);
         localStorage.setItem("username", response.data.username);
         localStorage.setItem("role", response.data.role.toLowerCase());
-        localStorage.setItem("subrole", response.data.subrole);
+        localStorage.setItem("subrole", response.data.subrole || "");
+        
+        // Store categories for admin users
+        if (response.data.categories) {
+          localStorage.setItem("categories", JSON.stringify(response.data.categories));
+        }
 
         // Navigate based on role
-        if (response.data.role.toLowerCase() === "admin") {
-          navigate("/admin-dashboard");
-        } else {
-          navigate("/user-dashboard");
+        const role = response.data.role.toLowerCase();
+        switch (role) {
+          case "superadmin":
+            navigate("/superadmin-dashboard");
+            break;
+          case "admin":
+            navigate("/admin-dashboard");
+            break;
+          case "observer":
+            navigate("/observer-dashboard");
+            break;
+          default:
+            navigate("/user-dashboard");
         }
       } else {
         throw new Error("Invalid response data");
@@ -38,14 +53,15 @@ const Login = () => {
 
   return (
     <Container
-      className="d-flex flex-column align-items-center justify-content-center"
+      className="d-flex align-items-center justify-content-center"
       style={{ minHeight: "100vh" }}
     >
-      <img
-        src="https://i.ibb.co/cXsYwrCh/core-ms-high-resolution-logo.png"
-        alt="Logo"
-        style={{ width: "400px", marginTop: "-50px", marginBottom: "-10px" }}
-      />
+        <img
+          src="https://i.ibb.co/cXsYwrCh/core-ms-high-resolution-logo.png"
+          alt="Logo"
+          className="logo-img"
+          style={{ width: "400px", marginTop: "-50px", marginBottom: "-10px" }}
+        />
 
       <div className="w-100" style={{ maxWidth: "400px" }}>
         <Card>

@@ -1,0 +1,23 @@
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Dependencies
+node_modules/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# PM2
+.pm2/
+
+# Uploads (if needed for local testing, but should use external storage in production)
+uploads/*
+!uploads/README.md
+
+# OS files
+.DS_Store
+Thumbs.db

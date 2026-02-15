@@ -1,5 +1,5 @@
 // NewComplaint.js
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { Container, Card, Form, Button } from "react-bootstrap";
@@ -8,10 +8,18 @@ const NewComplaint = () => {
   const [complaintTitle, setComplaintTitle] = useState("");
   const [complaintDescription, setComplaintDescription] = useState("");
   const [complaintCategory, setComplaintCategory] = useState(""); // New state for category
+  const [categories, setCategories] = useState([]); // Categories from API
   const [selectedPhoto, setSelectedPhoto] = useState(null);
   const [photoPreview, setPhotoPreview] = useState(null);
   const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
+
+  // Fetch categories on mount
+  useEffect(() => {
+    axios.get(`${process.env.REACT_APP_API_BASE_URL}/categories`)
+      .then(res => setCategories(res.data))
+      .catch(err => console.error("Error fetching categories:", err));
+  }, []);
 
   const handlePhotoChange = (e) => {
     const file = e.target.files[0];
@@ -99,19 +107,9 @@ const NewComplaint = () => {
                 required
               >
                 <option value="">Select Category</option>
-                <option value="Hostel">Hostel</option>
-                <option value="Canteen">Canteen</option>
-                <option value="Academic">Academic</option>
-                <option value="Sports">Sports</option>
-                <option value="Maintainance">Maintainance</option>
-                <option value="Library">Library</option>
-                <option value="Security">Security</option>
-                <option value="Documentation">Documentation</option>
-                <option value="DEIE">DEIE</option>
-                <option value="DMME">DMME</option>
-                <option value="DIS">DIS</option>
-                <option value="DMENA">DMENA</option>
-                <option value="DCEE">DCEE</option>
+                {categories.map(cat => (
+                  <option key={cat.category_id} value={cat.name}>{cat.name}</option>
+                ))}
               </Form.Select>
             </Form.Group>
             <Form.Group controlId="complaintPhoto" className="mb-3">

@@ -1,0 +1,45 @@
+name: Deploy to Oracle Cloud
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      - name: Setup SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.OCI_SSH_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.OCI_HOST }} >> ~/.ssh/known_hosts
+      
+      - name: Deploy Backend
+        run: |
+          ssh -i ~/.ssh/id_rsa ubuntu@${{ secrets.OCI_HOST }} << 'EOF'
+            cd ~/CoRe_Test
+            git pull origin main
+            cd complaint-management/backend
+            npm install --production
+            pm2 restart corems-backend || pm2 start ecosystem.config.js
+          EOF
+      
+      - name: Deploy Frontend
+        run: |
+          ssh -i ~/.ssh/id_rsa ubuntu@${{ secrets.OCI_HOST }} << 'EOF'
+            cd ~/CoRe_Test
+            git pull origin main
+            cd complaint-management/frontend
+            npm install
+            npm run build
+            sudo rm -rf /var/www/complaint-management/*
+            sudo cp -r build/* /var/www/complaint-management/
+            sudo systemctl reload nginx
+          EOF

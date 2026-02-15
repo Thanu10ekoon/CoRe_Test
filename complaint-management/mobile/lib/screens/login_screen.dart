@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../services/theme_service.dart';
@@ -47,12 +48,28 @@ class _LoginScreenState extends State<LoginScreen> {
             'role', response['role'].toString().toLowerCase());
         await prefs.setString('subrole', response['subrole'] ?? '');
 
+        // Store categories for admin
+        if (response['categories'] != null) {
+          await prefs.setString(
+              'categories', json.encode(response['categories']));
+        }
+
         if (!mounted) return;
 
-        if (response['role'].toString().toLowerCase() == 'admin') {
-          Navigator.of(context).pushReplacementNamed('/admin-dashboard');
-        } else {
-          Navigator.of(context).pushReplacementNamed('/user-dashboard');
+        // Navigate based on role
+        final role = response['role'].toString().toLowerCase();
+        switch (role) {
+          case 'superadmin':
+            Navigator.of(context).pushReplacementNamed('/superadmin-dashboard');
+            break;
+          case 'admin':
+            Navigator.of(context).pushReplacementNamed('/admin-dashboard');
+            break;
+          case 'observer':
+            Navigator.of(context).pushReplacementNamed('/observer-dashboard');
+            break;
+          default:
+            Navigator.of(context).pushReplacementNamed('/user-dashboard');
         }
       }
     } catch (e) {

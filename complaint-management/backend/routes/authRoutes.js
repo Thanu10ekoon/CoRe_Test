@@ -3,9 +3,9 @@ const router = express.Router();
 const db = require("../db");
 const bcrypt = require("bcryptjs");
 
-// Signup route
+// Signup route - supports 4 roles: user, observer, admin, superadmin
 router.post("/signup", async (req, res) => {
-  const { username, password, role, subrole } = req.body;
+  const { username, password, role, categories } = req.body;
 
   if (!username || !password) {
     return res.status(400).json({ error: "Username and password are required" });
@@ -19,9 +19,14 @@ router.post("/signup", async (req, res) => {
     return res.status(400).json({ error: "Password must be at least 4 characters long" });
   }
 
-  // Set default role and subrole if not provided
-  const userRole = role || "user";
-  const userSubrole = subrole || "user";
+  // Valid roles: user, observer, admin, superadmin
+  const validRoles = ["user", "observer", "admin", "superadmin"];
+  const userRole = validRoles.includes(role) ? role : "user";
+
+  // Admin must have at least one category
+  if (userRole === "admin" && (!categories || categories.length === 0)) {
+    return res.status(400).json({ error: "Admin must be assigned to at least one category" });
+  }
 
   try {
     // Check if username already exists
@@ -39,19 +44,39 @@ router.post("/signup", async (req, res) => {
       // Hash password
       const hashedPassword = await bcrypt.hash(password, 10);
 
-      // Insert new user with provided role and subrole
+      // Insert new user
       const insertQuery = "INSERT INTO CoReMSusers (username, password, role, subrole) VALUES (?, ?, ?, ?)";
+      const subroleValue = userRole === "admin" ? "CategoryAdmin" : userRole;
       
-      db.query(insertQuery, [username, hashedPassword, userRole, userSubrole], (err, result) => {
+      db.query(insertQuery, [username, hashedPassword, userRole, subroleValue], (err, result) => {
         if (err) {
           console.error("Database error:", err);
           return res.status(500).json({ error: "Failed to create account" });
         }
 
-        res.json({ 
-          message: "Account created successfully",
-          user_id: result.insertId 
-        });
+        const userId = result.insertId;
+
+        // If admin, assign categories
+        if (userRole === "admin" && categories && categories.length > 0) {
+          const categoryInserts = categories.map(catId => [userId, catId]);
+          const catInsertQuery = "INSERT INTO CoReMSadmin_categories (user_id, category_id) VALUES ?";
+          
+          db.query(catInsertQuery, [categoryInserts], (err) => {
+            if (err) {
+              console.error("Error assigning categories:", err);
+              // Don't fail the whole signup, just log the error
+            }
+            res.json({ 
+              message: "Account created successfully",
+              user_id: userId 
+            });
+          });
+        } else {
+          res.json({ 
+            message: "Account created successfully",
+            user_id: userId 
+          });
+        }
       });
     });
   } catch (error) {
@@ -91,13 +116,34 @@ router.post("/login", async (req, res) => {
         return res.status(401).json({ error: "Invalid username or password" });
       }
 
-      // Send back user details and role (don't send password)
-      res.json({
-        user_id: user.user_id,
-        username: user.username,
-        role: user.role,
-        subrole: user.subrole
-      });
+      // If admin, get their assigned categories
+      if (user.role === "admin") {
+        const catQuery = `SELECT c.category_id, c.name 
+                          FROM CoReMSadmin_categories ac 
+                          JOIN CoReMScategories c ON ac.category_id = c.category_id 
+                          WHERE ac.user_id = ?`;
+        db.query(catQuery, [user.user_id], (err, categories) => {
+          if (err) {
+            console.error("Error fetching categories:", err);
+            categories = [];
+          }
+          res.json({
+            user_id: user.user_id,
+            username: user.username,
+            role: user.role,
+            subrole: user.subrole,
+            categories: categories
+          });
+        });
+      } else {
+        // Send back user details and role (don't send password)
+        res.json({
+          user_id: user.user_id,
+          username: user.username,
+          role: user.role,
+          subrole: user.subrole
+        });
+      }
     } catch (error) {
       console.error("Error comparing passwords:", error);
       return res.status(500).json({ error: "Internal server error" });

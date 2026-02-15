@@ -2,17 +2,25 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { Button, Table, Container, Spinner, InputGroup, Form } from "react-bootstrap";
-import Chatbot from "../Chatbot";
+import { Button, Table, Container, Spinner, InputGroup, Form, Badge } from "react-bootstrap";
+import ThemeToggle from "./ThemeToggle";
 
 const AdminDashboard = () => {
   const [complaints, setComplaints] = useState([]);
   const [loading, setLoading] = useState(true);
   const [statusInputs, setStatusInputs] = useState({});
+  const [assignedCategories, setAssignedCategories] = useState([]);
   const navigate = useNavigate();
   const adminId = localStorage.getItem("user_id");
 
   useEffect(() => {
+    // Fetch admin's assigned categories
+    const storedCategories = localStorage.getItem("categories");
+    if (storedCategories) {
+      setAssignedCategories(JSON.parse(storedCategories));
+    }
+
+    // Fetch complaints
     axios
       .get(`${process.env.REACT_APP_API_BASE_URL}/complaints?admin_id=${adminId}`)
       .then((response) => {
@@ -68,18 +76,27 @@ const AdminDashboard = () => {
 
   return (
     <Container className="d-flex flex-column min-vh-100">
-      <div className="d-flex justify-content-center mt-4">
-        <img
-          src="https://i.ibb.co/cXsYwrCh/core-ms-high-resolution-logo.png"
-          alt="Logo"
-          style={{ width: "400px" }}
-        />
+        <div className="d-flex justify-content-center mt-4">
+          <img
+            src="https://i.ibb.co/cXsYwrCh/core-ms-high-resolution-logo.png"
+            alt="Logo"
+            className="logo-img"
+            style={{ width: "400px" }}
+          />
       </div>
 
       <div className="flex-grow-1 d-flex flex-column align-items-center mt-3">
         <div className="w-100 px-2" style={{ maxWidth: "900px" }}>
           <div className="d-flex flex-column flex-md-row justify-content-between align-items-center mb-3">
-            <h2 className="text-center text-md-start">Admin Dashboard</h2>
+            <div>
+              <h2 className="text-center text-md-start">Admin Dashboard</h2>
+              <div className="mt-2">
+                <small className="text-muted">Assigned Categories: </small>
+                {assignedCategories.map(cat => (
+                  <Badge key={cat.category_id} bg="primary" className="me-1">{cat.name}</Badge>
+                ))}
+              </div>
+            </div>
             <Button variant="danger" className="mt-2 mt-md-0" onClick={handleLogout}>
               Logout
             </Button>
@@ -173,8 +190,6 @@ const AdminDashboard = () => {
           </a>
         </p>
       </footer>
-
-      <Chatbot userType="admin" />
     </Container>
   );
 };
