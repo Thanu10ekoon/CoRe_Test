@@ -9,6 +9,7 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     
     steps:
       - name: Checkout code
@@ -20,26 +21,36 @@ jobs:
           echo "${{ secrets.OCI_SSH_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan -H ${{ secrets.OCI_HOST }} >> ~/.ssh/known_hosts
+          
+          # Configure SSH to keep connection alive
+          cat >> ~/.ssh/config << EOL
+          Host oci
+            HostName ${{ secrets.OCI_HOST }}
+            User ubuntu
+            IdentityFile ~/.ssh/id_rsa
+            ServerAliveInterval 60
+            ServerAliveCountMax 10
+            StrictHostKeyChecking no
+          EOL
+      
+      - name: Pull Latest Code
+        run: |
+          ssh oci "cd ~/CoRe_Test && git pull origin main"
       
       - name: Deploy Backend
         run: |
-          ssh -i ~/.ssh/id_rsa ubuntu@${{ secrets.OCI_HOST }} << 'EOF'
-            cd ~/CoRe_Test
-            git pull origin main
-            cd complaint-management/backend
-            npm install --production
-            pm2 restart corems-backend || pm2 start ecosystem.config.js
-          EOF
+          ssh oci "cd ~/CoRe_Test/complaint-management/backend && npm install --production --prefer-offline --no-audit"
+          ssh oci "cd ~/CoRe_Test/complaint-management/backend && pm2 restart corems-backend || pm2 start ecosystem.config.js"
       
       - name: Deploy Frontend
         run: |
-          ssh -i ~/.ssh/id_rsa ubuntu@${{ secrets.OCI_HOST }} << 'EOF'
-            cd ~/CoRe_Test
-            git pull origin main
-            cd complaint-management/frontend
-            npm install
-            npm run build
-            sudo rm -rf /var/www/complaint-management/*
-            sudo cp -r build/* /var/www/complaint-management/
-            sudo systemctl reload nginx
-          EOF
+          ssh oci "cd ~/CoRe_Test/complaint-management/frontend && npm install --prefer-offline --no-audit"
+          ssh oci "cd ~/CoRe_Test/complaint-management/frontend && npm run build"
+          ssh oci "sudo rm -rf /var/www/complaint-management/*"
+          ssh oci "sudo cp -r ~/CoRe_Test/complaint-management/frontend/build/* /var/www/complaint-management/"
+          ssh oci "sudo systemctl reload nginx"
+      
+      - name: Verify Deployment
+        run: |
+          ssh oci "pm2 status"
+          ssh oci "curl -s http://localhost:5000/api/categories || echo 'Backend check failed'"
