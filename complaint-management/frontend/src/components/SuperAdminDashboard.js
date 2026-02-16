@@ -1,5 +1,5 @@
 // SuperAdminDashboard.js
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { Button, Table, Container, Spinner, InputGroup, Form, Card, Modal, Badge, Tab, Tabs } from "react-bootstrap";
@@ -25,11 +25,7 @@ const SuperAdminDashboard = () => {
   const navigate = useNavigate();
   const adminId = localStorage.getItem("user_id");
 
-  useEffect(() => {
-    fetchData();
-  }, [adminId]);
-
-  const fetchData = () => {
+  const fetchData = useCallback(() => {
     setLoading(true);
     
     // Fetch complaints
@@ -52,7 +48,11 @@ const SuperAdminDashboard = () => {
         console.error("Error fetching categories:", err);
         setLoading(false);
       });
-  };
+  }, [adminId]);
+
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
 
   const handleStatusChange = (complaintId, value) => {
     setStatusInputs((prev) => ({ ...prev, [complaintId]: value }));
