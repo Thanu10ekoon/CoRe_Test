@@ -22,8 +22,7 @@ jobs:
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan -H ${{ secrets.OCI_HOST }} >> ~/.ssh/known_hosts
           
-          # Configure SSH to keep connection alive
-          cat >> ~/.ssh/config << EOL
+          cat > ~/.ssh/config << EOF
           Host oci
             HostName ${{ secrets.OCI_HOST }}
             User ubuntu
@@ -31,7 +30,7 @@ jobs:
             ServerAliveInterval 60
             ServerAliveCountMax 10
             StrictHostKeyChecking no
-          EOL
+          EOF
       
       - name: Pull Latest Code
         run: |
