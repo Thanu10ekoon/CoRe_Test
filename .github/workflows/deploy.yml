@@ -36,23 +36,32 @@ jobs:
         run: |
           ssh oci "cd ~/CoRe_Test && git pull origin main"
       
-      - name: Upgrade Node.js to v20 (if needed)
+      - name: Setup Node.js 20
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: complaint-management/frontend/package-lock.json
+      
+      - name: Build Frontend Locally
         run: |
-          ssh oci "node -v | grep -q 'v20' || (curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash - && sudo apt-get install -y nodejs)"
-          ssh oci "node -v && npm -v"
+          cd complaint-management/frontend
+          npm ci --legacy-peer-deps
+          npm run build
       
       - name: Deploy Backend
         run: |
           ssh oci "cd ~/CoRe_Test/complaint-management/backend && npm install --production --prefer-offline --no-audit"
           ssh oci "cd ~/CoRe_Test/complaint-management/backend && pm2 restart corems-backend || pm2 start ecosystem.config.js"
       
-      - name: Deploy Frontend
+      - name: Deploy Frontend Build
         run: |
-          ssh oci "cd ~/CoRe_Test/complaint-management/frontend && rm -rf node_modules package-lock.json"
-          ssh oci "cd ~/CoRe_Test/complaint-management/frontend && npm install --legacy-peer-deps"
-          ssh oci "cd ~/CoRe_Test/complaint-management/frontend && NODE_OPTIONS='--max-old-space-size=2048' npm run build"
+          ssh oci "mkdir -p /tmp/frontend-build"
+          scp -r complaint-management/frontend/build/* oci:/tmp/frontend-build/
           ssh oci "sudo rm -rf /var/www/complaint-management/*"
-          ssh oci "sudo cp -r ~/CoRe_Test/complaint-management/frontend/build/* /var/www/complaint-management/"
+          ssh oci "sudo cp -r /tmp/frontend-build/* /var/www/complaint-management/"
+          ssh oci "sudo chown -R www-data:www-data /var/www/complaint-management"
+          ssh oci "rm -rf /tmp/frontend-build"
           ssh oci "sudo systemctl reload nginx"
       
       - name: Verify Deployment
