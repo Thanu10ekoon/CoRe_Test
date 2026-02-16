@@ -36,6 +36,11 @@ jobs:
         run: |
           ssh oci "cd ~/CoRe_Test && git pull origin main"
       
+      - name: Upgrade Node.js to v20 (if needed)
+        run: |
+          ssh oci "node -v | grep -q 'v20' || (curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash - && sudo apt-get install -y nodejs)"
+          ssh oci "node -v && npm -v"
+      
       - name: Deploy Backend
         run: |
           ssh oci "cd ~/CoRe_Test/complaint-management/backend && npm install --production --prefer-offline --no-audit"
@@ -43,8 +48,8 @@ jobs:
       
       - name: Deploy Frontend
         run: |
-          ssh oci "cd ~/CoRe_Test/complaint-management/frontend && npm install --prefer-offline --no-audit"
-          ssh oci "cd ~/CoRe_Test/complaint-management/frontend && npm run build"
+          ssh oci "cd ~/CoRe_Test/complaint-management/frontend && npm install --prefer-offline --no-audit --legacy-peer-deps"
+          ssh oci "cd ~/CoRe_Test/complaint-management/frontend && NODE_OPTIONS='--max-old-space-size=2048' npm run build"
           ssh oci "sudo rm -rf /var/www/complaint-management/*"
           ssh oci "sudo cp -r ~/CoRe_Test/complaint-management/frontend/build/* /var/www/complaint-management/"
           ssh oci "sudo systemctl reload nginx"
